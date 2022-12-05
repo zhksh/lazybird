@@ -1,0 +1,3 @@
+[submodule "mvp-lm-backend"]
+	path = mvp-lm-backend
+	url = https://gitlab.lrz.de/zhksh/mvp-lm-backend
