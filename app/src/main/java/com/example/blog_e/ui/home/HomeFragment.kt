@@ -7,7 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.blog_e.adapters.PostsViewAdapter
 import com.example.blog_e.databinding.FragmentHomeBinding
+import com.example.blog_e.models.PostsViewModel
 
 class HomeFragment : Fragment() {
 
@@ -32,6 +36,25 @@ class HomeFragment : Fragment() {
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
+
+        val postViewList: ArrayList<PostsViewModel> = arrayListOf()
+
+        val post = PostsViewModel(
+            profilePicture = 1,
+            username = "Max Mustermann"
+        )
+
+        val recyclerView: RecyclerView = binding.postsListRecyclerView
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(root.context)
+
+        for (i in 1..20) {
+            postViewList.add(post)
+        }
+
+        recyclerView.adapter = PostsViewAdapter(postViewList)
+
+
         return root
     }
 

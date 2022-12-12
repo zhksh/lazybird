@@ -26,7 +26,7 @@ class PostsViewAdapter(private val postList: List<PostsViewModel>) :
 
         val postsViewModel = postList[position]
 
-        holder.profilePictureView.setImageResource(postsViewModel.profilePicture)
+        // holder.profilePictureView.setImageResource(postsViewModel.profilePicture)
 
         holder.content.text = postsViewModel.content
 
@@ -43,6 +43,5 @@ class PostsViewAdapter(private val postList: List<PostsViewModel>) :
         val profilePictureView: ImageView = itemView.findViewById(R.id.profilePictureView)
         val content: TextView = itemView.findViewById(R.id.content)
         val username: TextView = itemView.findViewById(R.id.username)
-        val contentView: ImageView = TODO()
     }
 }

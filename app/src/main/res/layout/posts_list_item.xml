@@ -27,7 +27,6 @@
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="27dp"
                 android:layout_toRightOf="@id/profilePictureView"
                 android:text="Username" />
 
@@ -45,7 +44,7 @@
                 android:id="@+id/content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="The content" />
+                android:text="Here goes the content" />
         </TableRow>
 
         <TableRow>
