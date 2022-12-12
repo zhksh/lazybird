@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/blog_post"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+
+    <ImageView
+        android:id="@+id/profilePictureView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        app:srcCompat="@drawable/ic_baseline_account_circle_24" />
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="27dp"
+                android:layout_toRightOf="@id/profilePictureView"
+                android:text="Username" />
+
+            <TextView
+                android:id="@+id/postTimeStamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="5h" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="The content" />
+        </TableRow>
+
+        <TableRow>
+
+        </TableRow>
+
+        <TableRow>
+
+            <ImageButton
+                android:id="@+id/likeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_baseline_favorite_24" />
+
+            <TextView
+                android:id="@+id/likeNumber"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="6" />
+
+            <ImageView android:src="@drawable/ic_baseline_mode_comment_24" />
+
+            <TextView
+                android:id="@+id/commentNumber"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="6" />
+        </TableRow>
+
+
+    </TableLayout>
+
+
+</LinearLayout>
