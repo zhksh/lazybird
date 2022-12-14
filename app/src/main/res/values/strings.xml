@@ -1,5 +1,19 @@
 <resources>
     <string name="app_name">Blog-E</string>
+    <!-- login -->
+    <string name="welcome_back">Welcome Back</string>
+    <string name="sign_in_to_your_account">Sign in to your account</string>
+    <string name="hello">Hello</string>
+    <string name="create_account">Create account</string>
+    <string name="i_don_t_have_an_account">I don\'t have an Account></string>
+    <string name="i_already_have_an_account">I already have an Account></string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign up</string>
+    <string name="choose_avatar">choose an avatar:</string>
+
+    <!-- nav bar -->
     <string name="title_home">Home</string>
     <string name="title_profile">Profile</string>
     <string name="title_search">Search</string>
