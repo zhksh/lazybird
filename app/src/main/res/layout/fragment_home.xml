@@ -6,21 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Follower"
-        app:layout_constraintTop_toTopOf="@+id/postsListRecyclerView"
- />
+    <ToggleButton
+        android:id="@+id/toggleButton"
+        android:layout_width="149dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="4dp"
+        android:text="ToggleButton"
+        android:textOff="Followers"
+        android:textOn="Global"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/postsListRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggleButton"
         tools:itemCount="5"
-        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteX="0dp"
         tools:listitem="@layout/posts_list_item" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
