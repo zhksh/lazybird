@@ -53,7 +53,8 @@
             android:inputType="textPersonName"
             android:text="@string/password"
             tools:ignore="LabelFor,TextFields"
-            android:autofillHints="" />
+            android:autofillHints=""
+            />
 
         <Button
             android:id="@+id/btnLogin"
