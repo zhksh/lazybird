@@ -7,6 +7,10 @@ android {
     namespace 'com.example.blog_e'
     compileSdk 32
 
+    dataBinding {
+        enabled = true
+    }
+
     defaultConfig {
         applicationId "com.example.blog_e"
         minSdk 29
