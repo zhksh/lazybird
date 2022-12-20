@@ -8,11 +8,11 @@
     android:padding="5dp">
 
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profilePictureView"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_margin="8dp"
+        app:shapeAppearanceOverlay="@style/Circular"
         app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
     <androidx.constraintlayout.widget.ConstraintLayout

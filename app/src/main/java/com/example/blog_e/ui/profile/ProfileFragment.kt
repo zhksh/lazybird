@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.blog_e.R
 import com.example.blog_e.adapters.PostsViewAdapter
 import com.example.blog_e.databinding.FragmentProfileBinding
 import com.example.blog_e.models.PostsViewModel
@@ -49,7 +50,8 @@ class ProfileFragment : Fragment() {
         postViewList.addAll(
             generatePosts(
                 20,
-                "Hello everyone!\nThis is a post from your followers"
+                "Hello everyone!\nThis is a post from me \uD83D\uDC24\n\nMerry Christmas \uD83C\uDF85",
+                R.drawable.baby_yoda_1
             )
         )
 

@@ -32,6 +32,8 @@ class PostsViewAdapter(private val postList: List<PostsViewModel>) :
 
         holder.username.text = postsViewModel.username
 
+        holder.profilePictureView.setImageResource(postsViewModel.profilePicture)
+
     }
 
     override fun getItemCount(): Int {

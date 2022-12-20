@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.blog_e.R
 import com.example.blog_e.adapters.PostsViewAdapter
 import com.example.blog_e.databinding.FragmentHomeBinding
 import com.example.blog_e.models.PostsViewModel
@@ -81,12 +82,12 @@ class HomeFragment : Fragment() {
 }
 
 // TODO: replace this function with service calls for fetching the posts
-fun generatePosts(number: Int, content: String): List<PostsViewModel> {
+fun generatePosts(number: Int, content: String, img: Int ?= null): List<PostsViewModel> {
     val posts: ArrayList<PostsViewModel> = arrayListOf()
     for (i in 0..number) {
         posts.add(
             PostsViewModel(
-                profilePicture = 1,
+                profilePicture =  img ?: R.drawable.ic_baseline_account_circle_24,
                 username = "Max Mustermann",
                 content = content
             )
