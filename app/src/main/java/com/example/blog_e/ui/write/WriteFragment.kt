@@ -9,9 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.blog_e.data.model.Post
+import com.example.blog_e.data.model.User
+import com.example.blog_e.data.repository.BlogPostRepository
+import com.example.blog_e.data.repository.UserRepo
 import com.example.blog_e.databinding.FragmentWriteBinding
+import java.util.*
 
-class WriteFragment : Fragment() {
+class WriteFragment(private val postRepository: BlogPostRepository) : Fragment() {
 
     private var _binding: FragmentWriteBinding? = null
 
@@ -89,6 +94,15 @@ class WriteFragment : Fragment() {
 
         postBtn.setOnClickListener {
             writeViewModel.savePost()
+            val mockedPost = Post(
+                content = postInput.text.toString(),
+                publicationDate = Date(),
+                comments = emptyList(),
+                modifications = "none",
+                autogenerateResponses = false,
+            )
+            // TODO sollte asynchron erfolgen
+            // postRepository.createPost( mockedPost)
         }
 
         generateEmptyBtn.setOnClickListener {
