@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/start_fragment">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -28,5 +28,41 @@
         android:name="com.example.blog_e.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/login_fragment"
+        android:name="com.example.blog_e.ui.login.LoginFragment"
+        android:label="login_fragment"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_login_fragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_login_fragment_to_sign_up_fragment"
+            app:destination="@id/sign_up_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/sign_up_fragment"
+        android:name="com.example.blog_e.ui.login.SignUpFragment"
+        android:label="sign_up_fragment"
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_sign_up_fragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/start_fragment"
+        android:name="com.example.blog_e.ui.login.StartFragment"
+        android:label="start_fragment"
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_start_fragment_to_login_fragment"
+            app:destination="@id/login_fragment" />
+        <action
+            android:id="@+id/action_start_fragment_to_sign_up_fragment"
+            app:destination="@id/sign_up_fragment" />
+    </fragment>
 
 </navigation>
