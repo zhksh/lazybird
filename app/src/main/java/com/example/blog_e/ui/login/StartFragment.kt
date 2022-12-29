@@ -5,26 +5,35 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.blog_e.R
 import com.example.blog_e.databinding.FragmentStartBinding
 
 
 class StartFragment : Fragment() {
 
     private var _binding: FragmentStartBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val sharedViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
         _binding = FragmentStartBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        binding.btnLogin.setOnClickListener { login() }
+        binding.btnSignUp.setOnClickListener { signUp() }
+
         return root
     }
+
+    private fun signUp() {
+        findNavController().navigate(R.id.action_start_fragment_to_sign_up_fragment)
+    }
+
+    private fun login() {
+        findNavController().navigate(R.id.action_start_fragment_to_login_fragment)
+    }
+
 }
