@@ -3,6 +3,7 @@ package com.example.blog_e.ui.write
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +12,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.blog_e.data.model.CompletePayload
 import com.example.blog_e.data.repository.ApiClient
 import com.example.blog_e.data.repository.LLMResult
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -60,19 +63,35 @@ class WriteViewModel : ViewModel() {
     fun completePost(data: CompletePayload, context: Context){
         Log.i(TAG, "before coroutinge")
         viewModelScope.launch {
+
             try {
-                val client = ApiClient.getClient(context)
-                Toast.makeText(
+                var t = Toast.makeText(
                     context,
-                    "Generating ..",
+                    "COMPLETING",
                     Toast.LENGTH_LONG
-                ).show()
+                )
+                t.show()
+                val client = ApiClient.getClient(context)
                 val resp = client.generateCompletion(data)
                 if (resp.isSuccessful()) {
-                    _uiState.value = _uiState.value.copy(postInput = resp.message())
-                    Log.i(TAG, resp.body().toString())
+                    val res: LLMResult? = resp.body()
+                    if (res != null) {
+                        Log.d(TAG, res.response)
+                        _uiState.value = _uiState.value.copy(postInput = res.response)
+                    }
+                    else {
+                        t = Toast.makeText(
+                            context,
+                            "Empty Body",
+                            Toast.LENGTH_LONG
+                        )
+                        Log.e(TAG, "empty body")
+                        Log.i(TAG, resp.body().toString())
+                    }
+
 
                 } else {
+                    t.cancel()
                     Toast.makeText(
                         context,
                         resp.errorBody().toString(),
@@ -82,6 +101,7 @@ class WriteViewModel : ViewModel() {
             }catch (Ex:Exception){
                 Log.e("Error",Ex.localizedMessage)
             }
+            Log.d(TAG, "generation call done")
         }
 
 

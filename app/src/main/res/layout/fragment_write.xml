@@ -184,7 +184,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:text="Generate"
+                android:text="Generate from nothing"
                 android:visibility="gone">
 
             </Button>
