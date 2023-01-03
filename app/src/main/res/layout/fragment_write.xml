@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Write a post"
+            android:text="Write stuff"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:hint="Write a post ..."
+            android:hint="Bruce Lee and"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -196,7 +196,14 @@
                 android:layout_marginHorizontal="8dp"
                 android:enabled="false"
                 android:text="Post">
-
+            </Button>
+            <Button
+                    android:id="@+id/postGenerateButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:enabled="false"
+                    android:text="Generate">
             </Button>
         </LinearLayout>
 

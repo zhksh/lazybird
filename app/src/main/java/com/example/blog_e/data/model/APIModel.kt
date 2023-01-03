@@ -1,5 +1,7 @@
 package com.example.blog_e.data.model
 
+import com.google.gson.annotations.SerializedName
+
 
 data class PostAPIModel(
     val commentCount: Int,
@@ -57,5 +59,14 @@ data class LoginPayload(
 data class FollowResult(
     val code: Int,
     val message: String
+)
+
+data class CompletePayload(
+    @SerializedName("prefix")
+    val prefix: String,
+    @SerializedName("temperature")
+    val temperature: Double,
+    @SerializedName("mood")
+    val mood: Int
 )
 

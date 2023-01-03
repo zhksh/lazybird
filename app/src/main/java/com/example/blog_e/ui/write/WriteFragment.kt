@@ -4,20 +4,27 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import com.example.blog_e.data.model.CompletePayload
 import com.example.blog_e.data.model.Post
 import com.example.blog_e.data.model.User
+import com.example.blog_e.data.repository.ApiClient
 import com.example.blog_e.data.repository.BlogPostRepository
 import com.example.blog_e.data.repository.UserRepo
 import com.example.blog_e.databinding.FragmentWriteBinding
+import kotlinx.coroutines.launch
 import java.util.*
 
-class WriteFragment(private val postRepository: BlogPostRepository) : Fragment() {
-
+class WriteFragment : Fragment() {
+    private val TAG = "write_frag"
     private var _binding: FragmentWriteBinding? = null
 
     // This property is only valid between onCreateView and
@@ -40,10 +47,15 @@ class WriteFragment(private val postRepository: BlogPostRepository) : Fragment()
         val generateEmptyBtn = binding.generatePostFromPromptButton
         val aiSwitch = binding.aiSwitchButton
         val postInput = binding.postInput
+        val generateBtn = binding.postGenerateButton
 
 
-        writeViewModel.postText.observe(viewLifecycleOwner) { post ->
-            postInput.text = SpannableStringBuilder(post)
+        viewLifecycleOwner.lifecycleScope.launch {
+            writeViewModel.uiState
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                    postInput.setText(it.postInput)
+                }
         }
 
 
@@ -64,6 +76,7 @@ class WriteFragment(private val postRepository: BlogPostRepository) : Fragment()
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     if (s.toString().isNotBlank()) {
                         postBtn.isEnabled = true
+                        generateBtn.isEnabled = true
 
                         generatePromptBtn.visibility = View.GONE
                         generateEmptyBtn.isEnabled = true
@@ -101,10 +114,21 @@ class WriteFragment(private val postRepository: BlogPostRepository) : Fragment()
                 modifications = "none",
                 autogenerateResponses = false,
             )
+            Log.i(TAG, postInput.text.toString())
+            val client = ApiClient()
+
             // TODO sollte asynchron erfolgen
             // postRepository.createPost( mockedPost)
         }
 
+        generateBtn.setOnClickListener {
+            writeViewModel.completePost(
+                CompletePayload(
+                    postInput.text.toString(),
+                    0.5,
+                    1),
+                requireContext())
+        }
         generateEmptyBtn.setOnClickListener {
             postInput.text = SpannableStringBuilder(postInput.text.toString() + "\nGenerated text")
         }

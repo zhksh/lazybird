@@ -7,7 +7,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import retrofit2.Retrofit
-
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class ApiClient {
 
@@ -19,7 +20,8 @@ class ApiClient {
         if (!::apiService.isInitialized) {
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .client(okhttpClient(context)) // Add our Okhttp client
+                .client(okhttpClient(context))
+                .addConverterFactory(GsonConverterFactory.create())// Add our Okhttp client
                 .build()
 
             apiService = retrofit.create(BlogEAPI::class.java)
@@ -28,14 +30,22 @@ class ApiClient {
         return apiService
     }
 
-
     /**
      * Initialize OkhttpClient with our interceptor
      */
     private fun okhttpClient(context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(context))
+            .readTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(60, TimeUnit.SECONDS)
             .build()
+    }
+
+    companion object {
+        fun getClient(context: Context): BlogEAPI {
+            val provider = ApiClient()
+            return provider.getApiService(context)
+        }
     }
 }
 
@@ -54,5 +64,6 @@ class AuthInterceptor(context: Context) : Interceptor {
 
         return chain.proceed(requestBuilder.build())
     }
+
 
 }
