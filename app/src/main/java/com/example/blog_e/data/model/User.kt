@@ -5,7 +5,7 @@ import java.util.*
 
 
 data class User(
-    val id: UUID,
+    val id: UUID = UUID.randomUUID(),
     val username: String,
     // TODO anders mit umgehen
     val password: String,
