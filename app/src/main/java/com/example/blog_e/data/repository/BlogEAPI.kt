@@ -5,7 +5,7 @@ import retrofit2.Response
 import retrofit2.http.*
 
 
-const val BASE_URL = "http://localhost:5432/"
+const val BASE_URL = "http://172.18.208.1:6969"
 
 interface BlogEAPI {
 
