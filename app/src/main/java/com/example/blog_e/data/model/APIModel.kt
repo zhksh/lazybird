@@ -70,3 +70,8 @@ data class CompletePayload(
     val mood: Int
 )
 
+data class ErrorResponse(
+    @SerializedName("msg")
+    val msg: String,
+)
+
