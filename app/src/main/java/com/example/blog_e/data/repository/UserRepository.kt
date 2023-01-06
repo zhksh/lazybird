@@ -10,11 +10,11 @@ interface UserRepository {
 
     suspend fun signUp(user: User): Authorization
 
-    suspend fun login(loginBody: LoginPayload): Authorization
+    suspend fun login(loginBody: LoginPayload): ApiResult<Authorization>
 
-    fun getUserStream(): LiveData<User>
+    fun getUserStream(): ApiResult<LiveData<User>>
 
-    suspend fun getUser(user: User): User
+    suspend fun getUser(user: User): ApiResult<User>
 
     suspend fun getUser(userId: UUID)
 

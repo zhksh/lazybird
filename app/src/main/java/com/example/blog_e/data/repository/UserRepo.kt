@@ -50,31 +50,40 @@ class UserRepo() : UserRepository {
         return response.body()!!
     }
 
-    override suspend fun login(loginBody: LoginPayload): Authorization {
-        println(loginBody)
-        val response: Response<Authorization> = try {
-            backendS.login(loginBody)
-        } catch (e: IOException) {
-            Log.e(TAG, "IOExeption occured")
-            throw e
-        } catch (e: HttpException) {
-            Log.e(TAG, "Could not fetch with http")
-            throw e
-        }
-        if (!response.isSuccessful) {
-            Log.e(TAG, "Response with code: " + response.code())
-        }
-        println(response)
-        Log.i(TAG,response.message())
+    override suspend fun login(loginBody: LoginPayload): ApiResult<Authorization> {
 
-        return response.body()!!
+        return handleApi { backendS.login(loginBody) }
     }
 
-    override fun getUserStream(): LiveData<User> {
+    suspend fun <T : Any> handleApi(
+        execute: suspend () -> Response<T>
+    ): ApiResult<T> {
+        return try {
+            val response = execute()
+            val body = response.body()
+            if (response.isSuccessful && body != null) {
+                ApiSuccess(body)
+            } else {
+                Log.e(TAG, "API request unsuccessful. Error ${response.code()}: ${response.message()}")
+                ApiError(code = response.code(), message = response.message())
+            }
+        } catch (e: HttpException) {
+            Log.e(TAG, "Could not fetch with http")
+            ApiError(code = e.code(), message = e.message())
+        } catch (e: IOException) {
+            Log.e(TAG, "IOException occurred")
+            ApiException(e)
+        } catch (e: Throwable) {
+            Log.e(TAG, "Exception occurred")
+            ApiException(e)
+        }
+    }
+
+    override fun getUserStream(): ApiResult<LiveData<User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUser(user: User): User {
+    override suspend fun getUser(user: User): ApiResult<User> {
         TODO("Muss noch gemacht werden")
     }
 

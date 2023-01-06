@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.blog_e.R
 import com.example.blog_e.data.model.LoginPayload
 import com.example.blog_e.databinding.FragmentLoginBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -77,21 +79,23 @@ class LoginFragment : Fragment() {
             binding.etUserName.text.toString(),
             binding.etPassword.text.toString()
         )
-        loginViewModel.login(loginUser)
-        // TODO: validate credentials
 
-        val isValidUser = true
 
-        if (isValidUser) {
+        lifecycleScope.launch {
+            val isValidUser = loginViewModel.login(loginUser)
+            if (isValidUser) {
+                findNavController().navigate(R.id.action_login_fragment_to_navigation_home)
+                Snackbar.make(
+                    binding.root,
+                    "Welcome back, ${loginUser.username}",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
 
-            findNavController().navigate(R.id.action_login_fragment_to_navigation_home)
-
-            Snackbar.make(binding.root, "Welcome back, ${loginUser.username}", Toast.LENGTH_SHORT)
-                .show()
-
-        } else {
-            // TODO: handle wrong input
-
+            } else {
+                Snackbar.make(binding.root, "Invalid username or password", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
 
     }
