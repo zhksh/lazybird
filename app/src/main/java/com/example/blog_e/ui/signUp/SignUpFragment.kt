@@ -7,8 +7,10 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.blog_e.R
 import com.example.blog_e.data.model.ProfilePicture
@@ -16,6 +18,7 @@ import com.example.blog_e.data.model.User
 import com.example.blog_e.databinding.FragmentSignUpBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
@@ -78,19 +81,22 @@ class SignUpFragment : Fragment() {
             profilePicture = ProfilePicture.PICTURE_01
         )
 
-        /* TODO: 1. some how wait for this async task to get a response/watch for a non-null value/response etc.
-                 2. create a loading spinner ()
-                 both tasks either from here or the viewmodel
-        */
-        signUpViewModel.signUp(newUser)
+        //TODO: create a loading spinner
 
-        findNavController().navigate(R.id.action_sign_up_fragment_to_navigation_home)
+        lifecycleScope.launch {
+            val isValidUser = signUpViewModel.signUp(newUser)
+            if (isValidUser) {
+                findNavController().navigate(R.id.action_sign_up_fragment_to_navigation_home)
+                Snackbar.make(
+                    binding.root,
+                    "Welcome, ${newUser.username}!",
+                    Snackbar.LENGTH_LONG
+                ).show()
 
-        Snackbar.make(
-            binding.root,
-            "Welcome, ${newUser.username}!",
-            Snackbar.LENGTH_LONG
-        ).show()
+            } else {
+                Snackbar.make(binding.root, "User already exists", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
-
 }

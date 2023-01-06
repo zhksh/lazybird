@@ -8,7 +8,7 @@ import java.util.*
 
 interface UserRepository {
 
-    suspend fun signUp(user: User): Authorization
+    suspend fun signUp(user: User): ApiResult<Authorization>
 
     suspend fun login(loginBody: LoginPayload): ApiResult<Authorization>
 

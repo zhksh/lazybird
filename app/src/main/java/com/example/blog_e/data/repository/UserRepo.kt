@@ -27,34 +27,6 @@ class UserRepo() : UserRepository {
         backendS = retrofit.create(BlogEAPI::class.java)
     }
 
-    override suspend fun signUp(user: User): Authorization {
-
-        val userReq = NewUserAPIModel(
-            user.username,
-            user.profilePicture.toString(),
-            user.password,
-            user.username
-        )
-        val response: Response<Authorization> = try {
-            backendS.signUp(userReq)
-        } catch (e: IOException) {
-            Log.e(TAG, "IOExeption occured")
-            throw e
-        } catch (e: HttpException) {
-            Log.e(TAG, "Could not fetch with http")
-            throw e
-        }
-        if (!response.isSuccessful) {
-            Log.e(TAG, "Response with code: " + response.code())
-        }
-        return response.body()!!
-    }
-
-    override suspend fun login(loginBody: LoginPayload): ApiResult<Authorization> {
-
-        return handleApi { backendS.login(loginBody) }
-    }
-
     suspend fun <T : Any> handleApi(
         execute: suspend () -> Response<T>
     ): ApiResult<T> {
@@ -64,7 +36,10 @@ class UserRepo() : UserRepository {
             if (response.isSuccessful && body != null) {
                 ApiSuccess(body)
             } else {
-                Log.e(TAG, "API request unsuccessful. Error ${response.code()}: ${response.message()}")
+                Log.e(
+                    TAG,
+                    "API request unsuccessful. Error ${response.code()}: ${response.message()}"
+                )
                 ApiError(code = response.code(), message = response.message())
             }
         } catch (e: HttpException) {
@@ -78,6 +53,21 @@ class UserRepo() : UserRepository {
             ApiException(e)
         }
     }
+
+    override suspend fun signUp(user: User): ApiResult<Authorization> {
+        val userReq = NewUserAPIModel(
+            user.username,
+            user.profilePicture.toString(),
+            user.password,
+            user.username
+        )
+        return handleApi { backendS.signUp(userReq) }
+    }
+
+    override suspend fun login(loginBody: LoginPayload): ApiResult<Authorization> {
+        return handleApi { backendS.login(loginBody) }
+    }
+
 
     override fun getUserStream(): ApiResult<LiveData<User>> {
         TODO("Not yet implemented")
@@ -94,4 +84,5 @@ class UserRepo() : UserRepository {
     override suspend fun followOrUnfollowUser(actionUser: User, targetUser: User) {
         TODO("Not yet implemented")
     }
+
 }
