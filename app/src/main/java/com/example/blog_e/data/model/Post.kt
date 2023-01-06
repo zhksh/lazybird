@@ -9,7 +9,8 @@ data class Post(
     val publicationDate: Date,
     val modifications: String,
     val comments: List<Comment>,
-    val likes: List<Like>,
-    val author: User,
+    val likes: List<Like>?= emptyList(),
+    val author: User?=null,
+    val autogenerateResponses: Boolean,
     val isAIEnabled: Boolean = false,
 )

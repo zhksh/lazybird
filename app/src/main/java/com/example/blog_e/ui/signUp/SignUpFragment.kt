@@ -1,4 +1,5 @@
-package com.example.blog_e.ui.login
+package com.example.blog_e.ui.signUp
+
 
 import android.os.Bundle
 import android.text.Editable
@@ -12,24 +13,25 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.blog_e.R
-import com.example.blog_e.data.model.LoginPayload
-import com.example.blog_e.databinding.FragmentLoginBinding
+import com.example.blog_e.data.model.ProfilePicture
+import com.example.blog_e.data.model.User
+import com.example.blog_e.databinding.FragmentSignUpBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class LoginFragment : Fragment() {
+class SignUpFragment : Fragment() {
 
-    private var _binding: FragmentLoginBinding? = null
+    private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val signUpViewModel: SignUpViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        _binding = FragmentSignUpBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         setupFragmentBinding()
@@ -42,7 +44,7 @@ class LoginFragment : Fragment() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val et1 = binding.etUserName.text.toString().trim()
                 val et2 = binding.etPassword.text.toString().trim()
-                binding.btnLogin.isEnabled = et1.isNotEmpty() && et2.isNotEmpty()
+                binding.btnSignUp.isEnabled = et1.isNotEmpty() && et2.isNotEmpty()
 
                 // TODO: add listener for spaces + make sth like a TextView to notify that there may not be spaces in the username
             }
@@ -58,7 +60,7 @@ class LoginFragment : Fragment() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val et1 = binding.etUserName.text.toString().trim()
                 val et2 = binding.etPassword.text.toString().trim()
-                binding.btnLogin.isEnabled = et1.isNotEmpty() && et2.isNotEmpty()
+                binding.btnSignUp.isEnabled = et1.isNotEmpty() && et2.isNotEmpty()
             }
 
             override fun beforeTextChanged(
@@ -68,40 +70,33 @@ class LoginFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable) {}
         })
-        binding.btnLogin.setOnClickListener { login() }
-        binding.btnAccount.setOnClickListener { toSignUp() }
-
+        binding.btnSignUp.setOnClickListener { signUp() }
     }
 
-    private fun login() {
+    private fun signUp() {
 
-        val loginUser = LoginPayload(
-            binding.etUserName.text.toString(),
-            binding.etPassword.text.toString()
+        val newUser = User(
+            username = binding.etUserName.text.toString(),
+            password = binding.btnSignUp.text.toString(),
+            profilePicture = ProfilePicture.PICTURE_01
         )
 
+        //TODO: create a loading spinner
 
         lifecycleScope.launch {
-            val isValidUser = loginViewModel.login(loginUser)
+            val isValidUser = signUpViewModel.signUp(newUser)
             if (isValidUser) {
-                findNavController().navigate(R.id.action_login_fragment_to_navigation_home)
+                findNavController().navigate(R.id.action_sign_up_fragment_to_navigation_home)
                 Snackbar.make(
                     binding.root,
-                    "Welcome back, ${loginUser.username}",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+                    "Welcome, ${newUser.username}!",
+                    Snackbar.LENGTH_LONG
+                ).show()
 
             } else {
-                Snackbar.make(binding.root, "Invalid username or password", Toast.LENGTH_SHORT)
+                Snackbar.make(binding.root, "User already exists", Toast.LENGTH_SHORT)
                     .show()
             }
         }
-
     }
-
-    private fun toSignUp() {
-        findNavController().navigate(R.id.action_login_fragment_to_sign_up_fragment)
-    }
-
 }

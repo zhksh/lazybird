@@ -44,7 +44,7 @@
 
     <fragment
         android:id="@+id/sign_up_fragment"
-        android:name="com.example.blog_e.ui.login.SignUpFragment"
+        android:name="com.example.blog_e.ui.signUp.SignUpFragment"
         android:label="sign_up_fragment"
         tools:layout="@layout/fragment_sign_up" >
         <action
