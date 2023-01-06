@@ -2,8 +2,9 @@ package com.example.blog_e.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.example.blog_e.R
-import com.example.blog_e.data.model.*
+import com.example.blog_e.data.model.Authorization
+import com.example.blog_e.data.model.NewUserAPIModel
+import com.example.blog_e.data.model.User
 import retrofit2.HttpException
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -14,6 +15,8 @@ import java.util.*
 class UserRepo() : UserRepository {
 
     private var backendS: BlogEAPI
+
+    private val TAG = this.toString()
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()
@@ -27,23 +30,21 @@ class UserRepo() : UserRepository {
 
         val userReq = NewUserAPIModel(
             user.username,
-            R.drawable.among_us_0.toString(),
+            user.profilePicture.toString(),
             user.password,
             user.username
         )
         val response: Response<Authorization> = try {
             backendS.signUp(userReq)
-        } catch (e: IOException ) {
-            Log.e(this.toString(), "Keine buffer")
+        } catch (e: IOException) {
+            Log.e(TAG, "IOExeption occured")
             throw e
         } catch (e: HttpException) {
-            Log.e(this.toString(), "Keine Verbindung bekommen")
+            Log.e(TAG, "Could not fetch with http")
             throw e
         }
-
         if (!response.isSuccessful) {
-            Log.e(this.toString(), "Fehlermeldung" + response.code())
-
+            Log.e(TAG, "Response with code: " + response.code())
         }
         return response.body()!!
     }
