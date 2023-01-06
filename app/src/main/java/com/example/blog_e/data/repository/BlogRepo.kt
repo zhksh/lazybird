@@ -5,21 +5,9 @@ import androidx.lifecycle.LiveData
 import com.example.blog_e.data.model.*
 import retrofit2.HttpException
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
-class BlogRepo: BlogPostRepository{
-
-    private var backendS: BlogEAPI
-
-    init {
-        val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        backendS = retrofit.create(BlogEAPI::class.java)
-    }
+class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
 
     override fun getPostsStream(): LiveData<List<Post>> {
         TODO("Not yet implemented")
@@ -52,7 +40,7 @@ class BlogRepo: BlogPostRepository{
                     0
                 )
             )
-        } catch (e: IOException ) {
+        } catch (e: IOException) {
             Log.e(this.toString(), "Keine buffer")
             return
         } catch (e: HttpException) {
@@ -60,7 +48,7 @@ class BlogRepo: BlogPostRepository{
             return
         }
 
-        if (response.isSuccessful && response.body()!=null) {
+        if (response.isSuccessful && response.body() != null) {
             Log.e(this.toString(), "erfolgreich")
         } else {
             Log.e(this.toString(), "Not successful")
