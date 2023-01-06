@@ -37,23 +37,36 @@ class SignUpFragment : Fragment() {
     }
 
     private fun setupFragmentBinding() {
-        val editTexts = listOf(binding.etUserName, binding.etPassword)
-        for (editText in editTexts) {
-            editText.addTextChangedListener(object : TextWatcher {
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    val et1 = binding.etUserName.text.toString().trim()
-                    val et2 = binding.etPassword.text.toString().trim()
-                    binding.btnSignUp.isEnabled = et1.isNotEmpty() && et2.isNotEmpty()
-                }
+        binding.etUserName.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                val et1 = binding.etUserName.text.toString().trim()
+                val et2 = binding.etPassword.text.toString().trim()
+                binding.btnSignUp.isEnabled = et1.isNotEmpty() && et2.isNotEmpty()
 
-                override fun beforeTextChanged(
-                    s: CharSequence, start: Int, count: Int, after: Int
-                ) {
-                }
+                // TODO: add listener for spaces + make sth like a TextView to notify that there may not be spaces in the username
+            }
 
-                override fun afterTextChanged(s: Editable) {}
-            })
-        }
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int, count: Int, after: Int
+            ) {
+            }
+
+            override fun afterTextChanged(s: Editable) {}
+        })
+        binding.etPassword.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                val et1 = binding.etUserName.text.toString().trim()
+                val et2 = binding.etPassword.text.toString().trim()
+                binding.btnSignUp.isEnabled = et1.isNotEmpty() && et2.isNotEmpty()
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int, count: Int, after: Int
+            ) {
+            }
+
+            override fun afterTextChanged(s: Editable) {}
+        })
         binding.btnSignUp.setOnClickListener { signUp() }
     }
 

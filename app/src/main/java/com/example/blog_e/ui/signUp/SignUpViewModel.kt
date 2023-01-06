@@ -17,6 +17,8 @@ class SignUpViewModel @Inject constructor(val userRepo: UserRepo) : ViewModel() 
         viewModelScope.launch(Dispatchers.IO) {
             val authorization = userRepo.signUp(user)
             //TODO: save auth token
+
+            //TODO: handle unsuccessfull events e.g. this user is already registered
         }
     }
 
