@@ -51,8 +51,8 @@ data class Authorization(
 )
 
 data class LoginPayload(
-    val password: String,
-    val username: String
+    val username: String,
+    val password: String
 )
 
 data class FollowResult(

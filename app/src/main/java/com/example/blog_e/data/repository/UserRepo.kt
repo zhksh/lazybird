@@ -3,6 +3,7 @@ package com.example.blog_e.data.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.blog_e.data.model.Authorization
+import com.example.blog_e.data.model.LoginPayload
 import com.example.blog_e.data.model.NewUserAPIModel
 import com.example.blog_e.data.model.User
 import retrofit2.HttpException
@@ -49,8 +50,24 @@ class UserRepo() : UserRepository {
         return response.body()!!
     }
 
-    override suspend fun login(user: User) {
-        TODO("Not yet implemented")
+    override suspend fun login(loginBody: LoginPayload): Authorization {
+        println(loginBody)
+        val response: Response<Authorization> = try {
+            backendS.login(loginBody)
+        } catch (e: IOException) {
+            Log.e(TAG, "IOExeption occured")
+            throw e
+        } catch (e: HttpException) {
+            Log.e(TAG, "Could not fetch with http")
+            throw e
+        }
+        if (!response.isSuccessful) {
+            Log.e(TAG, "Response with code: " + response.code())
+        }
+        println(response)
+        Log.i(TAG,response.message())
+
+        return response.body()!!
     }
 
     override fun getUserStream(): LiveData<User> {

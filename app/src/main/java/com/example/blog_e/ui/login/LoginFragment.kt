@@ -1,56 +1,93 @@
 package com.example.blog_e.ui.login
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.blog_e.R
+import com.example.blog_e.data.model.LoginPayload
 import com.example.blog_e.databinding.FragmentLoginBinding
+import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
-    private lateinit var sharedViewModel: LoginViewModel
-
     private var _binding: FragmentLoginBinding? = null
-
     private val binding get() = _binding!!
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        sharedViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
-        // TODO: Use the ViewModel. Decide if you to this in here or in onCreateView
-    }
+    private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        sharedViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        binding.btnLogin.setOnClickListener { login() }
-        binding.btnAccount.setOnClickListener { toSignUp() }
+        setupFragmentBinding()
 
         return root
     }
 
+    private fun setupFragmentBinding() {
+        binding.etUserName.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                val et1 = binding.etUserName.text.toString().trim()
+                val et2 = binding.etPassword.text.toString().trim()
+                binding.btnLogin.isEnabled = et1.isNotEmpty() && et2.isNotEmpty()
+
+                // TODO: add listener for spaces + make sth like a TextView to notify that there may not be spaces in the username
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int, count: Int, after: Int
+            ) {
+            }
+
+            override fun afterTextChanged(s: Editable) {}
+        })
+        binding.etPassword.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                val et1 = binding.etUserName.text.toString().trim()
+                val et2 = binding.etPassword.text.toString().trim()
+                binding.btnLogin.isEnabled = et1.isNotEmpty() && et2.isNotEmpty()
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int, count: Int, after: Int
+            ) {
+            }
+
+            override fun afterTextChanged(s: Editable) {}
+        })
+        binding.btnLogin.setOnClickListener { login() }
+        binding.btnAccount.setOnClickListener { toSignUp() }
+
+    }
+
     private fun login() {
+
+        val loginUser = LoginPayload(
+            binding.etUserName.text.toString(),
+            binding.etPassword.text.toString()
+        )
+        loginViewModel.login(loginUser)
         // TODO: validate credentials
 
         val isValidUser = true
 
         if (isValidUser) {
-            // TODO: set auth token
 
             findNavController().navigate(R.id.action_login_fragment_to_navigation_home)
 
-            Toast.makeText(activity, "Welcome back USERNAME", Toast.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, "Welcome back, ${loginUser.username}", Toast.LENGTH_SHORT)
+                .show()
 
         } else {
             // TODO: handle wrong input

@@ -2,6 +2,7 @@ package com.example.blog_e.data.repository
 
 import androidx.lifecycle.LiveData
 import com.example.blog_e.data.model.Authorization
+import com.example.blog_e.data.model.LoginPayload
 import com.example.blog_e.data.model.User
 import java.util.*
 
@@ -9,7 +10,7 @@ interface UserRepository {
 
     suspend fun signUp(user: User): Authorization
 
-    suspend fun login(user: User)
+    suspend fun login(loginBody: LoginPayload): Authorization
 
     fun getUserStream(): LiveData<User>
 
