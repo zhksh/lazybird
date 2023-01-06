@@ -6,17 +6,21 @@ import com.example.blog_e.data.repository.ApiError
 import com.example.blog_e.data.repository.ApiException
 import com.example.blog_e.data.repository.ApiSuccess
 import com.example.blog_e.data.repository.UserRepo
+import com.example.blog_e.utils.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(val userRepo: UserRepo) : ViewModel() {
+class SignUpViewModel @Inject constructor(
+    private val userRepo: UserRepo,
+    private val sessionManager: SessionManager
+) : ViewModel() {
 
     suspend fun signUp(user: User): Boolean =
         when (val authorizationResult = userRepo.signUp(user)) {
             is ApiSuccess -> {
-                //TODO set auth token
+                sessionManager.saveAuthToken(authorizationResult.data.accessToken)
                 true
             }
             is ApiError -> {

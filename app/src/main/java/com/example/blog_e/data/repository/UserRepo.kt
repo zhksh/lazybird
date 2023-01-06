@@ -8,24 +8,13 @@ import com.example.blog_e.data.model.NewUserAPIModel
 import com.example.blog_e.data.model.User
 import retrofit2.HttpException
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.util.*
 
-class UserRepo() : UserRepository {
+class UserRepo(private val backendS: BlogEAPI) : UserRepository {
 
-    private var backendS: BlogEAPI
 
     private val TAG = this.toString()
-
-    init {
-        val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        backendS = retrofit.create(BlogEAPI::class.java)
-    }
 
     suspend fun <T : Any> handleApi(
         execute: suspend () -> Response<T>
