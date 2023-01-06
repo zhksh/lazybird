@@ -4,7 +4,7 @@ import com.example.blog_e.data.model.*
 import retrofit2.Response
 import retrofit2.http.*
 
-
+// TODO: IMPORTANT, fix that you dont have to use local ip adress
 const val BASE_URL = "http://172.18.208.1:6969"
 
 interface BlogEAPI {

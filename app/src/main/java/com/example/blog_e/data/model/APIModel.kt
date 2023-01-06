@@ -37,6 +37,7 @@ data class PostsResult(
     val posts: List<PostAPIModel>
 )
 
+// TODO: change iconId to string
 data class NewUserAPIModel(
     val displayName: String,
     val password: String,
