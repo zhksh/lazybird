@@ -7,8 +7,11 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-
+/**
+ * Retrofit instance class
+ */
 class ApiClient {
 
     private lateinit var apiService: BlogEAPI
@@ -39,6 +42,10 @@ class ApiClient {
     }
 }
 
+
+/**
+ *  Interceptor to add auth token to requests
+ */
 class AuthInterceptor(context: Context) : Interceptor {
 
     private val sessionManager = SessionManager(context)
