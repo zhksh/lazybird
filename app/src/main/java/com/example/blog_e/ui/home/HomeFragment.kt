@@ -88,7 +88,7 @@ fun generatePosts(number: Int, content: String, img: Int ?= null): List<PostsVie
         posts.add(
             PostsViewModel(
                 profilePicture =  img ?: R.drawable.ic_baseline_account_circle_24,
-                username = "Max Mustermann",
+                username = "Franz Mustermann",
                 content = content
             )
         )
