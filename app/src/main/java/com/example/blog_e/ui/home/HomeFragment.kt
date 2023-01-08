@@ -31,11 +31,17 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        setupFragmentBinding()
+
+        return root
+    }
+
+    private fun setupFragmentBinding() {
         val toggleButton: ToggleButton = binding.toggleButton
 
         val recyclerView: RecyclerView = binding.postsListRecyclerView
         recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(root.context)
+        recyclerView.layoutManager = LinearLayoutManager(binding.root.context)
 
         // Setup dummy data list; default should be follower list
         val postViewList: ArrayList<PostsViewModel> = arrayListOf()
@@ -72,10 +78,8 @@ class HomeFragment : Fragment() {
         }
 
         binding.button22.setOnClickListener {
-            homeViewModel.fetchBlogs("followers")
+            homeViewModel.fetchBlogs(false)
         }
-
-        return root
     }
 
     override fun onDestroyView() {

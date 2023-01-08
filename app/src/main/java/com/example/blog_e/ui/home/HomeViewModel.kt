@@ -24,13 +24,11 @@ class HomeViewModel @Inject constructor(
         return _posts
     }
 
-    fun fetchBlogs(filter: String) {
+    fun fetchBlogs(isUserFeed: Boolean) {
         val req = PostsRequest(
-            false,
+            isUserFeed,
             25,
             ""
-
-
         )
         viewModelScope.launch {
             blogRepo.getPosts(req)
