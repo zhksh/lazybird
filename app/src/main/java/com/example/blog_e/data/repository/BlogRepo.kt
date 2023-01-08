@@ -6,15 +6,65 @@ import com.example.blog_e.data.model.*
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
+import java.util.*
 
 class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
+
+    private val TAG = this.toString()
+
+    suspend fun <T : Any> handleApi(
+        execute: suspend () -> Response<T>
+    ): ApiResult<T> {
+        return try {
+            val response = execute()
+            val body = response.body()
+            if (response.isSuccessful && body != null) {
+                ApiSuccess(body)
+            } else {
+                Log.e(
+                    TAG,
+                    "API request unsuccessful. Error ${response.code()}: ${response.message()}"
+                )
+                ApiError(code = response.code(), message = response.message())
+            }
+        } catch (e: HttpException) {
+            Log.e(TAG, "Could not fetch with http")
+            ApiError(code = e.code(), message = e.message())
+        } catch (e: IOException) {
+            Log.e(TAG, "IOException occurred")
+            ApiException(e)
+        } catch (e: Throwable) {
+            Log.e(TAG, "Exception occurred")
+            ApiException(e)
+        }
+    }
 
     override fun getPostsStream(): LiveData<List<Post>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getPosts(): List<Post> {
-        TODO("Not yet implemented")
+    /**
+     * Includes mapping. Consider refactoring this into a domain layer
+     */
+    override suspend fun getPosts(postsRequest: PostsRequest): List<Post> {
+        when (val postsApiResult = handleApi { backendS.getPosts(postsRequest) }) {
+            is ApiSuccess -> {
+                val postsResult = postsApiResult.data
+                val posts = postsResult.posts.map {
+                    Post(
+                        id = UUID.fromString(it.id),
+                        content = it.content,
+                        publicationDate = Date(it.timestamp.toLong()),
+                        commentCount = it.commentCount,
+                    )
+                }
+
+                return posts
+            }
+            is ApiError -> return listOf() // do something
+            is ApiException -> throw postsApiResult.e
+        }
+
     }
 
     override suspend fun refreshPosts() {
@@ -35,7 +85,7 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
                 PostRequest(
                     post.content,
                     "happy",
-                    post.autogenerateResponses,
+                    true,
                     shouldAutoComplete = false,
                     0
                 )

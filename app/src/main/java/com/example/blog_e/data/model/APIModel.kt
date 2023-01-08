@@ -25,11 +25,12 @@ data class PostRequest(
     val temperature: Int
 )
 
+// TODO: transform to Query parameters
 data class PostsRequest(
     val isUserFeed: Boolean,
     val pageSize: Int,
-    val pageToken: String,
-    val usernames: List<String>
+    val pageToken: String ?= null,
+    val usernames: List<String> ?= null
 )
 
 data class PostsResult(
