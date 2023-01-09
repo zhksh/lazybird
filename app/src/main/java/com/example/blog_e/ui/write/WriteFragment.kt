@@ -4,20 +4,32 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import com.example.blog_e.data.model.CompletePayload
 import com.example.blog_e.data.model.Post
 import com.example.blog_e.data.model.User
 import com.example.blog_e.data.repository.BlogPostRepository
 import com.example.blog_e.data.repository.UserRepo
 import com.example.blog_e.databinding.FragmentWriteBinding
+import com.google.android.material.button.MaterialButton
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.*
 
-class WriteFragment(private val postRepository: BlogPostRepository) : Fragment() {
+@AndroidEntryPoint
+class WriteFragment() : Fragment() {
 
+    private val TAG = this.toString()
     private var _binding: FragmentWriteBinding? = null
 
     // This property is only valid between onCreateView and
@@ -40,10 +52,16 @@ class WriteFragment(private val postRepository: BlogPostRepository) : Fragment()
         val generateEmptyBtn = binding.generatePostFromPromptButton
         val aiSwitch = binding.aiSwitchButton
         val postInput = binding.postInput
+        val generationTemperature = binding.writeGenerateTemperature
+        val moodChoices = binding.emotionButtonsGroup
 
 
-        writeViewModel.postText.observe(viewLifecycleOwner) { post ->
-            postInput.text = SpannableStringBuilder(post)
+        viewLifecycleOwner.lifecycleScope.launch {
+            writeViewModel.uiState
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                    postInput.setText(it.postInput)
+                }
         }
 
 
@@ -100,12 +118,25 @@ class WriteFragment(private val postRepository: BlogPostRepository) : Fragment()
                 commentCount = 2,
                 autogenerateResponses = false,
             )
-            // TODO sollte asynchron erfolgen
             // postRepository.createPost( mockedPost)
         }
 
+
         generateEmptyBtn.setOnClickListener {
-            postInput.text = SpannableStringBuilder(postInput.text.toString() + "\nGenerated text")
+            var t = Toast.makeText(
+                context,
+                "COMPLETING",
+                Toast.LENGTH_LONG
+            )
+            t.show()
+            Log.e(TAG, moodChoices.checkedButtonId.toString())
+            writeViewModel.completePost(
+                CompletePayload(
+                    postInput.text.toString(),
+                    generationTemperature.values[0],
+                    "lucid")
+            )
+
         }
 
         return root

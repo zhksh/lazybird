@@ -15,3 +15,10 @@ class UserResult(
     @SerializedName("displayName")
     val displayName: String,
     )
+
+data class LLMResult(
+    @SerializedName("response")
+    val response: String,
+)
+
+
