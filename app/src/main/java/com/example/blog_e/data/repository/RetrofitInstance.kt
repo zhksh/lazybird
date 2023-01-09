@@ -43,7 +43,7 @@ class ApiClient {
     }
 
     companion object {
-        const val BASE_URL = "http://10.0.2.2:6969"
+        const val BASE_URL = "https://mvsp-api.ncmg.eu"
     }
 }
 

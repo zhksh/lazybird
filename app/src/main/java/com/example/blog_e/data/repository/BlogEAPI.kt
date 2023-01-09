@@ -25,7 +25,13 @@ interface BlogEAPI {
     suspend fun createPost(@Body post: PostRequest): Response<PostAPIModel>
 
     @GET("posts")
-    suspend fun getPosts(@Body postsRequest: PostsRequest): Response<PostsResult>
+    suspend fun getPosts(
+        @Query("usernames") usernames: List<String>? = null,
+        @Query("pageSize") pageSize: Int,
+        @Query("pageToken") pageToken: String? = null,
+        @Query("isUserFeed") isUserFeed: Boolean,
+
+        ): Response<PostsResult>
 
     /*TODO: APIs for
        (WS) Watch post  http://localhost:6969/posts/{id}/watch

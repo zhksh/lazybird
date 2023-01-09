@@ -97,8 +97,7 @@ class WriteFragment(private val postRepository: BlogPostRepository) : Fragment()
             val mockedPost = Post(
                 content = postInput.text.toString(),
                 publicationDate = Date(),
-                comments = emptyList(),
-                modifications = "none",
+                commentCount = 2,
                 autogenerateResponses = false,
             )
             // TODO sollte asynchron erfolgen

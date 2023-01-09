@@ -10,7 +10,12 @@ interface BlogPostRepository {
 
     fun getPostsStream(): LiveData<List<Post>>
 
-    suspend fun getPosts(): List<Post>
+    suspend fun getPosts(
+        usernames: List<String>? = null,
+        pageSize: Int,
+        pageToken: String? = null,
+        isUserFeed: Boolean
+    ): List<Post>
 
     suspend fun refreshPosts()
 

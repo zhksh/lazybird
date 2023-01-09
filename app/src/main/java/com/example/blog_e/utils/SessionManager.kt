@@ -24,6 +24,12 @@ class SessionManager(context: Context) {
         return prefs.getString(USER_TOKEN, null)
     }
 
+    fun deleteAuthToken() {
+        val editor = prefs.edit()
+        editor.remove(USER_TOKEN)
+        editor.apply()
+    }
+
     companion object {
         const val USER_TOKEN = "user_token"
     }

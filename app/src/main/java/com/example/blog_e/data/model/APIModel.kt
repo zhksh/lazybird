@@ -25,13 +25,6 @@ data class PostRequest(
     val temperature: Int
 )
 
-data class PostsRequest(
-    val isUserFeed: Boolean,
-    val pageSize: Int,
-    val pageToken: String,
-    val usernames: List<String>
-)
-
 data class PostsResult(
     val nextPageToken: String,
     val posts: List<PostAPIModel>

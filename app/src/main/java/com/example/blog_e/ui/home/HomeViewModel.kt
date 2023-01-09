@@ -3,11 +3,37 @@ package com.example.blog_e.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.blog_e.data.repository.BlogRepo
+import com.example.blog_e.data.repository.UserRepo
+import com.example.blog_e.models.PostsViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val userRepo: UserRepo,
+    private val blogRepo: BlogRepo
+) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    private val _posts: MutableLiveData<List<PostsViewModel>> = MutableLiveData()
+
+    fun getPosts(): LiveData<List<PostsViewModel>> {
+        return _posts
     }
-    val text: LiveData<String> = _text
+
+    fun fetchBlogs(isUserFeed: Boolean) {
+        viewModelScope.launch {
+            //TODO: fetch global instead of me, add flag for followers
+            blogRepo.getPosts(
+                listOf("me"),
+                25,
+                "",
+                isUserFeed
+            )
+        }
+    }
+
+
 }
