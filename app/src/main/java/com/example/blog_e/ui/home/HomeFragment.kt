@@ -6,28 +6,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ToggleButton
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
 import com.example.blog_e.adapters.PostsViewAdapter
 import com.example.blog_e.databinding.FragmentHomeBinding
 import com.example.blog_e.models.PostsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -72,6 +71,10 @@ class HomeFragment : Fragment() {
             }
         }
 
+        binding.button22.setOnClickListener {
+            homeViewModel.fetchBlogs(true)
+        }
+
         return root
     }
 
@@ -82,13 +85,13 @@ class HomeFragment : Fragment() {
 }
 
 // TODO: replace this function with service calls for fetching the posts
-fun generatePosts(number: Int, content: String, img: Int ?= null): List<PostsViewModel> {
+fun generatePosts(number: Int, content: String, img: Int? = null): List<PostsViewModel> {
     val posts: ArrayList<PostsViewModel> = arrayListOf()
     for (i in 0..number) {
         posts.add(
             PostsViewModel(
-                profilePicture =  img ?: R.drawable.ic_baseline_account_circle_24,
-                username = "Franz Mustermann",
+                profilePicture = img ?: R.drawable.ic_baseline_account_circle_24,
+                username = "Max Mustermann",
                 content = content
             )
         )
