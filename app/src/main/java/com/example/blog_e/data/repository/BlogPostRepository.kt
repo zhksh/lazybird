@@ -1,9 +1,7 @@
 package com.example.blog_e.data.repository
 
 import androidx.lifecycle.LiveData
-import com.example.blog_e.data.model.Comment
-import com.example.blog_e.data.model.Like
-import com.example.blog_e.data.model.Post
+import com.example.blog_e.data.model.*
 
 
 interface BlogPostRepository {
@@ -15,7 +13,7 @@ interface BlogPostRepository {
         pageSize: Int,
         pageToken: String? = null,
         isUserFeed: Boolean
-    ): List<Post>
+    ): ApiResult<PostsResult>
 
     suspend fun refreshPosts()
 

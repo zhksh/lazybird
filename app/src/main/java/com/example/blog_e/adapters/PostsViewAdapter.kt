@@ -6,12 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBindings
 import com.example.blog_e.R
+import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.data.model.ProfilePicture
-import com.example.blog_e.models.PostsViewModel
 
-class PostsViewAdapter(private val postList: List<PostsViewModel>) :
+class PostsViewAdapter(private val postList: List<PostAPIModel>) :
     RecyclerView.Adapter<PostsViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,15 +31,21 @@ class PostsViewAdapter(private val postList: List<PostsViewModel>) :
 
         holder.content.text = postsViewModel.content
 
-        holder.username.text = postsViewModel.username
+        holder.username.text = postsViewModel.user.username
 
         // TODO: mit anderem Model den Display-Namen setzen
-        holder.displayName.text = postsViewModel.username
+        holder.displayName.text = postsViewModel.user.displayName
 
-        postsViewModel.profilePicture
+        postsViewModel.user.iconId
         val imageResourceId = ProfilePicture.PICTURE_01
 
         holder.profilePictureView.setImageResource(imageResourceId.res)
+
+        holder.likes.text = postsViewModel.likes.toString()
+        holder.comments.text = postsViewModel.commentCount.toString()
+
+        // TODO: should be a Data -> get difference with localdate time (now)
+        holder.pastTime.text = postsViewModel.timestamp
 
     }
 
@@ -54,5 +59,8 @@ class PostsViewAdapter(private val postList: List<PostsViewModel>) :
         val content: TextView = itemView.findViewById(R.id.content)
         val username: TextView = itemView.findViewById(R.id.username)
         val displayName: TextView = itemView.findViewById(R.id.displayName)
+        val likes: TextView = itemView.findViewById(R.id.likeNumber)
+        val comments: TextView = itemView.findViewById(R.id.commentNumber)
+        val pastTime: TextView = itemView.findViewById(R.id.postPastTime)
     }
 }
