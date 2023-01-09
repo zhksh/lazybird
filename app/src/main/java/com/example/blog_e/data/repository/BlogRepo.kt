@@ -6,6 +6,7 @@ import com.example.blog_e.data.model.*
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
+import java.time.Instant
 import java.util.*
 
 class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
@@ -46,15 +47,29 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
     /**
      * Includes mapping. Consider refactoring this into a domain layer
      */
-    override suspend fun getPosts(postsRequest: PostsRequest): List<Post> {
-        when (val postsApiResult = handleApi { backendS.getPosts(postsRequest) }) {
+    override suspend fun getPosts(
+        usernames: List<String>?,
+        pageSize: Int,
+        pageToken: String?,
+        isUserFeed: Boolean
+    ): List<Post> {
+        val postsApiResult = handleApi {
+            backendS.getPosts(
+                usernames,
+                pageSize,
+                pageToken,
+                isUserFeed,
+            )
+        }
+        println(usernames)
+        when (postsApiResult) {
             is ApiSuccess -> {
                 val postsResult = postsApiResult.data
                 val posts = postsResult.posts.map {
                     Post(
                         id = UUID.fromString(it.id),
                         content = it.content,
-                        publicationDate = Date(it.timestamp.toLong()),
+                        publicationDate = Date.from(Instant.parse((it.timestamp))),
                         commentCount = it.commentCount,
                     )
                 }

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.blog_e.data.model.PostsRequest
 import com.example.blog_e.data.repository.BlogRepo
 import com.example.blog_e.data.repository.UserRepo
 import com.example.blog_e.models.PostsViewModel
@@ -25,14 +24,14 @@ class HomeViewModel @Inject constructor(
     }
 
     fun fetchBlogs(isUserFeed: Boolean) {
-        val req = PostsRequest(
-            isUserFeed,
-            25,
-            ""
-        )
         viewModelScope.launch {
-            blogRepo.getPosts(req)
-            println("gelauncht!")
+            //TODO: fetch global instead of me, add flag for followers
+            blogRepo.getPosts(
+                listOf("me"),
+                25,
+                "",
+                isUserFeed
+            )
         }
     }
 
