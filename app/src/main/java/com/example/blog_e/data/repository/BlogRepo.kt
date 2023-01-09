@@ -11,34 +11,7 @@ import java.util.*
 
 class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
 
-    private val TAG = this.toString()
-
-    suspend fun <T : Any> handleApi(
-        execute: suspend () -> Response<T>
-    ): ApiResult<T> {
-        return try {
-            val response = execute()
-            val body = response.body()
-            if (response.isSuccessful && body != null) {
-                ApiSuccess(body)
-            } else {
-                Log.e(
-                    TAG,
-                    "API request unsuccessful. Error ${response.code()}: ${response.message()}"
-                )
-                ApiError(code = response.code(), message = response.message())
-            }
-        } catch (e: HttpException) {
-            Log.e(TAG, "Could not fetch with http")
-            ApiError(code = e.code(), message = e.message())
-        } catch (e: IOException) {
-            Log.e(TAG, "IOException occurred")
-            ApiException(e)
-        } catch (e: Throwable) {
-            Log.e(TAG, "Exception occurred")
-            ApiException(e)
-        }
-    }
+    private val apiHandler: ApiHandler = ApiHandler(this.toString())
 
     override fun getPostsStream(): LiveData<List<Post>> {
         TODO("Not yet implemented")
@@ -53,7 +26,7 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
         pageToken: String?,
         isUserFeed: Boolean
     ): List<Post> {
-        val postsApiResult = handleApi {
+        val postsApiResult = apiHandler.handleApi {
             backendS.getPosts(
                 usernames,
                 pageSize,
