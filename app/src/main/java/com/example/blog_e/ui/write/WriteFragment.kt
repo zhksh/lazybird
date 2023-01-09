@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.example.blog_e.Config
 import com.example.blog_e.data.model.CompletePayload
 import com.example.blog_e.data.model.Post
 import com.example.blog_e.data.model.User
@@ -29,7 +30,7 @@ import java.util.*
 @AndroidEntryPoint
 class WriteFragment() : Fragment() {
 
-    private val TAG = this.toString()
+    private val TAG = Config.tag(this.toString())
     private var _binding: FragmentWriteBinding? = null
 
     // This property is only valid between onCreateView and

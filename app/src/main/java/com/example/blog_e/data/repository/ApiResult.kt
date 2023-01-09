@@ -21,7 +21,7 @@ class ApiHandler(private val tag: String) {
             val timeInMillis = measureTimeMillis {
                 response = execute()
             }
-            Log.d(tag, "call took: $timeInMillis ms")
+            Log.v(tag, "call took: $timeInMillis ms")
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 Log.v(tag, "response body: $body")
