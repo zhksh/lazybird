@@ -43,6 +43,7 @@ class WriteViewModel : ViewModel() {
 
     fun createPost() = viewModelScope.launch {
         // TODO: save in service
+//        Log.i()
         _uiState.update {
             it.copy(isPostSaved = true)
         }
