@@ -1,6 +1,7 @@
 package com.example.blog_e.data.repository
 
 import androidx.lifecycle.LiveData
+import com.example.blog_e.Config
 import com.example.blog_e.data.model.Authorization
 import com.example.blog_e.data.model.LoginPayload
 import com.example.blog_e.data.model.NewUserAPIModel
@@ -9,7 +10,7 @@ import java.util.*
 
 class UserRepo(private val backendS: BlogEAPI) : UserRepository {
 
-    private val apiHandler: ApiHandler = ApiHandler(this.toString())
+    private val apiHandler: ApiHandler = ApiHandler(Config.tag(this.toString()))
 
 
     override suspend fun signUp(user: User): ApiResult<Authorization> {

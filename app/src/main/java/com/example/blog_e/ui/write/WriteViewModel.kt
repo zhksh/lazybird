@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blog_e.Config
 import com.example.blog_e.data.model.CompletePayload
 import com.example.blog_e.data.repository.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +28,7 @@ data class WriteUiState(
 
 @HiltViewModel
 class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewModel() {
-    private val TAG = this.toString()
+    private val TAG = Config.tag(this.toString())
     // TODO: ui state richtig verwenden
     private val _uiState = MutableStateFlow(WriteUiState())
     val uiState: StateFlow<WriteUiState> = _uiState.asStateFlow()

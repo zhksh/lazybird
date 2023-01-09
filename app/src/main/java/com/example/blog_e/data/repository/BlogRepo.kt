@@ -2,6 +2,7 @@ package com.example.blog_e.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.example.blog_e.Config
 import com.example.blog_e.data.model.*
 import retrofit2.HttpException
 import retrofit2.Response
@@ -13,7 +14,7 @@ import java.util.*
 
 class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
 
-    private val apiHandler: ApiHandler = ApiHandler(this.toString())
+    private val apiHandler: ApiHandler = ApiHandler(Config.tag(this.toString()))
 
     override fun getPostsStream(): LiveData<List<Post>> {
         TODO("Not yet implemented")
