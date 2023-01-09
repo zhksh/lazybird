@@ -14,18 +14,15 @@ class ApiException<T : Any>(val e: Throwable) : ApiResult<T>
 
 class ApiHandler(private val tag: String) {
 
-    suspend fun <T : Any> handleApi(
-        execute: suspend () -> Response<T>
-    ): ApiResult<T> {
+    suspend fun <T : Any> handleApi(execute: suspend () -> Response<T>): ApiResult<T> {
         return try {
             val response = execute()
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 ApiSuccess(body)
-            } else {
-                Log.e(
-                    tag,
-                    "API request unsuccessful. Error ${response.code()}: ${response.message()}"
+            }
+            else {
+                Log.e(tag,"API request unsuccessful. Error ${response.code()}: ${response.message()}"
                 )
                 ApiError(code = response.code(), message = response.message())
             }
