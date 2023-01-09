@@ -5,6 +5,9 @@ import retrofit2.Response
 import retrofit2.http.*
 
 
+//const val BASE_URL = "http://localhost:5432/"
+const val BASE_URL = "https://mvsp-api.ncmg.eu"
+
 interface BlogEAPI {
 
     // User
@@ -32,6 +35,12 @@ interface BlogEAPI {
         @Query("isUserFeed") isUserFeed: Boolean,
 
         ): Response<PostsResult>
+
+
+
+    @POST("generate/complete")
+    suspend fun generateCompletion(@Body completePayload: CompletePayload): Response<LLMResult>
+
 
     /*TODO: APIs for
        (WS) Watch post  http://localhost:6969/posts/{id}/watch

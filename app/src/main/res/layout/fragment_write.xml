@@ -140,8 +140,13 @@
                     android:text="choose craziness: "></TextView>
 
                 <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/writeGenerateTemperature"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"></com.google.android.material.slider.RangeSlider>
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0.0"
+                    android:valueTo="1.0"
+                    android:value="0.5">
+                </com.google.android.material.slider.RangeSlider>
 
             </LinearLayout>
 
@@ -153,7 +158,8 @@
 
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"></com.google.android.material.checkbox.MaterialCheckBox>
+                    android:layout_height="wrap_content">
+                </com.google.android.material.checkbox.MaterialCheckBox>
 
                 <TextView
                     android:layout_width="wrap_content"
