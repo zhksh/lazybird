@@ -1,9 +1,7 @@
 package com.example.blog_e.data.repository
 
 import androidx.lifecycle.LiveData
-import com.example.blog_e.data.model.Comment
-import com.example.blog_e.data.model.Like
-import com.example.blog_e.data.model.Post
+import com.example.blog_e.data.model.*
 
 
 interface BlogPostRepository {
@@ -15,22 +13,24 @@ interface BlogPostRepository {
         pageSize: Int,
         pageToken: String? = null,
         isUserFeed: Boolean
-    ): List<Post>
+    ): ApiResult<PostsResult>
 
     suspend fun refreshPosts()
 
-    fun getPostStream(): LiveData<Post>
+    fun getPostStream(): ApiResult<LiveData<Post>>
 
-    suspend fun getPost(post: Post): Post
+    suspend fun getPost(post: Post): ApiResult<Post>
 
-    suspend fun createPost(post: Post)
+    suspend fun createPost(post: Post): ApiResult<PostAPIModel>
 
-    fun getCommentsStream(): LiveData<List<Comment>>
+    suspend fun completePost(completePayload: CompletePayload): ApiResult<LLMResult>
 
-    suspend fun getComments(post: Post): List<Comment>
+    fun getCommentsStream(): ApiResult<LiveData<List<Comment>>>
 
-    suspend fun createComment(comment: Comment, post: Post)
+    suspend fun getComments(post: Post): ApiResult<List<Comment>>
 
-    suspend fun likeOrUnlikePost(like: Like, post: Post)
+    suspend fun createComment(comment: Comment, post: Post): ApiResult<Any>
+
+    suspend fun likeOrUnlikePost(like: Like, post: Post): ApiResult<Any>
 
 }

@@ -4,6 +4,7 @@ import android.util.Log
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
+import kotlin.system.measureTimeMillis
 
 sealed interface ApiResult<T : Any>
 
@@ -16,9 +17,14 @@ class ApiHandler(private val tag: String) {
 
     suspend fun <T : Any> handleApi(execute: suspend () -> Response<T>): ApiResult<T> {
         return try {
-            val response = execute()
+            var response: Response<T>
+            val timeInMillis = measureTimeMillis {
+                response = execute()
+            }
+            Log.v(tag, "call took: $timeInMillis ms")
             val body = response.body()
             if (response.isSuccessful && body != null) {
+                Log.v(tag, "response body: $body")
                 ApiSuccess(body)
             }
             else {
@@ -27,13 +33,13 @@ class ApiHandler(private val tag: String) {
                 ApiError(code = response.code(), message = response.message())
             }
         } catch (e: HttpException) {
-            Log.e(tag, "Could not fetch with http")
+            Log.e(tag, "Could not fetch with http: " + e.message)
             ApiError(code = e.code(), message = e.message())
         } catch (e: IOException) {
-            Log.e(tag, "IOException occurred")
+            Log.e(tag, "IOException occurred: " + e.message)
             ApiException(e)
         } catch (e: Throwable) {
-            Log.e(tag, "Exception occurred")
+            Log.e(tag, "Exception occurred: " + e.message )
             ApiException(e)
         }
     }

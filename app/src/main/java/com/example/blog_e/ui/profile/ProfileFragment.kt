@@ -8,11 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.blog_e.R
 import com.example.blog_e.adapters.PostsViewAdapter
+import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.databinding.FragmentProfileBinding
-import com.example.blog_e.models.PostsViewModel
-import com.example.blog_e.ui.home.generatePosts
 
 class ProfileFragment : Fragment() {
 
@@ -45,15 +43,9 @@ class ProfileFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(root.context)
 
         // Setup dummy data list; default should be follower list
-        val postViewList: ArrayList<PostsViewModel> = arrayListOf()
+        val postViewList: ArrayList<PostAPIModel> = arrayListOf()
 
-        postViewList.addAll(
-            generatePosts(
-                20,
-                "Hello everyone!\nThis is a post from me \uD83D\uDC24\n\nMerry Christmas \uD83C\uDF85",
-                R.drawable.baby_yoda_1
-            )
-        )
+//    TODO hier was richtiges laden
 
         recyclerView.adapter = PostsViewAdapter(postViewList)
 
