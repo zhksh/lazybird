@@ -63,7 +63,8 @@ data class FollowResult(
 data class CompletePayload(
     val prefix: String,
     val temperature: Float,
-    val mood: String
+    val mood: String,
+    val ours: String
 )
 
 
