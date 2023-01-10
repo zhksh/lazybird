@@ -2,6 +2,7 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
+        <import type="android.view.View"/>
         <variable name="viewModel" type="com.example.blog_e.ui.signUp.SignUpViewModel" />
     </data>
 
@@ -10,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.login.LoginFragment">
-
         <LinearLayout
             android:layout_width="350dp"
             android:layout_height="wrap_content"
@@ -75,6 +75,7 @@
                 android:ems="10"
                 android:hint="Username"
                 android:inputType="textPersonName"
+                android:onTextChanged="@{viewModel::updatedUsername}"
                 tools:ignore="LabelFor" />
 
             <TextView
@@ -94,6 +95,7 @@
                 android:ems="10"
                 android:hint="Password"
                 android:inputType="textPersonName"
+                android:onTextChanged="@{viewModel::updatedPassword}"
                 tools:ignore="LabelFor,TextFields" />
 
             <TextView
@@ -108,8 +110,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:enabled="false"
                 android:text="@string/sign_up"
+                android:onClick="@{viewModel::onClickSignUp}"
                 android:textAllCaps="false" />
 
             <Button
@@ -120,8 +122,30 @@
                 android:background="@android:color/transparent"
                 android:text="@string/i_already_have_an_account"
                 android:textAllCaps="false"
-                android:textColor="@color/black" />
+                android:textColor="@color/black">
+            </Button>
         </LinearLayout>
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="@{viewModel.isLoading() ? View.VISIBLE : View.GONE}"
+            android:background="#B3000000"
+            >
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="visible" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Loading"
+                />
+        </LinearLayout>
     </FrameLayout>
 </layout>
