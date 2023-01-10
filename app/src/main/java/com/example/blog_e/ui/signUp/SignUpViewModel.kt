@@ -1,14 +1,10 @@
 package com.example.blog_e.ui.signUp
 
 import android.view.View
-import android.widget.Toast
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.findNavController
-import com.example.blog_e.R
 import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.data.model.User
 import com.example.blog_e.data.repository.ApiError
@@ -16,17 +12,16 @@ import com.example.blog_e.data.repository.ApiException
 import com.example.blog_e.data.repository.ApiSuccess
 import com.example.blog_e.data.repository.UserRepo
 import com.example.blog_e.utils.SessionManager
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Observable
 import javax.inject.Inject
 
 data class SignUpState(
-    val error: String? = null,
+    val errorMessage: String? = null,
+    val isUserLoggedIn: Boolean = false
 )
 
 @HiltViewModel
@@ -41,8 +36,10 @@ class SignUpViewModel @Inject constructor(
     val usernameError = ObservableField<String>()
     val passwordError = ObservableField<String>()
     val isLoading = ObservableBoolean(false)
-    private val _loginError = MutableStateFlow(SignUpState())
-    val loginError = _loginError.asStateFlow()
+
+    // Sending events as state https://developer.android.com/topic/architecture/ui-layer/events#handle-viewmodel-events
+    private val _uiState = MutableStateFlow(SignUpState())
+    val uiState = _uiState.asStateFlow()
 
     fun onClickSignUp(view: View) {
         val newUser = makeUser() ?: return
@@ -53,12 +50,12 @@ class SignUpViewModel @Inject constructor(
             // TODO: Do we need to catch error?
             val success = signUp(newUser)
             if (success) {
-                _loginError.update {
-                    SignUpState("success")
+                _uiState.update {
+                    it.copy(isUserLoggedIn = true)
                 }
             } else {
-                _loginError.update {
-                    SignUpState("username already taken") // TODO: Proper error mapping
+                _uiState.update {
+                    it.copy(errorMessage = "username already token")
                 }
             }
 
