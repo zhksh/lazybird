@@ -58,6 +58,7 @@ class ApiClient {
             //log body
             val buffer = Buffer()
             req.body()?.writeTo(buffer)
+
             Log.d(tag, "request body: ${buffer.toString()}")
             Log.d(tag, "headers: ${req.headers()}")
 

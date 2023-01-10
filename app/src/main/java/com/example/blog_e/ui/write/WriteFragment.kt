@@ -23,6 +23,7 @@ import com.example.blog_e.data.repository.BlogPostRepository
 import com.example.blog_e.data.repository.UserRepo
 import com.example.blog_e.databinding.FragmentWriteBinding
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.*
@@ -52,6 +53,7 @@ class WriteFragment() : Fragment() {
         val generatePromptBtn = binding.generatePostFromNothingButton
         val generateEmptyBtn = binding.generatePostFromPromptButton
         val aiSwitch = binding.aiSwitchButton
+        val spinner = binding.completeSpinner
         val postInput = binding.postInput
         val generationTemperature = binding.writeGenerateTemperature
         val moodChoices = binding.emotionButtonsGroup
@@ -61,7 +63,18 @@ class WriteFragment() : Fragment() {
             writeViewModel.uiState
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collect {
-                    postInput.setText(it.postInput)
+                    if (it.running){
+                        spinner.visibility = View.VISIBLE
+                    }
+                    else {
+                        spinner.visibility = View.GONE
+                    }
+                    if (! it.success){
+                        Snackbar.make(binding.root, it.error, Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        postInput.setText(it.postInput)
+                    }
                 }
         }
 
@@ -124,19 +137,15 @@ class WriteFragment() : Fragment() {
 
 
         generateEmptyBtn.setOnClickListener {
-            var t = Toast.makeText(
-                context,
-                "COMPLETING",
-                Toast.LENGTH_LONG
-            )
-            t.show()
             Log.e(TAG, moodChoices.checkedButtonId.toString())
             writeViewModel.completePost(
                 CompletePayload(
                     postInput.text.toString(),
                     generationTemperature.values[0],
-                    "lucid")
+                    "lucid", "true")
             )
+//            spinner.visibility = View.GONE
+
 
         }
 
