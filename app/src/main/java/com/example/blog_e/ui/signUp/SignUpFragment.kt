@@ -1,6 +1,5 @@
 package com.example.blog_e.ui.signUp
 
-
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -22,20 +21,22 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
-
-    private var _binding: FragmentSignUpBinding? = null
-    private val binding get() = _binding!!
-    private val viewModel: SignUpViewModel by viewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSignUpBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
+        val viewModel: SignUpViewModel by viewModels()
+        val binding = FragmentSignUpBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
 
-        return root
+        lifecycleScope.launch {
+            viewModel.loginError.collect {
+                if (it.error != null) {
+                    Snackbar.make(binding.root, "${it.error}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        return binding.root
     }
 }

@@ -18,10 +18,16 @@ import com.example.blog_e.data.repository.UserRepo
 import com.example.blog_e.utils.SessionManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Observable
 import javax.inject.Inject
 
+data class SignUpState(
+    val error: String? = null,
+)
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
@@ -35,22 +41,25 @@ class SignUpViewModel @Inject constructor(
     val usernameError = ObservableField<String>()
     val passwordError = ObservableField<String>()
     val isLoading = ObservableBoolean(false)
+    private val _loginError = MutableStateFlow(SignUpState())
+    val loginError = _loginError.asStateFlow()
 
     fun onClickSignUp(view: View) {
-        val newUser = User(
-            username = this.username,
-            password = this.password,
-            profilePicture = ProfilePicture.PICTURE_01  // TODO: Replace with selected image
-        )
+        val newUser = makeUser() ?: return
 
         viewModelScope.launch {
             isLoading.set(true)
 
+            // TODO: Do we need to catch error?
             val success = signUp(newUser)
             if (success) {
-                println("logged in success")
+                _loginError.update {
+                    SignUpState("success")
+                }
             } else {
-                println("logged in failure")
+                _loginError.update {
+                    SignUpState("username already taken") // TODO: Proper error mapping
+                }
             }
 
             isLoading.set(false)
@@ -68,6 +77,33 @@ class SignUpViewModel @Inject constructor(
         val error = this.validatePassword(this.password)
         this.passwordError.set(error)
     }
+
+    private fun makeUser(): User? {
+        if (
+            this.validateUsername(this.username) != "" ||
+            this.validatePassword(this.password) != ""
+        ) {
+            return null
+        }
+
+        return User(
+            username = this.username,
+            password = this.password,
+            profilePicture = ProfilePicture.PICTURE_01  // TODO: Replace with selected image
+        )
+    }
+
+    private suspend fun signUp(user: User): Boolean =
+        when (val authorizationResult = userRepo.signUp(user)) {
+            is ApiSuccess -> {
+                sessionManager.saveAuthToken(authorizationResult.data.accessToken)
+                true
+            }
+            is ApiError -> {
+                false
+            }
+            is ApiException -> throw authorizationResult.e
+        }
 
     private fun validateUsername(name: String): String {
         if (name.length < 3) {
@@ -92,16 +128,4 @@ class SignUpViewModel @Inject constructor(
 
         return  ""
     }
-
-    suspend fun signUp(user: User): Boolean =
-        when (val authorizationResult = userRepo.signUp(user)) {
-            is ApiSuccess -> {
-                sessionManager.saveAuthToken(authorizationResult.data.accessToken)
-                true
-            }
-            is ApiError -> {
-                false       // TODO: Display api error
-            }
-            is ApiException -> throw authorizationResult.e
-        }
 }
