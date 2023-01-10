@@ -103,5 +103,4 @@ class LoginFragment : Fragment() {
     private fun toSignUp() {
         findNavController().navigate(R.id.action_login_fragment_to_sign_up_fragment)
     }
-
 }

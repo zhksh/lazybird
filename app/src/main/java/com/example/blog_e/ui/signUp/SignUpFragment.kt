@@ -26,6 +26,7 @@ class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
     private val signUpViewModel: SignUpViewModel by viewModels()
+    private val usernameRegex = """^[A-Za-z0-9]*$""".toRegex()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,9 +43,13 @@ class SignUpFragment : Fragment() {
     private fun setupFragmentBinding() {
         binding.etUserName.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val et1 = binding.etUserName.text.toString().trim()
-                val et2 = binding.etPassword.text.toString().trim()
-                binding.btnSignUp.isEnabled = et1.isNotEmpty() && et2.isNotEmpty()
+                val username = binding.etUserName.text.toString().trim()
+                val password = binding.etPassword.text.toString()
+
+                binding.usernameError = username
+                binding.passwordError = password
+
+                binding.btnSignUp.isEnabled = isValidUsername(username) && password.isNotEmpty()
 
                 // TODO: add listener for spaces + make sth like a TextView to notify that there may not be spaces in the username
             }
@@ -98,5 +103,9 @@ class SignUpFragment : Fragment() {
                     .show()
             }
         }
+    }
+
+    private fun isValidUsername(name: String): Boolean {
+        return name != "me" && name.length >= 3 && name.length < 15 && this.usernameRegex.matches(name)
     }
 }

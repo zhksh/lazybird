@@ -5,16 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
 import com.example.blog_e.adapters.PostsViewAdapter
+import com.example.blog_e.data.model.User
 import com.example.blog_e.databinding.FragmentProfileBinding
 import com.example.blog_e.models.PostsViewModel
 import com.example.blog_e.ui.home.generatePosts
+import com.example.blog_e.utils.SessionManager
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class ProfileFragment : Fragment() {
+@AndroidEntryPoint
+class ProfileFragment: Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
 
@@ -31,7 +38,19 @@ class ProfileFragment : Fragment() {
             ViewModelProvider(this).get(ProfileViewModel::class.java)
 
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = profileViewModel
+
         val root: View = binding.root
+
+        profileViewModel.getProfile().observe(viewLifecycleOwner, Observer<User?>{ user ->
+            println("observer called")
+            if (user == null) {
+                findNavController().navigate(R.id.start_fragment)
+            } else {
+                // TODO: Update UI with user
+            }
+        })
 
         /*
         val textView: TextView = binding.textProfile
