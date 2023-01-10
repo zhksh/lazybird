@@ -1,10 +1,12 @@
 package com.example.blog_e.ui.signUp
 
 import android.view.View
+import androidx.annotation.IdRes
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blog_e.R
 import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.data.model.User
 import com.example.blog_e.data.repository.ApiError
@@ -22,7 +24,7 @@ import javax.inject.Inject
 data class SignUpState(
     val errorMessage: String? = null,
     val welcomeMessage: String = "Welcome",
-    val isUserLoggedIn: Boolean = false
+    @IdRes val navTo: Int? = null
 )
 
 @HiltViewModel
@@ -52,7 +54,8 @@ class SignUpViewModel @Inject constructor(
             val success = signUp(newUser)
             if (success) {
                 _uiState.update {
-                    it.copy(isUserLoggedIn = true, welcomeMessage = "Welcome, ${newUser.username}")
+                    val navId = R.id.action_sign_up_fragment_to_navigation_home
+                    it.copy(navTo = navId, welcomeMessage = "Welcome, ${newUser.username}")
                 }
             } else {
                 _uiState.update {
@@ -74,6 +77,13 @@ class SignUpViewModel @Inject constructor(
         this.password = s.toString()
         val error = this.validatePassword(this.password)
         this.passwordError.set(error)
+    }
+
+    fun onClickAlreadySignedUp(view: View) {
+        _uiState.update {
+            val navId = R.id.action_sign_up_fragment_to_login_fragment
+            it.copy(navTo = navId)
+        }
     }
 
     private fun makeUser(): User? {

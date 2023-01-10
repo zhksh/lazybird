@@ -5,74 +5,78 @@
     android:layout_height="match_parent"
     tools:context=".ui.login.LoginFragment">
 
-    <LinearLayout
-        android:layout_width="350dp"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+        android:layout_gravity="center">
+        <LinearLayout
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="80dp"
-            android:text="@string/welcome_back"
-            android:textSize="40sp"
-            android:textStyle="bold" />
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
 
-        <TextView
-            android:id="@+id/subtextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:text="@string/sign_in_to_your_account"
-            android:textSize="20sp" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="80dp"
+                android:text="@string/welcome_back"
+                android:textSize="40sp"
+                android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/etUserName"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="180dp"
-            android:autofillHints=""
-            android:background="@drawable/textview_border"
-            android:ems="10"
-            android:hint="@string/username"
-            android:inputType="textPersonName"
-            tools:ignore="LabelFor" />
+            <TextView
+                android:id="@+id/subtextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="@string/sign_in_to_your_account"
+                android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="40dp"
-            android:autofillHints=""
-            android:background="@drawable/textview_border"
-            android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPersonName"
-            tools:ignore="LabelFor,TextFields" />
+            <EditText
+                android:id="@+id/etUserName"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="180dp"
+                android:autofillHints=""
+                android:background="@drawable/textview_border"
+                android:ems="10"
+                android:hint="@string/username"
+                android:inputType="textPersonName"
+                tools:ignore="LabelFor" />
 
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:enabled="false"
-            android:text="@string/login"
-            android:textAllCaps="false" />
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="40dp"
+                android:autofillHints=""
+                android:background="@drawable/textview_border"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPersonName"
+                tools:ignore="LabelFor,TextFields" />
 
-        <Button
-            android:id="@+id/btnAccount"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginTop="50dp"
-            android:background="@android:color/transparent"
-            android:text="@string/i_don_t_have_an_account"
-            android:textAllCaps="false"
-            android:textColor="@color/black" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:enabled="false"
+                android:text="@string/login"
+                android:textAllCaps="false" />
 
+            <Button
+                android:id="@+id/btnAccount"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="50dp"
+                android:background="@android:color/transparent"
+                android:text="@string/i_don_t_have_an_account"
+                android:textAllCaps="false"
+                android:textColor="@color/black" />
+        </LinearLayout>
+    </ScrollView>
 </FrameLayout>

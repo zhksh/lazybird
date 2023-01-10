@@ -11,6 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.login.LoginFragment">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+
+
+
         <LinearLayout
             android:layout_width="350dp"
             android:layout_height="wrap_content"
@@ -122,10 +131,10 @@
                 android:background="@android:color/transparent"
                 android:text="@string/i_already_have_an_account"
                 android:textAllCaps="false"
-                android:textColor="@color/black">
-            </Button>
+                android:onClick="@{viewModel::onClickAlreadySignedUp}"
+                android:textColor="@color/black" />
         </LinearLayout>
-
+        </ScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"
