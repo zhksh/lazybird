@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -27,6 +28,10 @@ class SignUpFragment : Fragment() {
     private val binding get() = _binding!!
     private val signUpViewModel: SignUpViewModel by viewModels()
 
+    private lateinit var username: EditText
+    private lateinit var displayName: EditText
+    private lateinit var password: EditText
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,10 +45,14 @@ class SignUpFragment : Fragment() {
     }
 
     private fun setupFragmentBinding() {
-        binding.etUserName.addTextChangedListener(object : TextWatcher {
+        username = binding.etUserName.editText!!
+        displayName = binding.etDisplayName.editText!!
+        password = binding.etPassword.editText!!
+
+        username.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val et1 = binding.etUserName.text.toString().trim()
-                val et2 = binding.etPassword.text.toString().trim()
+                val et1 = username.text.toString().trim()
+                val et2 = password.text.toString().trim()
                 binding.btnSignUp.isEnabled = et1.isNotEmpty() && et2.isNotEmpty()
 
                 // TODO: add listener for spaces + make sth like a TextView to notify that there may not be spaces in the username
@@ -56,10 +65,10 @@ class SignUpFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable) {}
         })
-        binding.etPassword.addTextChangedListener(object : TextWatcher {
+        password.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val et1 = binding.etUserName.text.toString().trim()
-                val et2 = binding.etPassword.text.toString().trim()
+                val et1 = username.text.toString().trim()
+                val et2 = password.text.toString().trim()
                 binding.btnSignUp.isEnabled = et1.isNotEmpty() && et2.isNotEmpty()
             }
 
@@ -78,13 +87,13 @@ class SignUpFragment : Fragment() {
 
     private fun signUp() {
 
-        var displayName = binding.etUserName.text.toString()
-        if (binding.etDisplayName.text.toString().isNotEmpty()) {
-            displayName = binding.etDisplayName.text.toString()
+        var defaultDisplayName = username.text.toString()
+        if (displayName.text.toString().isNotEmpty()) {
+            defaultDisplayName = displayName.text.toString()
         }
         val newUser = NewUserAPIModel(
-            username = binding.etUserName.text.toString(),
-            displayName = displayName,
+            username = binding.etUserName.editText!!.text.toString(),
+            displayName = defaultDisplayName,
             password = binding.btnSignUp.text.toString(),
             iconId = ProfilePicture.PICTURE_01.toString()
         )

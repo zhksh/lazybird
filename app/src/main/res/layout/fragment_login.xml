@@ -40,33 +40,47 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textView"/>
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/etUserName"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
-            android:autofillHints=""
-            android:background="@drawable/textview_border"
-            android:ems="10"
-            android:hint="@string/username"
-            android:inputType="textPersonName"
+            android:hint="Username"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subtextView"
-            tools:ignore="LabelFor" />
+            app:layout_constraintTop_toBottomOf="@+id/subtextView">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/textview_border"
+                android:ems="10"
+                android:inputType="textPersonName"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:autofillHints=""
-            android:background="@drawable/textview_border"
-            android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPersonName"
-            tools:ignore="LabelFor,TextFields"
+            android:hint="Password"
+            app:endIconMode="password_toggle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etUserName"/>
+            app:layout_constraintTop_toBottomOf="@+id/etUserName">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:autofillHints=""
+                android:background="@drawable/textview_border"
+                android:ems="10"
+                android:inputType="textPassword"
+                tools:ignore="LabelFor,TextFields" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnLogin"
