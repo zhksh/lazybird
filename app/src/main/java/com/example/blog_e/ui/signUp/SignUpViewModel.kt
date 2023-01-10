@@ -39,6 +39,7 @@ class SignUpViewModel @Inject constructor(
     val usernameError = ObservableField<String>()
     val passwordError = ObservableField<String>()
     val isLoading = ObservableBoolean(false)
+    val signUpReady = ObservableBoolean(false)
 
     // Sending events as state https://developer.android.com/topic/architecture/ui-layer/events#handle-viewmodel-events
     private val _uiState = MutableStateFlow(SignUpState())
@@ -71,12 +72,14 @@ class SignUpViewModel @Inject constructor(
         this.username = s.toString()
         val error = this.validateUsername(this.username)
         this.usernameError.set(error)
+        this.signUpReady.set(signUpIsReady())
     }
 
     fun updatedPassword(s: CharSequence, start: Int, before: Int, count: Int) {
         this.password = s.toString()
         val error = this.validatePassword(this.password)
         this.passwordError.set(error)
+        this.signUpReady.set(signUpIsReady())
     }
 
     fun onClickAlreadySignedUp(view: View) {
@@ -87,10 +90,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun makeUser(): User? {
-        if (
-            this.validateUsername(this.username) != "" ||
-            this.validatePassword(this.password) != ""
-        ) {
+        if (!signUpIsReady()) {
             return null
         }
 
@@ -135,5 +135,9 @@ class SignUpViewModel @Inject constructor(
         }
 
         return  ""
+    }
+
+    private fun signUpIsReady(): Boolean {
+        return this.validateUsername(this.username) == "" && this.validatePassword(this.password) == ""
     }
 }
