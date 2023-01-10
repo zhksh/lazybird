@@ -1,11 +1,19 @@
 package com.example.blog_e.data.repository
 
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import okio.Buffer
+import org.json.JSONObject
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 import kotlin.system.measureTimeMillis
 
+data class ErrorResponse(
+    val message: String,
+    val error: String
+)
 sealed interface ApiResult<T : Any>
 
 class ApiSuccess<T : Any>(val data: T) : ApiResult<T>
@@ -28,9 +36,9 @@ class ApiHandler(private val tag: String) {
                 ApiSuccess(body)
             }
             else {
-                Log.e(tag,"API request unsuccessful. Error ${response.code()}: ${response.message()}"
-                )
-                ApiError(code = response.code(), message = response.message())
+                val errBody = response.errorBody()!!.charStream().readText()
+                Log.e(tag,"API request unsuccessful. Error ${response.code()}: ${response.message()}: ${errBody.toString()}")
+                ApiError(code = response.code(), message = errBody.toString())
             }
         } catch (e: HttpException) {
             Log.e(tag, "Could not fetch with http: " + e.message)

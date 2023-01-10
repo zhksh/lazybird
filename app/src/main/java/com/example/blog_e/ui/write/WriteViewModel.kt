@@ -23,18 +23,26 @@ data class WriteUiState(
     val isAIMode: Boolean = false,
     val postInput: String = "",
     val userMessage: String? = null,
-    val isPostSaved: Boolean = false
+    val isPostSaved: Boolean = false,
+    val generatedText: String = "",
+    val error: String = "",
+    val success: Boolean = false,
+    val running: Boolean = false
 )
+
 
 @HiltViewModel
 class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewModel() {
+
     private val TAG = Config.tag(this.toString())
+
     // TODO: ui state richtig verwenden
     private val _uiState = MutableStateFlow(WriteUiState())
     val uiState: StateFlow<WriteUiState> = _uiState.asStateFlow()
 
     private val _postText = MutableLiveData<String>()
     val postText: LiveData<String> = _postText
+
 
     fun hideAiViews() {
     }
@@ -61,20 +69,38 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
 
     fun completePost(data: CompletePayload){
         viewModelScope.launch {
+            updateRunning(true)
             val res = postRepo.completePost(data)
             when (res) {
-                is ApiException -> {Log.e(TAG, "network error")}
-                is ApiError -> {Log.e(TAG, res.message.toString() ) }
+                is ApiException -> {
+                    updateErr("error: ${res.e.message}")}
+                is ApiError -> {
+                    updateErr("this didnt work, try later")
+                }
                 is ApiSuccess -> {
-                    _uiState.value = _uiState.value.copy(postInput = res.data.response)
+                    if (res.data.response.isBlank()) updateErr("empty response, try longer prompt")
+                    else updatePostText(res.data.response)
                 }
             }
+            updateRunning(false)
         }
     }
 
     fun updatePostText(newText: String) {
         _uiState.update {
-            it.copy(postInput = newText)
+            it.copy(postInput = newText, success = true)
+        }
+    }
+
+    fun updateRunning(running: Boolean) {
+        _uiState.update {
+            it.copy(running = running)
+        }
+    }
+
+    fun updateErr(errStr: String) {
+        _uiState.update {
+            it.copy(error = errStr, success = false)
         }
     }
 
