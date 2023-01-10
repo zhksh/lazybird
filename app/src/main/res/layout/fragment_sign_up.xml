@@ -2,8 +2,7 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="usernameError" type="String" />
-        <variable name="passwordError" type="String" />
+        <variable name="viewModel" type="com.example.blog_e.ui.signUp.SignUpViewModel" />
     </data>
 
     <FrameLayout
@@ -81,7 +80,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{usernameError}"
+                android:text="@{viewModel.usernameError}"
                 android:textColor="@color/design_default_color_error"
                 />
 
@@ -100,7 +99,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{passwordError}"
+                android:text="@{viewModel.passwordError}"
                 android:textColor="@color/design_default_color_error"
                 />
 
