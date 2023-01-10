@@ -31,26 +31,24 @@ class PostsViewAdapter(private val postList: List<PostAPIModel>) :
 
         val postsViewModel = postList[position]
 
-        // holder.profilePictureView.setImageResource(postsViewModel.profilePicture)
-
         holder.content.text = postsViewModel.content
 
         val username = "@" + postsViewModel.user.username
+
         holder.username.text = username
 
-        // TODO: mit anderem Model den Display-Namen setzen
         holder.displayName.text = postsViewModel.user.displayName
 
         postsViewModel.user.iconId
         val imageResourceId = ProfilePicture.PICTURE_01
-
-        holder.profilePictureView.setImageResource(imageResourceId.res)
+        holder.profilePictureView.setImageResource(
+            ProfilePicture.values().toList().shuffled().first().res
+        )
 
         holder.likes.text = postsViewModel.likes.toString()
+
         holder.comments.text = postsViewModel.commentCount.toString()
 
-        // TODO: should be a Data -> get difference with localdate time (now)
-        println(postsViewModel.user.displayName)
         holder.pastTime.text = calculatePastTime(postsViewModel.timestamp)
 
     }
