@@ -6,12 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.adapters.PostsViewAdapter
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.databinding.FragmentProfileBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
@@ -19,6 +23,7 @@ class ProfileFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,23 +36,16 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        /*
-        val textView: TextView = binding.textProfile
-        profileViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        */
-
-        val recyclerView: RecyclerView = binding.postsListRecyclerView
+        recyclerView = binding.postsListRecyclerView
         recyclerView.isNestedScrollingEnabled = false
         recyclerView.layoutManager = LinearLayoutManager(root.context)
 
-        // Setup dummy data list; default should be follower list
-        val postViewList: ArrayList<PostAPIModel> = arrayListOf()
+        lifecycleScope.launch {
+            val postViewList: List<PostAPIModel> = profileViewModel.fetchBlogs()
 
-//    TODO hier was richtiges laden
+            recyclerView.adapter = PostsViewAdapter(postViewList)
 
-        recyclerView.adapter = PostsViewAdapter(postViewList)
+        }
 
         return root
     }

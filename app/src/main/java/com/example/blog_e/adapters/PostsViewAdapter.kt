@@ -9,6 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.data.model.ProfilePicture
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class PostsViewAdapter(private val postList: List<PostAPIModel>) :
     RecyclerView.Adapter<PostsViewAdapter.ViewHolder>() {
@@ -27,30 +31,59 @@ class PostsViewAdapter(private val postList: List<PostAPIModel>) :
 
         val postsViewModel = postList[position]
 
-        // holder.profilePictureView.setImageResource(postsViewModel.profilePicture)
-
         holder.content.text = postsViewModel.content
 
-        holder.username.text = postsViewModel.user.username
+        val username = "@" + postsViewModel.user.username
 
-        // TODO: mit anderem Model den Display-Namen setzen
+        holder.username.text = username
+
         holder.displayName.text = postsViewModel.user.displayName
 
         postsViewModel.user.iconId
         val imageResourceId = ProfilePicture.PICTURE_01
-
-        holder.profilePictureView.setImageResource(imageResourceId.res)
+        holder.profilePictureView.setImageResource(
+            ProfilePicture.values().toList().shuffled().first().res
+        )
 
         holder.likes.text = postsViewModel.likes.toString()
+
         holder.comments.text = postsViewModel.commentCount.toString()
 
-        // TODO: should be a Data -> get difference with localdate time (now)
-        holder.pastTime.text = postsViewModel.timestamp
+        holder.pastTime.text = calculatePastTime(postsViewModel.timestamp)
 
     }
 
     override fun getItemCount(): Int {
         return postList.size
+    }
+
+    fun calculatePastTime(date: String): String {
+
+        val current = LocalDateTime.now(ZoneId.of("Europe/Berlin"))
+        var formatter = DateTimeFormatter.ofPattern(pattern)
+        val creationDate: LocalDateTime = LocalDateTime.parse(date, formatter)
+        val duration = Duration.between(creationDate, current)
+
+        if (duration.toDays() > 9) {
+            formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+            return creationDate.format(formatter)
+        }
+        if (duration.toDays() > 0) {
+            return "${duration.toDays()} d"
+        }
+        if (duration.toHours() > 0) {
+            return "${duration.toHours()} H"
+        }
+        if (duration.toMinutes() > 0) {
+            return "${duration.toMinutes()} M"
+        }
+
+        if (duration.toSeconds() > 0) {
+            return "${duration.toSeconds()} s"
+        }
+
+        return "just posted"
+
     }
 
 
@@ -62,5 +95,9 @@ class PostsViewAdapter(private val postList: List<PostAPIModel>) :
         val likes: TextView = itemView.findViewById(R.id.likeNumber)
         val comments: TextView = itemView.findViewById(R.id.commentNumber)
         val pastTime: TextView = itemView.findViewById(R.id.postPastTime)
+    }
+
+    companion object {
+        val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
     }
 }

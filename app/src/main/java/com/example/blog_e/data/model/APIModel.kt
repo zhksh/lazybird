@@ -1,5 +1,7 @@
 package com.example.blog_e.data.model
 
+import com.google.gson.annotations.SerializedName
+
 
 data class PostAPIModel(
     val commentCount: Int,
@@ -11,9 +13,14 @@ data class PostAPIModel(
 )
 
 data class UserAPIModel(
+    @SerializedName("display_name")
     val displayName: String,
+    //TODO wahrscheinlich wird das hier anders gemacht werden
+    @SerializedName("followers")
     val followers: Int,
+    @SerializedName("icon_id")
     val iconId: String,
+    @SerializedName("username")
     val username: String
 )
 
