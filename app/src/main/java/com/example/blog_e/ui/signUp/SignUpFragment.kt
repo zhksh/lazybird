@@ -13,8 +13,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.blog_e.R
+import com.example.blog_e.data.model.NewUserAPIModel
 import com.example.blog_e.data.model.ProfilePicture
-import com.example.blog_e.data.model.User
 import com.example.blog_e.databinding.FragmentSignUpBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,14 +71,22 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(s: Editable) {}
         })
         binding.btnSignUp.setOnClickListener { signUp() }
+        binding.btnAccount.setOnClickListener {
+            findNavController().navigate(R.id.action_sign_up_fragment_to_login_fragment)
+        }
     }
 
     private fun signUp() {
 
-        val newUser = User(
+        var displayName = binding.etUserName.text.toString()
+        if (binding.etDisplayName.text.toString().isNotEmpty()) {
+            displayName = binding.etDisplayName.text.toString()
+        }
+        val newUser = NewUserAPIModel(
             username = binding.etUserName.text.toString(),
+            displayName = displayName,
             password = binding.btnSignUp.text.toString(),
-            profilePicture = ProfilePicture.PICTURE_01
+            iconId = ProfilePicture.PICTURE_01.toString()
         )
 
         //TODO: create a loading spinner

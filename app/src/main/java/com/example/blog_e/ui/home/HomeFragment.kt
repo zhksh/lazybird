@@ -10,12 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.blog_e.R
 import com.example.blog_e.adapters.PostsViewAdapter
-import com.example.blog_e.data.model.Post
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.databinding.FragmentHomeBinding
-import com.example.blog_e.models.PostsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -49,24 +46,7 @@ class HomeFragment : Fragment() {
             recyclerView.adapter = PostsViewAdapter(postViewList)
         }
 
-
-//        binding.button22.setOnClickListener {
-//            homeViewModel.fetchBlogs(true)
-//        }
-
         return root
-    }
-
-    private fun mapPosts(postViewList: List<Post>): List<PostsViewModel> {
-        return postViewList.map {
-            PostsViewModel(
-                profilePicture = R.drawable.baby_yoda_1,
-                username = it.author.toString(),
-                createdSince = it.publicationDate.toString(),
-                content = it.content,
-                commentNumber = it.commentCount,
-            )
-        }
     }
 
     private fun setUpFragmentBinding() {

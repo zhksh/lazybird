@@ -13,14 +13,8 @@ class UserRepo(private val backendS: BlogEAPI) : UserRepository {
     private val apiHandler: ApiHandler = ApiHandler(Config.tag(this.toString()))
 
 
-    override suspend fun signUp(user: User): ApiResult<Authorization> {
-        val userReq = NewUserAPIModel(
-            user.username,
-            user.profilePicture.toString(),
-            user.password,
-            user.username
-        )
-        return apiHandler.handleApi { backendS.signUp(userReq) }
+    override suspend fun signUp(user: NewUserAPIModel): ApiResult<Authorization> {
+        return apiHandler.handleApi { backendS.signUp(user) }
     }
 
     override suspend fun login(loginBody: LoginPayload): ApiResult<Authorization> {

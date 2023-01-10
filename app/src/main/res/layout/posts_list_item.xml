@@ -18,17 +18,18 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8px"
         android:padding="8px">
 
 
         <TextView
             android:id="@+id/displayName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:text="Display name"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/postPastTime"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,8 +37,8 @@
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="user_name"
-            android:textSize="16sp"
+            android:text="\@user_name"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@id/displayName"
             app:layout_constraintTop_toBottomOf="@id/displayName" />
 

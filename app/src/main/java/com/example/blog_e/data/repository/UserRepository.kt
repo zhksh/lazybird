@@ -3,12 +3,13 @@ package com.example.blog_e.data.repository
 import androidx.lifecycle.LiveData
 import com.example.blog_e.data.model.Authorization
 import com.example.blog_e.data.model.LoginPayload
+import com.example.blog_e.data.model.NewUserAPIModel
 import com.example.blog_e.data.model.User
 import java.util.*
 
 interface UserRepository {
 
-    suspend fun signUp(user: User): ApiResult<Authorization>
+    suspend fun signUp(user: NewUserAPIModel): ApiResult<Authorization>
 
     suspend fun login(loginBody: LoginPayload): ApiResult<Authorization>
 
