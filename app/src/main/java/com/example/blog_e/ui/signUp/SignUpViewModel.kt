@@ -21,6 +21,7 @@ import javax.inject.Inject
 
 data class SignUpState(
     val errorMessage: String? = null,
+    val welcomeMessage: String = "Welcome",
     val isUserLoggedIn: Boolean = false
 )
 
@@ -51,11 +52,11 @@ class SignUpViewModel @Inject constructor(
             val success = signUp(newUser)
             if (success) {
                 _uiState.update {
-                    it.copy(isUserLoggedIn = true)
+                    it.copy(isUserLoggedIn = true, welcomeMessage = "Welcome, ${newUser.username}")
                 }
             } else {
                 _uiState.update {
-                    it.copy(errorMessage = "username already token")
+                    it.copy(errorMessage = "username already taken")
                 }
             }
 

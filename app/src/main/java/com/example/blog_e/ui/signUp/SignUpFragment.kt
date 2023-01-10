@@ -11,6 +11,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.example.blog_e.R
 import com.example.blog_e.databinding.FragmentSignUpBinding
 import com.example.blog_e.ui.login.LoginViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -43,11 +45,15 @@ class SignUpFragment : Fragment() {
 
     private fun handleStateChange(uiState: SignUpState, binding: FragmentSignUpBinding) {
         if (uiState.isUserLoggedIn) {
-            // TODO: navigate
+            findNavController().navigate(R.id.action_sign_up_fragment_to_navigation_home)
+            Snackbar.make(binding.root, "${uiState.welcomeMessage}", Toast.LENGTH_SHORT)
+                .show()
+            return
         }
 
         if (uiState.errorMessage != null) {
-            // TODO: Display error message
+            Snackbar.make(binding.root, "${uiState.errorMessage}", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 }
