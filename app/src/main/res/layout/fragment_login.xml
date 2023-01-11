@@ -64,7 +64,8 @@
                     android:background="@drawable/textview_border"
                     android:ems="10"
                     android:hint="@string/password"
-                    android:inputType="textPersonName"
+                    android:inputType="textPassword"
+                    android:imeOptions="actionDone"
                     android:onTextChanged="@{viewModel::updatedPassword}"
                     tools:ignore="LabelFor,TextFields" />
 
