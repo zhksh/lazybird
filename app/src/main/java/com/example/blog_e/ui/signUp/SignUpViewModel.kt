@@ -23,7 +23,6 @@ import javax.inject.Inject
 
 data class SignUpState(
     val errorMessage: String? = null,
-    val welcomeMessage: String = "Welcome",
     @IdRes val navTo: Int? = null
 )
 
@@ -56,7 +55,7 @@ class SignUpViewModel @Inject constructor(
             if (success) {
                 _uiState.update {
                     val navId = R.id.action_sign_up_fragment_to_navigation_home
-                    it.copy(navTo = navId, welcomeMessage = "Welcome, ${newUser.username}")
+                    it.copy(navTo = navId)
                 }
             } else {
                 _uiState.update {
