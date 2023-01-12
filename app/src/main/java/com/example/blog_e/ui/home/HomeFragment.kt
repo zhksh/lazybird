@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import android.widget.ToggleButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.blog_e.R
 import com.example.blog_e.adapters.PostsViewAdapter
+import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.databinding.FragmentHomeBinding
-import com.example.blog_e.models.PostsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -21,6 +22,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by viewModels()
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,70 +33,45 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val toggleButton: ToggleButton = binding.toggleButton
-
-        val recyclerView: RecyclerView = binding.postsListRecyclerView
+        recyclerView = binding.postsListRecyclerView
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
 
-        // Setup dummy data list; default should be follower list
-        val postViewList: ArrayList<PostsViewModel> = arrayListOf()
+        setUpFragmentBinding()
 
-        postViewList.addAll(
-            generatePosts(
-                20,
-                "Hello everyone!\nThis is a post from your followers"
-            )
-        )
+        // fetch blogs from user feed
+        lifecycleScope.launch {
+            val postViewList: List<PostAPIModel> = homeViewModel.fetchBlogs(true)
 
-        recyclerView.adapter = PostsViewAdapter(postViewList)
-
-        toggleButton.setOnCheckedChangeListener { _, showGlobal ->
-            if (showGlobal) {
-                postViewList.clear()
-                postViewList.addAll(
-                    generatePosts(
-                        20,
-                        "Hello worlds!\nThis is a post from someone globally\nHurray!\n\n#global"
-                    )
-                )
-                recyclerView.adapter = PostsViewAdapter(postViewList)
-            } else {
-                postViewList.clear()
-                postViewList.addAll(
-                    generatePosts(
-                        20,
-                        "Hello everyone!\nThis is a post from your followers"
-                    )
-                )
-                recyclerView.adapter = PostsViewAdapter(postViewList)
-            }
-        }
-
-        binding.button22.setOnClickListener {
-            homeViewModel.fetchBlogs(true)
+            recyclerView.adapter = PostsViewAdapter(postViewList)
         }
 
         return root
+    }
+
+    private fun setUpFragmentBinding() {
+
+        val toggleButton: ToggleButton = binding.toggleButton
+
+        toggleButton.setOnCheckedChangeListener { _, showGlobal ->
+            if (showGlobal) {
+                lifecycleScope.launch {
+                    val postViewList: List<PostAPIModel> = homeViewModel.fetchBlogs(false)
+
+                    recyclerView.adapter = PostsViewAdapter(postViewList)
+                }
+            } else {
+                lifecycleScope.launch {
+                    val postViewList: List<PostAPIModel> = homeViewModel.fetchBlogs(true)
+
+                    recyclerView.adapter = PostsViewAdapter(postViewList)
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-}
-
-// TODO: replace this function with service calls for fetching the posts
-fun generatePosts(number: Int, content: String, img: Int? = null): List<PostsViewModel> {
-    val posts: ArrayList<PostsViewModel> = arrayListOf()
-    for (i in 0..number) {
-        posts.add(
-            PostsViewModel(
-                profilePicture = img ?: R.drawable.ic_baseline_account_circle_24,
-                username = "Max Mustermann",
-                content = content
-            )
-        )
-    }
-    return posts
 }

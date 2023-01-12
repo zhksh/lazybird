@@ -9,8 +9,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
-import java.time.Instant
-import java.util.*
 
 class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
 
@@ -28,8 +26,8 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
         pageSize: Int,
         pageToken: String?,
         isUserFeed: Boolean
-    ): List<Post> {
-        val postsApiResult = apiHandler.handleApi {
+    ): ApiResult<PostsResult> {
+        return apiHandler.handleApi {
             backendS.getPosts(
                 usernames,
                 pageSize,
@@ -37,25 +35,6 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
                 isUserFeed,
             )
         }
-        println(usernames)
-        when (postsApiResult) {
-            is ApiSuccess -> {
-                val postsResult = postsApiResult.data
-                val posts = postsResult.posts.map {
-                    Post(
-                        id = UUID.fromString(it.id),
-                        content = it.content,
-                        publicationDate = Date.from(Instant.parse((it.timestamp))),
-                        commentCount = it.commentCount,
-                    )
-                }
-
-                return posts
-            }
-            is ApiError -> return listOf() // do something
-            is ApiException -> throw postsApiResult.e
-        }
-
     }
 
     override suspend fun refreshPosts() {

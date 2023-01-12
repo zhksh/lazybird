@@ -13,7 +13,7 @@ interface BlogPostRepository {
         pageSize: Int,
         pageToken: String? = null,
         isUserFeed: Boolean
-    ): List<Post>
+    ): ApiResult<PostsResult>
 
     suspend fun refreshPosts()
 
