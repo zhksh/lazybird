@@ -15,7 +15,7 @@ import com.example.blog_e.adapters.PostsViewAdapter
 import com.example.blog_e.data.model.User
 import com.example.blog_e.databinding.FragmentProfileBinding
 import com.example.blog_e.models.PostsViewModel
-import com.example.blog_e.ui.home.generatePosts
+// import com.example.blog_e.ui.home.generatePosts
 import com.example.blog_e.utils.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -66,6 +66,7 @@ class ProfileFragment: Fragment() {
         // Setup dummy data list; default should be follower list
         val postViewList: ArrayList<PostsViewModel> = arrayListOf()
 
+        /*
         postViewList.addAll(
             generatePosts(
                 20,
@@ -75,6 +76,8 @@ class ProfileFragment: Fragment() {
         )
 
         recyclerView.adapter = PostsViewAdapter(postViewList)
+    */
+
 
         return root
     }

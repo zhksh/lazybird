@@ -7,6 +7,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blog_e.R
+import com.example.blog_e.data.model.NewUserAPIModel
 import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.data.model.User
 import com.example.blog_e.data.repository.ApiError
@@ -33,10 +34,13 @@ class SignUpViewModel @Inject constructor(
 ) : ViewModel() {
     private val usernameRegex = """^[A-Za-z0-9]*$""".toRegex()
     private var username = ""
+    private var displayName = ""
     private var password = ""
 
     val usernameError = ObservableField<String>()
     val passwordError = ObservableField<String>()
+    val displayNameError = ObservableField<String>()
+
     val isLoading = ObservableBoolean(false)
     val signUpReady = ObservableBoolean(false)
 
@@ -74,6 +78,11 @@ class SignUpViewModel @Inject constructor(
         this.signUpReady.set(signUpIsReady())
     }
 
+    fun updatedDisplayName(s: CharSequence, start: Int, before: Int, count: Int) {
+        this.displayName = s.toString()
+        this.signUpReady.set(signUpIsReady())
+    }
+
     fun updatedPassword(s: CharSequence, start: Int, before: Int, count: Int) {
         this.password = s.toString()
         val error = this.validatePassword(this.password)
@@ -88,19 +97,20 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun makeUser(): User? {
+    private fun makeUser(): NewUserAPIModel? {
         if (!signUpIsReady()) {
             return null
         }
 
-        return User(
+        return NewUserAPIModel(
             username = this.username,
             password = this.password,
-            profilePicture = ProfilePicture.PICTURE_01  // TODO: Replace with selected image
+            displayName = this.displayName,
+            iconId = "1",        // TODO: Replace with selected image
         )
     }
 
-    private suspend fun signUp(user: User): Boolean =
+    private suspend fun signUp(user: NewUserAPIModel): Boolean =
         when (val authorizationResult = userRepo.signUp(user)) {
             is ApiSuccess -> {
                 sessionManager.saveAuthToken(authorizationResult.data.accessToken)
@@ -137,6 +147,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun signUpIsReady(): Boolean {
-        return this.validateUsername(this.username) == "" && this.validatePassword(this.password) == ""
+        return  this.validateUsername(this.username) == "" &&
+                this.validatePassword(this.password) == ""
     }
 }
