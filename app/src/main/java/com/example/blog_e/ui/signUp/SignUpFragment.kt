@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.blog_e.R
 import com.example.blog_e.databinding.FragmentSignUpBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +31,7 @@ class SignUpFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.uiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                    .collect{ uiState -> handleStateChange(uiState, binding)}
+                    .collect { uiState -> handleStateChange(uiState, binding) }
             }
         }
 

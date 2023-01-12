@@ -36,7 +36,11 @@ class ProfileViewModel @Inject constructor(
         val token = sessionManager.fetchAuthToken()
         if (token != null) {
             // TODO: Actually implement me
-            user.value = User(username = "TestUser", password = "not actually", profilePicture = ProfilePicture.PICTURE_00)
+            user.value = User(
+                username = "TestUser",
+                password = "not actually",
+                profilePicture = ProfilePicture.PICTURE_00
+            )
         } else {
             user.value = null
         }

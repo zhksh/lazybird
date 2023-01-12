@@ -50,7 +50,6 @@
         <action
             android:id="@+id/action_sign_up_fragment_to_navigation_home"
             app:destination="@id/navigation_home" />
-
         <action
             android:id="@+id/action_sign_up_fragment_to_login_fragment"
             app:destination="@id/login_fragment" />

@@ -1,6 +1,5 @@
 package com.example.blog_e.ui.signUp
 
-import android.provider.ContactsContract.Profile
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.databinding.ObservableBoolean
@@ -10,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.blog_e.R
 import com.example.blog_e.data.model.NewUserAPIModel
 import com.example.blog_e.data.model.ProfilePicture
-import com.example.blog_e.data.model.User
 import com.example.blog_e.data.repository.ApiError
 import com.example.blog_e.data.repository.ApiException
 import com.example.blog_e.data.repository.ApiSuccess
@@ -144,11 +142,11 @@ class SignUpViewModel @Inject constructor(
             return "password too short"
         }
 
-        return  ""
+        return ""
     }
 
     private fun signUpIsReady(): Boolean {
-        return  this.validateUsername(this.username) == "" &&
+        return this.validateUsername(this.username) == "" &&
                 this.validatePassword(this.password) == ""
     }
 }

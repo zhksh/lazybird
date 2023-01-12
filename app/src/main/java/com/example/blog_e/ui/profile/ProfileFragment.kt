@@ -1,5 +1,6 @@
 package com.example.blog_e.ui.profile
 
+// import com.example.blog_e.ui.home.generatePosts
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,15 +17,11 @@ import com.example.blog_e.adapters.PostsViewAdapter
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.data.model.User
 import com.example.blog_e.databinding.FragmentProfileBinding
-import com.example.blog_e.models.PostsViewModel
-// import com.example.blog_e.ui.home.generatePosts
-import com.example.blog_e.utils.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProfileFragment: Fragment() {
+class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
 
