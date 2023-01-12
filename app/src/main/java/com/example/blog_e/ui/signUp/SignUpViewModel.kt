@@ -1,5 +1,6 @@
 package com.example.blog_e.ui.signUp
 
+import android.provider.ContactsContract.Profile
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.databinding.ObservableBoolean
@@ -106,7 +107,7 @@ class SignUpViewModel @Inject constructor(
             username = this.username,
             password = this.password,
             displayName = this.displayName,
-            iconId = "1",        // TODO: Replace with selected image
+            iconId = ProfilePicture.PICTURE_01.toString(),
         )
     }
 
