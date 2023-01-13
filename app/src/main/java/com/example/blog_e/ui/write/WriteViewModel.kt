@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blog_e.Config
 import com.example.blog_e.data.model.CompletePayload
+import com.example.blog_e.data.model.Post
 import com.example.blog_e.data.repository.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,7 @@ data class WriteUiState(
     val isAIMode: Boolean = false,
     val postInput: String = "",
     val userMessage: String? = null,
-    val isPostSaved: Boolean = false,
+    val postSuccesful: Boolean = false,
     val generatedText: String = "",
     val error: String = "",
     val success: Boolean = false,
@@ -36,35 +37,26 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
 
     private val TAG = Config.tag(this.toString())
 
-    // TODO: ui state richtig verwenden
-    private val _uiState = MutableStateFlow(WriteUiState())
-    val uiState: StateFlow<WriteUiState> = _uiState.asStateFlow()
-
-    private val _postText = MutableLiveData<String>()
-    val postText: LiveData<String> = _postText
+    private var _uiState = MutableStateFlow(WriteUiState())
+    var uiState: StateFlow<WriteUiState> = _uiState.asStateFlow()
 
 
-    fun hideAiViews() {
-    }
+    fun createPost(data: Post) = viewModelScope.launch {
 
-    // Called when clicking on create button
-    fun savePost() {
-
-        if (uiState.value.postInput.isBlank()) {
-            _uiState.update {
-                it.copy(userMessage = "Task cannot be empty")
+       val res =  postRepo.createPost(data)
+        when (res) {
+            is ApiException -> {
+                updateErr("error: ${res.e.message}")}
+            is ApiError -> {
+                updateErr("this didnt work, try later")
             }
-            return
+            is ApiSuccess -> {
+                _uiState.update {
+                    it.copy(postSuccesful = true)
+                }
+            }
         }
 
-        createPost()
-    }
-
-    fun createPost() = viewModelScope.launch {
-        // TODO: save in service
-        _uiState.update {
-            it.copy(isPostSaved = true)
-        }
     }
 
     fun completePost(data: CompletePayload){
@@ -103,5 +95,6 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
             it.copy(error = errStr, success = false)
         }
     }
+
 
 }

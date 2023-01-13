@@ -21,7 +21,11 @@
         android:id="@+id/navigation_write"
         android:name="com.example.blog_e.ui.write.WriteFragment"
         android:label="@string/title_write"
-        tools:layout="@layout/fragment_write" />
+        tools:layout="@layout/fragment_write">
+    <action
+            android:id="@+id/action_write_fragment_to_nav_host_fragment_activity_main"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"

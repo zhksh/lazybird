@@ -42,7 +42,6 @@ class HomeFragment : Fragment() {
         // fetch blogs from user feed
         lifecycleScope.launch {
             val postViewList: List<PostAPIModel> = homeViewModel.fetchBlogs(true)
-
             recyclerView.adapter = PostsViewAdapter(postViewList)
         }
 

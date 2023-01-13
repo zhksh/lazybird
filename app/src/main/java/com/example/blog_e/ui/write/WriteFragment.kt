@@ -15,12 +15,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.navigateUp
 import com.example.blog_e.Config
+import com.example.blog_e.R
 import com.example.blog_e.data.model.CompletePayload
 import com.example.blog_e.data.model.Post
 import com.example.blog_e.data.model.User
 import com.example.blog_e.data.repository.BlogPostRepository
 import com.example.blog_e.data.repository.UserRepo
+import com.example.blog_e.databinding.FragmentHomeBinding
 import com.example.blog_e.databinding.FragmentWriteBinding
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
@@ -34,9 +38,11 @@ class WriteFragment() : Fragment() {
     private val TAG = Config.tag(this.toString())
     private var _binding: FragmentWriteBinding? = null
 
+    private val binding get() = _binding!!
+
+
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
 
     private val writeViewModel: WriteViewModel by viewModels()
 
@@ -45,9 +51,11 @@ class WriteFragment() : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.i(tag, "created")
+        super.onCreateView(inflater, container, savedInstanceState)
 
         _binding = FragmentWriteBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+
 
         val postBtn = binding.postButton
         val generatePromptBtn = binding.generatePostFromNothingButton
@@ -57,12 +65,20 @@ class WriteFragment() : Fragment() {
         val postInput = binding.postInput
         val generationTemperature = binding.writeGenerateTemperature
         val moodChoices = binding.emotionButtonsGroup
+        val autoReplyFlag = binding.autoReplyFlag
+
+        binding.lifecycleOwner = this
+
 
 
         viewLifecycleOwner.lifecycleScope.launch {
             writeViewModel.uiState
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collect {
+                    Log.d(TAG, "hi collecting state: " + it.postSuccesful.toString())
+                    if (it.postSuccesful){
+                        findNavController().navigate(R.id.navigation_home)
+                    }
                     if (it.running){
                         spinner.visibility = View.VISIBLE
                     }
@@ -77,6 +93,7 @@ class WriteFragment() : Fragment() {
                     }
                 }
         }
+
 
 
         // add text watcher for empty input
@@ -96,7 +113,6 @@ class WriteFragment() : Fragment() {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     if (s.toString().isNotBlank()) {
                         postBtn.isEnabled = true
-
                         generatePromptBtn.visibility = View.GONE
                         generateEmptyBtn.isEnabled = true
 
@@ -125,14 +141,13 @@ class WriteFragment() : Fragment() {
         }
 
         postBtn.setOnClickListener {
-            writeViewModel.savePost()
-            val mockedPost = Post(
-                content = postInput.text.toString(),
-                publicationDate = Date(),
-                commentCount = 2,
-                autogenerateResponses = false,
+            Log.e(TAG, moodChoices.checkedButtonId.toString())
+            writeViewModel.createPost(
+                Post(
+                    content=postInput.text.toString(),
+                    autogenerateResponses = autoReplyFlag.isChecked
+                    )
             )
-            // postRepository.createPost( mockedPost)
         }
 
 
@@ -144,14 +159,10 @@ class WriteFragment() : Fragment() {
                     generationTemperature.values[0],
                     "lucid", "true")
             )
-//            spinner.visibility = View.GONE
-
-
         }
 
-        return root
+        return binding.root
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
