@@ -1,5 +1,6 @@
 package com.example.blog_e.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -37,19 +38,20 @@ class HomeFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
 
-        setUpFragmentBinding()
+
+        setUpFragmentBinding(root.context)
 
         // fetch blogs from user feed
         lifecycleScope.launch {
             val postViewList: List<PostAPIModel> = homeViewModel.fetchBlogs(true)
 
-            recyclerView.adapter = PostsViewAdapter(postViewList)
+            recyclerView.adapter = PostsViewAdapter(postViewList, root.context)
         }
 
         return root
     }
 
-    private fun setUpFragmentBinding() {
+    private fun setUpFragmentBinding(context: Context) {
 
         val toggleButton: ToggleButton = binding.toggleButton
 
@@ -58,13 +60,13 @@ class HomeFragment : Fragment() {
                 lifecycleScope.launch {
                     val postViewList: List<PostAPIModel> = homeViewModel.fetchBlogs(false)
 
-                    recyclerView.adapter = PostsViewAdapter(postViewList)
+                    recyclerView.adapter = PostsViewAdapter(postViewList, context)
                 }
             } else {
                 lifecycleScope.launch {
                     val postViewList: List<PostAPIModel> = homeViewModel.fetchBlogs(true)
 
-                    recyclerView.adapter = PostsViewAdapter(postViewList)
+                    recyclerView.adapter = PostsViewAdapter(postViewList, context)
                 }
             }
         }

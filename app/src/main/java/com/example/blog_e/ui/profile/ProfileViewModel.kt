@@ -71,5 +71,4 @@ class ProfileViewModel @Inject constructor(
             is ApiException -> throw postsResult.e
         }
     }
-
 }

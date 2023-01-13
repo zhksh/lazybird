@@ -61,7 +61,7 @@ class ProfileFragment : Fragment() {
             // TODO: We might want to consider moving the data fetching to view model and only subscribe here through LiveData or any other observer
             // TODO: See https://uni2work.ifi.lmu.de/course/W22/IfI/MSP/file/Vorlesung%205:%20Modern%20Android%20Architecture/show
             val postViewList: List<PostAPIModel> = profileViewModel.fetchBlogs()
-            recyclerView.adapter = PostsViewAdapter(postViewList)
+            recyclerView.adapter = PostsViewAdapter(postViewList, root.context)
         }
 
         return root
