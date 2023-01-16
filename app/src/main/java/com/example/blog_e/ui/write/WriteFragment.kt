@@ -77,7 +77,7 @@ class WriteFragment() : Fragment() {
                 .collect {
                     Log.d(TAG, "hi collecting state: " + it.postSuccesful.toString())
                     if (it.postSuccesful){
-                        findNavController().navigate(R.id.navigation_home)
+                        findNavController().navigate(R.id.action_write_fragment_to_nav_host_fragment_activity_main)
                     }
                     if (it.running){
                         spinner.visibility = View.VISIBLE

@@ -24,7 +24,9 @@
         tools:layout="@layout/fragment_write">
     <action
             android:id="@+id/action_write_fragment_to_nav_host_fragment_activity_main"
-            app:destination="@id/navigation_home" />
+            app:destination="@id/navigation_home"
+            app:popUpTo="@+id/mobile_navigation"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
