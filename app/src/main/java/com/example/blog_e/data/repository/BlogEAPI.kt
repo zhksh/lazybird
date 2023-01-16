@@ -18,7 +18,7 @@ interface BlogEAPI {
     suspend fun login(@Body loginPayload: LoginPayload): Response<Authorization>
 
     @GET("users/{username}")
-    suspend fun getUser(@Path("username") user: String): Response<User>
+    suspend fun getUser(@Path("username") user: String): Response<GetUserAPIModel>
 
     @POST("users/{username}/follow")
     suspend fun follow(@Path("username") username: String): Response<FollowResult>

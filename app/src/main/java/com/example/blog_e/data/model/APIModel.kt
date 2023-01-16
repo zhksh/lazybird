@@ -24,6 +24,27 @@ data class UserAPIModel(
     val username: String
 )
 
+data class GetUserAPIModel(
+    @SerializedName("display_name")
+    val displayName: String,
+    @SerializedName("icon_id")
+    val iconId: String,
+    //TODO wahrscheinlich wird das hier anders gemacht werden
+    @SerializedName("followers")
+    val followers: List<FollowerApiModel>,
+    @SerializedName("username")
+    val username: String
+)
+
+data class FollowerApiModel(
+    @SerializedName("display_name")
+    val displayName: String,
+    @SerializedName("icon_id")
+    val iconId: String,
+    @SerializedName("username")
+    val username: String
+)
+
 data class PostRequest(
     val content: String,
     val mood: String,

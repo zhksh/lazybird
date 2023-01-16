@@ -15,30 +15,20 @@ import com.example.blog_e.data.repository.*
 import com.example.blog_e.models.PostsViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 data class HomeState(
     val posts: List<PostsViewModel> = listOf(),
     val isGlobal: Boolean = false,
-    val paginationToken: String ?= null,
+    val paginationToken: String? = null,
     val hasNextPage: Boolean = false,
     val isFetchingPosts: Boolean = false
 )
 
-data class UserState(
-    val followers: List<String> = listOf(),
-)
-
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val userRepo: UserRepo,
     private val blogRepo: BlogRepo
 ) : ViewModel() {
-
-    private val _uiState = MutableStateFlow(HomeState())
-    val uiState = _uiState.asStateFlow()
 
 
     private val _posts: MutableLiveData<List<PostsViewModel>> = MutableLiveData()
@@ -50,18 +40,20 @@ class HomeViewModel @Inject constructor(
     val flow: Flow<PagingData<PostAPIModel>> = Pager(
         blogRepo.getDefaultPageConfig()
     ) {
-        PostPagingSource(blogRepo, GetPostsQueryModel(
-            listOf(),
-            30,
-            null,
-            isUserFeed = false
-        ))
+        PostPagingSource(
+            blogRepo, GetPostsQueryModel(
+                listOf(),
+                30,
+                null,
+                isUserFeed = false
+            )
+        )
     }.flow.cachedIn(viewModelScope)
 
 
     private var isUserFeed = true
     private var hasNextPage = false
-    private var nextPageToken: String= ""
+    private var nextPageToken: String = ""
 
     suspend fun fetchBlogs(
         isUserFeed: Boolean,

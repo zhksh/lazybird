@@ -17,7 +17,6 @@ import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.databinding.FragmentHomeBinding
 import com.example.blog_e.utils.PostComparator
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -53,16 +52,13 @@ class HomeFragment : Fragment() {
         // fetch blogs from user feed
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            postViewList = homeViewModel.fetchBlogs(true,5)
+            postViewList = homeViewModel.fetchBlogs(true, 5)
 
             recyclerView.adapter = PostsViewAdapter(postViewList)
 
 //            homeViewModel.
 
             val pagingData: GetPostsQueryModel
-            homeViewModel.uiState.collectLatest {
-
-            }
         }
 
         return root
