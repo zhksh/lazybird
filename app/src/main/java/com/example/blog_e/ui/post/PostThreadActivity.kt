@@ -1,13 +1,10 @@
 package com.example.blog_e.ui.post
 
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
-import com.example.blog_e.R
+import androidx.lifecycle.Observer
 import com.example.blog_e.databinding.ActivityPostThreadBinding
-import com.example.blog_e.databinding.FragmentPostThreadBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +15,13 @@ class PostThreadActivity : AppCompatActivity() {
         val viewModel: PostThreadViewModel by viewModels()
 
         val postId = intent.getStringExtra("POST_ID")
-        viewModel.postId.set(postId)
+
+        if (postId != null) {
+            val postData = viewModel.getPost(postId)
+            postData.observe(this, Observer { post ->
+                viewModel.postId.set(post)
+            })
+        }
 
         val binding = ActivityPostThreadBinding.inflate(layoutInflater)
         binding.viewModel = viewModel
