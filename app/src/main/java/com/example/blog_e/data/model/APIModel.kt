@@ -34,7 +34,14 @@ data class PostRequest(
 
 data class PostsResult(
     val nextPageToken: String,
-    val posts: List<PostAPIModel>
+    val posts: ArrayList<PostAPIModel>
+)
+
+data class GetPostsQueryModel(
+    val usernames: List<String>? = null,
+    val pageSize: Int,
+    var pageToken: String?,
+    val isUserFeed: Boolean
 )
 
 // TODO: change iconId to string

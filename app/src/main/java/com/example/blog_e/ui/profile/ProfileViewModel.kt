@@ -5,6 +5,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.blog_e.data.model.GetPostsQueryModel
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.data.model.User
@@ -50,12 +51,15 @@ class ProfileViewModel @Inject constructor(
         pageSize: Int = 20,
         pageToken: String? = null
     ): List<PostAPIModel> {
-        val postsResult = blogRepo.getPosts(
+        val postsQueryModel = GetPostsQueryModel(
             usernames = listOf("me"),
             pageSize = pageSize,
             isUserFeed = false,
             pageToken = pageToken
         )
+
+        val postsResult = blogRepo.getPosts(postsQueryModel)
+
 
         return when (postsResult) {
             is ApiSuccess -> {
