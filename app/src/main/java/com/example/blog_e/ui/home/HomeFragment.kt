@@ -10,19 +10,30 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.blog_e.adapters.PostAdapter
 import com.example.blog_e.adapters.PostsViewAdapter
+import com.example.blog_e.data.model.GetPostsQueryModel
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.databinding.FragmentHomeBinding
+import com.example.blog_e.utils.PostComparator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
+    private lateinit var postViewList: ArrayList<PostAPIModel>
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
+
+    private var isLoading = false
+    private var isUserFeed = true
+
+    val pagingAdapter = PostAdapter(PostComparator())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,10 +51,18 @@ class HomeFragment : Fragment() {
         setUpFragmentBinding()
 
         // fetch blogs from user feed
-        lifecycleScope.launch {
-            val postViewList: List<PostAPIModel> = homeViewModel.fetchBlogs(true)
+
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            postViewList = homeViewModel.fetchBlogs(true,5)
 
             recyclerView.adapter = PostsViewAdapter(postViewList)
+
+//            homeViewModel.
+
+            val pagingData: GetPostsQueryModel
+            homeViewModel.uiState.collectLatest {
+
+            }
         }
 
         return root
