@@ -61,8 +61,8 @@ data class PostsResult(
 data class GetPostsQueryModel(
     val usernames: List<String>? = null,
     val pageSize: Int,
-    var pageToken: String?,
-    val isUserFeed: Boolean
+    val pageToken: String? = null,
+    val isUserFeed: Boolean?= null
 )
 
 // TODO: change iconId to string

@@ -7,7 +7,8 @@ import com.example.blog_e.data.model.PostAPIModel
 
 class PostPagingSource(
     val blogRepo: BlogRepo,
-    private val postsQueryModel: GetPostsQueryModel
+    private val isUserFeed: Boolean,
+    private val usernames: List<String>
 ) : PagingSource<String, PostAPIModel>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, PostAPIModel> {
@@ -17,10 +18,10 @@ class PostPagingSource(
 
         // TODO: überlegen, ob das als Objekt erstellt werden soll oder Query für query eingegeben wird
         val newParameters = GetPostsQueryModel(
-            postsQueryModel.usernames,
+            usernames,
             pageSize,
             nextPageToken,
-            postsQueryModel.isUserFeed
+            isUserFeed
         )
         val res = blogRepo.getPosts(newParameters)
         return when (res) {

@@ -5,7 +5,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.liveData
-import com.example.blog_e.data.model.GetPostsQueryModel
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.data.repository.BlogRepo
 import com.example.blog_e.data.repository.PostPagingSource
@@ -26,7 +25,7 @@ class HomeViewModel @Inject constructor(
     private val blogRepo: BlogRepo
 ) : ViewModel() {
 
-    private val _isUserFeed = MutableLiveData(USER_FEED_STARTING_PAGE)
+    private val _isUserFeed = MutableLiveData(IS_USER_FEED_STARTING_PAGE)
 
     val isUserFeed: LiveData<Boolean> = _isUserFeed
 
@@ -39,12 +38,9 @@ class HomeViewModel @Inject constructor(
             blogRepo.getDefaultPageConfig(),
         ) {
             PostPagingSource(
-                blogRepo, GetPostsQueryModel(
-                    listOf(),
-                    5,
-                    null,
-                    isUserFeed = it
-                )
+                blogRepo,
+                isUserFeed = it,
+                usernames = listOf()
             )
         }.liveData
             .cachedIn(viewModelScope)
@@ -64,7 +60,7 @@ class HomeViewModel @Inject constructor(
     }
 
     companion object {
-        const val USER_FEED_STARTING_PAGE = false
+        const val IS_USER_FEED_STARTING_PAGE = false
     }
 
 }

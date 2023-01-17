@@ -32,7 +32,7 @@ interface BlogEAPI {
         @Query("usernames") usernames: List<String>? = null,
         @Query("pageSize") pageSize: Int,
         @Query("pageToken") pageToken: String? = null,
-        @Query("isUserFeed") isUserFeed: Boolean,
+        @Query("isUserFeed") isUserFeed: Boolean? = null,
 
         ): Response<PostsResult>
 
