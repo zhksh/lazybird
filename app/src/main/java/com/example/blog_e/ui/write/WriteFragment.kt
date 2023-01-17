@@ -32,6 +32,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.lang.Exception
+import java.lang.NullPointerException
 import java.util.*
 
 @AndroidEntryPoint
@@ -103,24 +105,34 @@ class WriteFragment() : Fragment() {
             }
         }
 
+        postBtn.setOnClickListener {
+            Log.e(TAG, moodChoices.checkedButtonId.toString())
+            writeViewModel.createPost(
+                Post(
+                    content=postInput.text.toString(),
+                    autogenerateResponses = autoReplyFlag.isChecked
+                )
+            )
+        }
 
+        generateEmptyBtn.setOnClickListener {
+            var mood : String
+            try { mood = binding.root.findViewById<Button>(moodChoices.checkedButtonId).text.toString().lowercase()}
+            catch (e: NullPointerException){ mood = Config.defaultMood}
 
+            writeViewModel.completePost(
+                CompletePayload(
+                    postInput.text.toString(),
+                    generationTemperature.value,
+                    mood, "false")
+            )
+        }
 
-
-        // add text watcher for empty input
         postInput.addTextChangedListener(
             object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {
-                }
+                override fun afterTextChanged(s: Editable?) {}
 
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
-
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     if (s.toString().isNotBlank()) {
                         postBtn.isEnabled = true
@@ -128,7 +140,6 @@ class WriteFragment() : Fragment() {
                         generateEmptyBtn.isEnabled = true
 
                     } else {
-
                         postBtn.isEnabled = false
                         generateEmptyBtn.isEnabled = false
                         generatePromptBtn.visibility = View.VISIBLE
@@ -149,27 +160,6 @@ class WriteFragment() : Fragment() {
                 generatePromptBtn.visibility = View.GONE
                 binding.aiOptions.visibility = View.GONE
             }
-        }
-
-        postBtn.setOnClickListener {
-            Log.e(TAG, moodChoices.checkedButtonId.toString())
-            writeViewModel.createPost(
-                Post(
-                    content=postInput.text.toString(),
-                    autogenerateResponses = autoReplyFlag.isChecked
-                    )
-            )
-        }
-
-
-        generateEmptyBtn.setOnClickListener {
-            Log.e(TAG, moodChoices.checkedButtonId.toString())
-            writeViewModel.completePost(
-                CompletePayload(
-                    postInput.text.toString(),
-                    generationTemperature.values[0],
-                    "lucid", "true")
-            )
         }
 
         return binding.root
