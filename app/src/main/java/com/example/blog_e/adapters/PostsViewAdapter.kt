@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.data.model.ProfilePicture
+import com.example.blog_e.utils.Utils
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -59,8 +61,8 @@ class PostsViewAdapter(private val postList: List<PostAPIModel>) :
 
     fun calculatePastTime(date: String): String {
 
-        val current = LocalDateTime.now(ZoneId.of("Europe/Berlin"))
-        var formatter = DateTimeFormatter.ofPattern(pattern)
+        val current = Utils.currentDate()
+        var formatter = DateTimeFormatter.ofPattern(Config.dateFormat)
         val creationDate: LocalDateTime = LocalDateTime.parse(date, formatter)
         val duration = Duration.between(creationDate, current)
 
@@ -95,9 +97,5 @@ class PostsViewAdapter(private val postList: List<PostAPIModel>) :
         val likes: TextView = itemView.findViewById(R.id.likeNumber)
         val comments: TextView = itemView.findViewById(R.id.commentNumber)
         val pastTime: TextView = itemView.findViewById(R.id.postPastTime)
-    }
-
-    companion object {
-        val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
     }
 }
