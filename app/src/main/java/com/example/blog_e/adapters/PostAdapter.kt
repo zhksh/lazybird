@@ -8,12 +8,13 @@ import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.data.model.ProfilePicture
+import com.example.blog_e.utils.Utils
 import java.time.Duration
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>) :
@@ -55,11 +56,11 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>) :
 
     private fun calculatePastTime(date: String): String {
 
-
-        val current = LocalDateTime.now(ZoneId.of("Europe/Berlin"))
-        var formatter = DateTimeFormatter.ofPattern(PostsViewAdapter.pattern)
+        val current = Utils.currentDate()
+        var formatter = DateTimeFormatter.ofPattern(Config.dateFormat)
         val creationDate: LocalDateTime = LocalDateTime.parse(date, formatter)
         val duration = Duration.between(creationDate, current)
+
 
         if (duration.toDays() > 9) {
             formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
