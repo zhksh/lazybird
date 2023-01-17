@@ -2,10 +2,7 @@ package com.example.blog_e.data.repository
 
 import androidx.lifecycle.LiveData
 import com.example.blog_e.Config
-import com.example.blog_e.data.model.Authorization
-import com.example.blog_e.data.model.LoginPayload
-import com.example.blog_e.data.model.NewUserAPIModel
-import com.example.blog_e.data.model.User
+import com.example.blog_e.data.model.*
 import java.util.*
 
 class UserRepo(private val backendS: BlogEAPI) : UserRepository {
@@ -26,12 +23,8 @@ class UserRepo(private val backendS: BlogEAPI) : UserRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUser(user: User): ApiResult<User> {
-        TODO("Muss noch gemacht werden")
-    }
-
-    override suspend fun getUser(userId: UUID) {
-        TODO("Not yet implemented")
+    override suspend fun getUser(username: String): ApiResult<GetUserAPIModel> {
+        return apiHandler.handleApi { backendS.getUser(username) }
     }
 
     override suspend fun followOrUnfollowUser(actionUser: User, targetUser: User) {

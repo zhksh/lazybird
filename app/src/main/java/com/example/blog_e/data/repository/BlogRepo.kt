@@ -1,14 +1,9 @@
 package com.example.blog_e.data.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingConfig
 import com.example.blog_e.Config
 import com.example.blog_e.data.model.*
-import retrofit2.HttpException
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.io.IOException
 
 class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
 
@@ -21,18 +16,13 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
     /**
      * Includes mapping. Consider refactoring this into a domain layer
      */
-    override suspend fun getPosts(
-        usernames: List<String>?,
-        pageSize: Int,
-        pageToken: String?,
-        isUserFeed: Boolean
-    ): ApiResult<PostsResult> {
+    override suspend fun getPosts(postsQueryModel: GetPostsQueryModel): ApiResult<PostsResult> {
         return apiHandler.handleApi {
             backendS.getPosts(
-                usernames,
-                pageSize,
-                pageToken,
-                isUserFeed,
+                postsQueryModel.usernames,
+                postsQueryModel.pageSize,
+                postsQueryModel.pageToken,
+                postsQueryModel.isUserFeed,
             )
         }
     }
@@ -61,7 +51,7 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
     }
 
     override suspend fun completePost(completePayload: CompletePayload): ApiResult<LLMResult> {
-        return apiHandler.handleApi {backendS.generateCompletion(completePayload)}
+        return apiHandler.handleApi { backendS.generateCompletion(completePayload) }
     }
 
     override fun getCommentsStream(): ApiResult<LiveData<List<Comment>>> {
@@ -78,5 +68,20 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
 
     override suspend fun likeOrUnlikePost(like: Like, post: Post): ApiResult<Any> {
         TODO("Not yet implemented")
+    }
+
+    /**
+     * let's define page size, page size is the only required param, rest is optional
+     */
+    fun getDefaultPageConfig(): PagingConfig {
+        return PagingConfig(
+            pageSize = DEFAULT_PAGE_SIZE,
+            enablePlaceholders = false,
+            prefetchDistance = 1,
+        )
+    }
+
+    companion object {
+        const val DEFAULT_PAGE_SIZE = 10
     }
 }

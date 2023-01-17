@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.Config
 import com.example.blog_e.R
@@ -13,14 +15,12 @@ import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.utils.Utils
 import java.time.Duration
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class PostsViewAdapter(private val postList: List<PostAPIModel>) :
-    RecyclerView.Adapter<PostsViewAdapter.ViewHolder>() {
+class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>) :
+    PagingDataAdapter<PostAPIModel, PostAdapter.ViewHolder>(differCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         val view = LayoutInflater.from(parent.context).inflate(
             R.layout.posts_list_item,
             parent,
@@ -30,41 +30,37 @@ class PostsViewAdapter(private val postList: List<PostAPIModel>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val postsViewModel = getItem(position)
+        postsViewModel?.let {
+            holder.content.text = it.content
 
-        val postsViewModel = postList[position]
+            val username = "@" + it.user.username
 
-        holder.content.text = postsViewModel.content
+            holder.username.text = username
 
-        val username = "@" + postsViewModel.user.username
+            holder.displayName.text = it.user.displayName
 
-        holder.username.text = username
+            it.user.iconId
+            val imageResourceId = ProfilePicture.PICTURE_01
+            holder.profilePictureView.setImageResource(
+                ProfilePicture.values().toList().shuffled().first().res
+            )
 
-        holder.displayName.text = postsViewModel.user.displayName
+            holder.likes.text = it.likes.toString()
 
-        postsViewModel.user.iconId
-        val imageResourceId = ProfilePicture.PICTURE_01
-        holder.profilePictureView.setImageResource(
-            ProfilePicture.values().toList().shuffled().first().res
-        )
+            holder.comments.text = it.commentCount.toString()
 
-        holder.likes.text = postsViewModel.likes.toString()
-
-        holder.comments.text = postsViewModel.commentCount.toString()
-
-        holder.pastTime.text = calculatePastTime(postsViewModel.timestamp)
-
+            holder.pastTime.text = calculatePastTime(it.timestamp)
+        }
     }
 
-    override fun getItemCount(): Int {
-        return postList.size
-    }
-
-    fun calculatePastTime(date: String): String {
+    private fun calculatePastTime(date: String): String {
 
         val current = Utils.currentDate()
         var formatter = DateTimeFormatter.ofPattern(Config.dateFormat)
         val creationDate: LocalDateTime = LocalDateTime.parse(date, formatter)
         val duration = Duration.between(creationDate, current)
+
 
         if (duration.toDays() > 9) {
             formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
@@ -88,7 +84,6 @@ class PostsViewAdapter(private val postList: List<PostAPIModel>) :
 
     }
 
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profilePictureView: ImageView = itemView.findViewById(R.id.profilePictureView)
         val content: TextView = itemView.findViewById(R.id.content)
@@ -97,5 +92,8 @@ class PostsViewAdapter(private val postList: List<PostAPIModel>) :
         val likes: TextView = itemView.findViewById(R.id.likeNumber)
         val comments: TextView = itemView.findViewById(R.id.commentNumber)
         val pastTime: TextView = itemView.findViewById(R.id.postPastTime)
+
     }
+
+
 }
