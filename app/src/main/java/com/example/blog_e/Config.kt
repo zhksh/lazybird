@@ -7,7 +7,15 @@ class Config {
         const val clientTimout = 60 //s
         const val tagPref = "mvsp"
 
+        const val dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
+//        const val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+
+        const val timeZone = "Europe/Berlin"
+
+
         const val defaultMood = "neutral"
+
+
 
         fun tag(str: String): String {return tagPref + "_" + str }
     }
