@@ -21,7 +21,13 @@
         android:id="@+id/navigation_write"
         android:name="com.example.blog_e.ui.write.WriteFragment"
         android:label="@string/title_write"
-        tools:layout="@layout/fragment_write" />
+        tools:layout="@layout/fragment_write">
+    <action
+            android:id="@+id/action_write_fragment_to_nav_host_fragment_activity_main"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@+id/mobile_navigation"
+            app:popUpToInclusive="true"/>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -36,7 +42,10 @@
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_login_fragment_to_navigation_home"
-            app:destination="@id/navigation_home" />
+            app:destination="@id/navigation_home"
+            app:popUpTo="@+id/mobile_navigation"
+            app:popUpToInclusive="false"
+        />
         <action
             android:id="@+id/action_login_fragment_to_sign_up_fragment"
             app:destination="@id/sign_up_fragment" />

@@ -50,38 +50,14 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
     }
 
     override suspend fun createPost(post: Post): ApiResult<PostAPIModel> {
-        val post = PostRequest(
+        val postReq = PostRequest(
             post.content,
             "happy",
             true,
             shouldAutoComplete = false,
             0
         )
-        return apiHandler.handleApi { backendS.createPost(post) }
-//        val response: Response<PostAPIModel> = try {
-//            backendS.createPost(
-//                PostRequest(
-//                    post.content,
-//                    "happy",
-//                    true,
-//                    shouldAutoComplete = false,
-//                    0
-//                )
-//            )
-//        } catch (e: IOException) {
-//            Log.e(this.toString(), "Keine buffer")
-//            return
-//        } catch (e: HttpException) {
-//            Log.e(this.toString(), "Keine Verbindung bekommen")
-//            return
-//        }
-//
-//        if (response.isSuccessful && response.body() != null) {
-//            Log.e(this.toString(), "erfolgreich")
-//        } else {
-//            Log.e(this.toString(), "Not successful")
-//        }
-
+        return apiHandler.handleApi { backendS.createPost(postReq) }
     }
 
     override suspend fun completePost(completePayload: CompletePayload): ApiResult<LLMResult> {

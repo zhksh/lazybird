@@ -24,7 +24,7 @@ interface BlogEAPI {
     suspend fun follow(@Path("username") username: String): Response<FollowResult>
 
     // Post
-    @POST("post")
+    @POST("posts")
     suspend fun createPost(@Body post: PostRequest): Response<PostAPIModel>
 
     @GET("posts")
