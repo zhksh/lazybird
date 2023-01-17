@@ -8,24 +8,36 @@
 
     <ToggleButton
         android:id="@+id/toggleButton"
-        android:layout_width="149dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="4dp"
-        android:text="ToggleButton"
+        android:layout_width="150dp"
+        android:layout_height="52dp"
         android:textOff="Followers"
         android:textOn="Global"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:singleSelection="true"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/postsListRecyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggleButton"
-        tools:itemCount="5"
-        tools:layout_editor_absoluteX="0dp"
-        tools:listitem="@layout/posts_list_item" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="-16dp">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/postsListRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:itemCount="5"
+            tools:listitem="@layout/posts_list_item" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -30,7 +30,6 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val postsViewModel = getItem(position)
-
         postsViewModel?.let {
             holder.content.text = it.content
 
@@ -56,16 +55,12 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>) :
 
     private fun calculatePastTime(date: String): String {
 
-        println(date)
 
         val current = LocalDateTime.now(ZoneId.of("Europe/Berlin"))
         var formatter = DateTimeFormatter.ofPattern(PostsViewAdapter.pattern)
         val creationDate: LocalDateTime = LocalDateTime.parse(date, formatter)
         val duration = Duration.between(creationDate, current)
 
-        println(creationDate)
-        println(current)
-        println(duration.toMinutes())
         if (duration.toDays() > 9) {
             formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
             return creationDate.format(formatter)
@@ -88,8 +83,6 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>) :
 
     }
 
-
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profilePictureView: ImageView = itemView.findViewById(R.id.profilePictureView)
         val content: TextView = itemView.findViewById(R.id.content)
@@ -100,7 +93,6 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>) :
         val pastTime: TextView = itemView.findViewById(R.id.postPastTime)
 
     }
-
 
 
 }

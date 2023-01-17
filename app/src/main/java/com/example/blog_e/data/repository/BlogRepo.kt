@@ -98,10 +98,14 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
      * let's define page size, page size is the only required param, rest is optional
      */
     fun getDefaultPageConfig(): PagingConfig {
-        return PagingConfig(pageSize = DEFAULT_PAGE_SIZE, enablePlaceholders = false)
+        return PagingConfig(
+            pageSize = DEFAULT_PAGE_SIZE,
+            enablePlaceholders = false,
+            prefetchDistance = 1,
+        )
     }
 
     companion object {
-        const val DEFAULT_PAGE_SIZE = 25
+        const val DEFAULT_PAGE_SIZE = 10
     }
 }

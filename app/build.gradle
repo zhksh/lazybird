@@ -66,10 +66,10 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
-//    TODO das refreshen machen
-//    // user swiper refreshlayout when you want to load async when scrolling to the top
-//    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    // user swiper refreshlayout when you want to load async when scrolling to the top
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
+    // use android paging library
     implementation 'androidx.paging:paging-runtime:3.1.1'
 }
 
