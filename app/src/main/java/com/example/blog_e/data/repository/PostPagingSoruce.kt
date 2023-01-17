@@ -12,24 +12,20 @@ class PostPagingSource(
 ) : PagingSource<String, PostAPIModel>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, PostAPIModel> {
-
-        val nextPageToken = params.key
-        val pageSize = params.loadSize
-
-        // TODO: überlegen, ob das als Objekt erstellt werden soll oder Query für query eingegeben wird
-        val newParameters = GetPostsQueryModel(
+        val queryParamter = GetPostsQueryModel(
             usernames,
-            pageSize,
-            nextPageToken,
+            params.loadSize,
+            params.key,
             isUserFeed
         )
-        val res = blogRepo.getPosts(newParameters)
+        val res = blogRepo.getPosts(queryParamter)
         return when (res) {
             is ApiSuccess -> {
+                val nextPageToken: String? = res.data.nextPageToken.ifEmpty { null }
                 LoadResult.Page(
                     data = res.data.posts,
                     prevKey = null,  // only paging forward
-                    nextKey = res.data.nextPageToken
+                    nextKey = nextPageToken
                 )
             }
             is ApiException -> LoadResult.Error(res.e)
