@@ -7,10 +7,12 @@ class Config {
         const val clientTimout = 60 //s
         const val tagPref = "mvsp"
 
-        const val dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
-//        const val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+//        const val dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
+        //the re4st of the world is using ISO-8601 and so are we
+        const val dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
-        const val timeZone = "Europe/Berlin"
+        const val timeZone = "UTC"
+//        const val timeZone = "Europe/Berlin"
 
 
         const val defaultMood = "neutral"
