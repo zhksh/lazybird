@@ -7,6 +7,8 @@ class Config {
         const val clientTimout = 60 //s
         const val tagPref = "mvsp"
 
+        const val defaultMood = "neutral"
+
         fun tag(str: String): String {return tagPref + "_" + str }
     }
 

@@ -61,8 +61,6 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
             _uiState.update { it.copy( running = true, errorMsg = "") }
             val res = postRepo.completePost(data)
             _uiState.update { it.copy( running = false) }
-
-
             when (res) {
                 is ApiException -> {
                     _uiState.update { it.copy(errorMsg = res.e.message!!, success = false) }
