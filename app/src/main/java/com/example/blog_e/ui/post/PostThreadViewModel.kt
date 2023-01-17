@@ -9,11 +9,10 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.drafts.Draft
-import org.java_websocket.drafts.Draft_10
 import org.java_websocket.drafts.Draft_17
-import org.java_websocket.drafts.Draft_76
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
+import java.sql.Timestamp
 import javax.inject.Inject
 
 data class WebsocketEvent(
@@ -21,6 +20,30 @@ data class WebsocketEvent(
     val postId: String,
 )
 
+data class UserInfo(
+    val username: String,
+    val icon_id: String,
+    val display_name: String?,
+)
+
+data class Comment(
+    val id: String,
+    val user: UserInfo,
+)
+
+data class FullPost(
+    val id: String,
+    val content: String,
+    val user: UserInfo,
+    val timestamp: Timestamp,
+    val likes: Int,
+    val comments: List<Comment>,
+)
+
+data class WebsocketResponse(
+    val eventType: String,
+    val data: FullPost,
+)
 
 @HiltViewModel
 class PostThreadViewModel @Inject constructor(
@@ -28,13 +51,12 @@ class PostThreadViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val gson = Gson()
-    private val data: MutableLiveData<String> = MutableLiveData()
+    private val data: MutableLiveData<FullPost> = MutableLiveData()
+
     // TODO: Rename postId
     private var id: String = ""
 
-    val postId = ObservableField<String>();
-
-    fun getPost(id: String): LiveData<String> {
+    fun getPost(id: String): LiveData<FullPost> {
         println(id)
         loadPost(id)
         return data
@@ -42,9 +64,9 @@ class PostThreadViewModel @Inject constructor(
 
     private fun loadPost(id: String){
         // this.id = id
-        this.id = "be54098d-aa84-49ad-b710-33649123103e"
-        //val client = MyWebSocketClient(URI("wss://mvsp-api.ncmg.eu"), Draft_17())
-        val client = MyWebSocketClient(URI("ws://localhost:6969"), Draft_17())
+        this.id = "d5a12370-13f4-4fac-862f-e66a28a5a116"
+        // val client = MyWebSocketClient(URI("wss://mvsp-api.ncmg.eu"), Draft_17())
+        val client = MyWebSocketClient(URI("ws://10.0.2.2:6969"), Draft_17())
         client.connect()
     }
 
@@ -53,8 +75,8 @@ class PostThreadViewModel @Inject constructor(
             // TODO: Handle error?
             println(ex)
         }
+
         override fun onOpen(handshakedata: ServerHandshake?) {
-            println("connection opened")
             val event = gson.toJson(WebsocketEvent(postId = id))
             this.send(event)
         }
@@ -64,7 +86,12 @@ class PostThreadViewModel @Inject constructor(
         override fun onMessage(message: String?) {
             println(message)
             if (message != null) {
-                data.value = message!!
+                val response = gson.fromJson(message, WebsocketResponse::class.java)
+                // TODO: Check if parsing also works with error
+                println(response)
+
+                // data.value = response.data
+                data.postValue(response.data)
             }
         }
     }

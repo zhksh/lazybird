@@ -37,7 +37,7 @@
                 android:value="" />
         </activity>
 
-        <activity android:name=".ui.post.PostThreadActivity" android:parentActivityName=".MainActivity">
+        <activity android:name=".ui.post.PostThreadActivity" android:parentActivityName=".MainActivity" android:label="Comments">
         </activity>
     </application>
 
