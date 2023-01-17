@@ -1,6 +1,7 @@
 package com.example.blog_e.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.adapters.PostAdapter
-import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.databinding.FragmentHomeBinding
 import com.example.blog_e.utils.PostComparator
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,16 +22,12 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private lateinit var postViewList: ArrayList<PostAPIModel>
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: PostAdapter
-
-    private var isLoading = false
-    private var isUserFeed = true
-
+    private lateinit var postAdapter: PostAdapter
+    private lateinit var linearLayoutManager: LinearLayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,23 +37,19 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        adapter = PostAdapter(PostComparator())
+        postAdapter = PostAdapter(PostComparator())
+        linearLayoutManager = LinearLayoutManager(root.context)
 
         recyclerView = binding.postsListRecyclerView
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(root.context)
-            adapter = adapter
-            setHasFixedSize(true)
-        }
+        recyclerView.layoutManager = linearLayoutManager
+        recyclerView.adapter = postAdapter
+        recyclerView.setHasFixedSize(true)
 
         setUpFragmentBinding()
 
         viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.getPosts().observe(viewLifecycleOwner) {
-                adapter.submitData(lifecycle, it).also {
-                    // Sehr fragwürdig: Der Adapter updated sich nicht automatisch.
-                    recyclerView.adapter = adapter
-                }
+                postAdapter.submitData(lifecycle, it)
             }
         }
 
@@ -68,6 +60,15 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                postAdapter.addLoadStateListener {
+                    Log.i(this.toString(), "onCreateView: ${it}")
+                }
+            }
+        }
+
 
         return root
     }
@@ -87,7 +88,7 @@ class HomeFragment : Fragment() {
         binding.swipeRefresh.setOnRefreshListener {
             homeViewModel.refreshPosts(true)
             //TODO: Den Adapter zu refreshen sorgt aktuell dafür, dass hier das Paging nicht richtig funktioniert. Nochmal genauer naschschauen!!!
-            adapter.refresh()
+            postAdapter.refresh()
             homeViewModel.refreshPosts(false)
             binding.swipeRefresh.isRefreshing = false
         }
