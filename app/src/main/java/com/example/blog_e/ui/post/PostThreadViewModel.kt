@@ -1,6 +1,5 @@
 package com.example.blog_e.ui.post
 
-import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -81,17 +80,22 @@ class PostThreadViewModel @Inject constructor(
             this.send(event)
         }
         override fun onClose(code: Int, reason: String?, remote: Boolean) {
-            println("connection closed code: ${code} reason: ${reason}")
+            println("connection closed code: $code reason: $reason")
         }
         override fun onMessage(message: String?) {
             println(message)
             if (message != null) {
                 val response = gson.fromJson(message, WebsocketResponse::class.java)
-                // TODO: Check if parsing also works with error
                 println(response)
 
-                // data.value = response.data
-                data.postValue(response.data)
+                if (response.eventType == "error") {
+                    // TODO: Handle error
+                    println("received websocket error")
+                }
+
+                if (response.eventType == "update") {
+                    data.postValue(response.data)
+                }
             }
         }
     }

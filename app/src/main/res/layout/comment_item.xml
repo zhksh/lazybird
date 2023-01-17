@@ -1,15 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/comment"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:id="@+id/blog_post"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:padding="5dp">
+
+
+<com.google.android.material.imageview.ShapeableImageView
+    android:id="@+id/profilePictureView"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    app:shapeAppearanceOverlay="@style/Circular"
+    app:srcCompat="@drawable/ic_baseline_account_circle_24" />
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="5dp">
+    android:layout_marginLeft="8px"
+    android:padding="8px">
+
 
     <TextView
+        android:id="@+id/displayName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Display name"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Foo Bar"/>
+        android:layout_marginTop="6dp"
+        android:minHeight="32dp"
+        android:text="Here goes the content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/displayName" />
 
-
+</androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

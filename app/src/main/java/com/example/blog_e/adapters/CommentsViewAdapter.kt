@@ -1,0 +1,34 @@
+package com.example.blog_e.adapters
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.blog_e.R
+import com.example.blog_e.ui.post.Comment
+
+class CommentsViewAdapter(val comments: List<Comment>) :
+    RecyclerView.Adapter<CommentsViewAdapter.ViewHolder>() {
+
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val content: TextView
+
+        init {
+            content = view.findViewById(R.id.content)
+        }
+    }
+
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(viewGroup.context)
+            .inflate(R.layout.comment_item, viewGroup, false)
+
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        viewHolder.content.text = comments[position].id
+    }
+
+    override fun getItemCount() = comments.size
+}

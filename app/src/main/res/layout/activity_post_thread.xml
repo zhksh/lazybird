@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable name="viewModel" type="com.example.blog_e.ui.post.PostThreadViewModel" />
     </data>
 
     <LinearLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/blog_post"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:padding="5dp">
 
 
@@ -92,14 +93,13 @@
                 app:layout_constraintVertical_bias="0.454" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/commentListRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="548dp"
+            tools:itemCount="5"
+            tools:layout_editor_absoluteX="0dp"
+            tools:listitem="@layout/comment_item" />
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/postsListRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:itemCount="5"
-        tools:layout_editor_absoluteX="0dp"
-        tools:listitem="@layout/comment_item" />
-
 </layout>
