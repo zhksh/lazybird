@@ -58,6 +58,7 @@ class ProfileFragment : Fragment() {
                 findNavController().navigate(R.id.start_fragment)
             } else {
                 // TODO: Update UI with user
+
             }
         })
 
