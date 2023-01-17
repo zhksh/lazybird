@@ -26,7 +26,7 @@ class ApiClient {
             val retrofit = Retrofit.Builder()
                 .baseUrl(Config.apiAddress)
                 .client(okhttpClient(context))
-                .addConverterFactory(GsonConverterFactory.create(gson))// Add our Okhttp client
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
 
             apiService = retrofit.create(BlogEAPI::class.java)

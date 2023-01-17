@@ -71,17 +71,17 @@ class PostsViewAdapter(private val postList: List<PostAPIModel>) :
             return creationDate.format(formatter)
         }
         if (duration.toDays() > 0) {
-            return "${duration.toDays()} d"
+            return "${duration.toDays()}d"
         }
         if (duration.toHours() > 0) {
-            return "${duration.toHours()} H"
+            return "${duration.toHours()}h"
         }
         if (duration.toMinutes() > 0) {
-            return "${duration.toMinutes()} M"
+            return "${duration.toMinutes()}m"
         }
 
-        if (duration.toSeconds() > 0) {
-            return "${duration.toSeconds()} s"
+        if (duration.seconds > 0) {
+            return "${duration.seconds}s"
         }
 
         return "just posted"
