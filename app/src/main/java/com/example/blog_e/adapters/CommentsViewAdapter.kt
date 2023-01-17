@@ -13,9 +13,11 @@ class CommentsViewAdapter(val comments: List<Comment>) :
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val content: TextView
+        val displayName: TextView
 
         init {
             content = view.findViewById(R.id.content)
+            displayName = view.findViewById(R.id.displayName)
         }
     }
 
@@ -27,7 +29,14 @@ class CommentsViewAdapter(val comments: List<Comment>) :
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.content.text = comments[position].id
+        val comment = comments[position]
+
+        viewHolder.content.text = comment.id
+        if (comment.user.display_name == null) {
+            viewHolder.displayName.text = comments[position].user.username
+        } else {
+            viewHolder.displayName.text = comments[position].user.display_name
+        }
     }
 
     override fun getItemCount() = comments.size
