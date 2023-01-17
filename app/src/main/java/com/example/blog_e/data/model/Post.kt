@@ -6,8 +6,8 @@ import java.util.*
 data class Post(
     val id: UUID = UUID.randomUUID(),
     val content: String,
-    val publicationDate: Date,
-    val commentCount: Int,
+    val publicationDate: Date = Date(),
+    val commentCount: Int = 0,
     val likes: List<Like>? = emptyList(),
     val author: User? = null,
     val autogenerateResponses: Boolean? = false,

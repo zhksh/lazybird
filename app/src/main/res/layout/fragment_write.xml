@@ -73,7 +73,7 @@
                 android:gravity="top"
                 android:inputType="textMultiLine"
                 android:minHeight="200dp"
-                android:text="@{viewmodel.postText}"/>
+                android:text="Frank Zappa goes to town and"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
@@ -164,7 +164,8 @@
 
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:id="@+id/autoReplyFlag">
                 </com.google.android.material.checkbox.MaterialCheckBox>
 
                 <TextView

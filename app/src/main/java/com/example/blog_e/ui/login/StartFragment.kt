@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.databinding.FragmentStartBinding
 
@@ -14,7 +15,7 @@ class StartFragment : Fragment() {
 
     private var _binding: FragmentStartBinding? = null
     private val binding get() = _binding!!
-
+    private val  TAG = Config.tag(this.toString())
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
