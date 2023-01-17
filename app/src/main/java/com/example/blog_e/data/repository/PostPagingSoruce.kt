@@ -13,11 +13,12 @@ class PostPagingSource(
     override suspend fun load(params: LoadParams<String>): LoadResult<String, PostAPIModel> {
 
         val nextPageToken = params.key
+        val pageSize = params.loadSize
 
         // TODO: überlegen, ob das als Objekt erstellt werden soll oder Query für query eingegeben wird
         val newParameters = GetPostsQueryModel(
             postsQueryModel.usernames,
-            postsQueryModel.pageSize,
+            pageSize,
             nextPageToken,
             postsQueryModel.isUserFeed
         )

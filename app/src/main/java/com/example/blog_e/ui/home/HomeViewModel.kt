@@ -1,9 +1,6 @@
 package com.example.blog_e.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.Pager
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -15,7 +12,6 @@ import com.example.blog_e.data.repository.PostPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 data class HomeState(
@@ -30,41 +26,45 @@ class HomeViewModel @Inject constructor(
     private val blogRepo: BlogRepo
 ) : ViewModel() {
 
+    private val _isUserFeed = MutableLiveData(USER_FEED_STARTING_PAGE)
+
+    val isUserFeed: LiveData<Boolean> = _isUserFeed
+
+    // TODO: home state aktuell nicht benutzt
     private val _homeState = MutableStateFlow(HomeState())
     val homeState = _homeState.asStateFlow()
 
-    private val _posts = MutableLiveData<PagingData<PostAPIModel>>()
-
-    fun getPosts(): LiveData<PagingData<PostAPIModel>> {
-        val liveDate = Pager(
+    private var _posts: MutableLiveData<PagingData<PostAPIModel>> = _isUserFeed.switchMap {
+        Pager(
             blogRepo.getDefaultPageConfig(),
         ) {
-            blogRepo
             PostPagingSource(
                 blogRepo, GetPostsQueryModel(
                     listOf(),
                     5,
                     null,
-                    // TODO: isUserFeed richtig updaten!!! Ggf. eine Methode "fetch(), die das LiveData Objekt neusetzt."
-                    isUserFeed = homeState.value.isNotUserFeed
+                    isUserFeed = it
                 )
             )
         }.liveData
             .cachedIn(viewModelScope)
-        _posts.value = liveDate.value
-        return liveDate
-    }
+    } as MutableLiveData<PagingData<PostAPIModel>>
+
+    var posts: LiveData<PagingData<PostAPIModel>> = _posts
+
 
     fun onClickUserFeed(isGlobal: Boolean) {
-        _homeState.update {
-            it.copy(isNotUserFeed = isGlobal)
-        }
+        _isUserFeed.value = !isGlobal
     }
 
     fun refreshPosts(isRefreshing: Boolean) {
-        _homeState.update {
-            it.copy(isRefreshingPosts = isRefreshing)
-        }
+//        _homeState.update {
+//            it.copy(isRefreshingPosts = isRefreshing)
+//        }
+    }
+
+    companion object {
+        const val USER_FEED_STARTING_PAGE = false
     }
 
 }

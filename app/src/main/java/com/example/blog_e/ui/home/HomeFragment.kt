@@ -47,28 +47,13 @@ class HomeFragment : Fragment() {
 
         setUpFragmentBinding()
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            homeViewModel.getPosts().observe(viewLifecycleOwner) {
-                postAdapter.submitData(lifecycle, it)
-            }
+        homeViewModel.posts.observe(viewLifecycleOwner) {
+            postAdapter.submitData(lifecycle, it)
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.homeState.collect {
-                    onToggleClick(it)
-                }
-            }
+        homeViewModel.isUserFeed.observe(viewLifecycleOwner) {
+            onToggleClick(it)
         }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                postAdapter.addLoadStateListener {
-                    Log.i(this.toString(), "onCreateView: ${it}")
-                }
-            }
-        }
-
 
         return root
     }
@@ -88,14 +73,14 @@ class HomeFragment : Fragment() {
         binding.swipeRefresh.setOnRefreshListener {
             homeViewModel.refreshPosts(true)
             //TODO: Den Adapter zu refreshen sorgt aktuell dafür, dass hier das Paging nicht richtig funktioniert. Nochmal genauer naschschauen!!!
-            postAdapter.refresh()
+//            postAdapter.refresh()
             homeViewModel.refreshPosts(false)
             binding.swipeRefresh.isRefreshing = false
         }
     }
 
-    private fun onToggleClick(state: HomeState) {
-        binding.toggleButton.isChecked = state.isNotUserFeed
+    private fun onToggleClick(isGlobal: Boolean) {
+        binding.toggleButton.isChecked = !isGlobal
     }
 
 }
