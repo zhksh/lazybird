@@ -8,8 +8,9 @@ class Config {
         const val tagPref = "mvsp"
 
         const val dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
+//        const val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+
         const val timeZone = "Europe/Berlin"
-        const val dateFormat_better = "yyyy-MM-dd'T'HH:mm:ss'Z'+1"
 
 
         const val defaultMood = "neutral"
