@@ -86,7 +86,8 @@
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/emotionButtonsGroup"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:singleSelection="true">
 
                 <Button
                     android:id="@+id/button2"
@@ -146,7 +147,7 @@
                     android:layout_marginLeft="32px"
                     android:text="choose craziness: "></TextView>
 
-                <com.google.android.material.slider.RangeSlider
+                <com.google.android.material.slider.Slider
                     android:id="@+id/writeGenerateTemperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
