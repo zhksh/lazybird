@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PostThreadActivity : AppCompatActivity() {
+
     private val tag = Config.tag(this.toString())
     private val adapter = CommentsViewAdapter(comments = listOf())
     private val viewModel: PostThreadViewModel by viewModels()
@@ -35,6 +36,7 @@ class PostThreadActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         postId = intent.getStringExtra("POST_ID")
+
         if (postId == null) {
             Log.e(tag,"failed to retrieve postId")
             return

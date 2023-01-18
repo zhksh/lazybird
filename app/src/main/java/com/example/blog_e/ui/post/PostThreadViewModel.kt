@@ -1,6 +1,7 @@
 package com.example.blog_e.ui.post
 
 import android.util.Log
+import android.view.View
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -56,25 +57,30 @@ class PostThreadViewModel @Inject constructor(
 ) : ViewModel() {
 
     val isLoading = ObservableBoolean(true)
+    val hasFailed = ObservableBoolean(false)
 
     private val tag = Config.tag(this.toString())
     private val gson = Gson()
     private val data: MutableLiveData<FullPost> = MutableLiveData()
     private var client: PostWebSocketClient? = null
+    private var postId = ""
 
     fun postData(): LiveData<FullPost> {
         return data
     }
 
     fun openPostConnection(id: String) {
-        isLoading.set(true)
-        client = makeClient(id)
-        client?.connect()
+        postId = id
+        reconnect()
     }
 
     fun closePostConnection() {
         client?.close()
         client = null
+    }
+
+    fun onClickRetry(view: View) {
+        reconnect()
     }
 
     suspend fun addComment(content: String, postId: String) {
@@ -89,18 +95,14 @@ class PostThreadViewModel @Inject constructor(
         }
     }
 
-    private fun makeClient(postId: String): PostWebSocketClient {
-        val sslContext = SSLContext.getInstance("TLS")
-        sslContext.init(null, null, null)
-        val client = PostWebSocketClient(URI("wss://mvsp-api.ncmg.eu"), Draft_17(), postId)
-        client.setWebSocketFactory(DefaultSSLWebSocketClientFactory(sslContext))
-        return client
-    }
-
     inner class PostWebSocketClient(serverUri: URI?, draft: Draft?, private val postId: String) : WebSocketClient(serverUri, draft) {
+        init {
+            setLoadingState()
+        }
+
         override fun onError(ex: Exception?) {
             Log.e(tag, "websocket error: $ex?.message")
-            // TODO: Handle error?
+            setErrorState()
         }
 
         override fun onOpen(handshakedata: ServerHandshake?) {
@@ -109,7 +111,7 @@ class PostThreadViewModel @Inject constructor(
         }
 
         override fun onClose(code: Int, reason: String?, remote: Boolean) {
-            Log.d(tag, "websocket closed: $reason")
+            setErrorState()
         }
 
         override fun onMessage(message: String?) {
@@ -118,14 +120,46 @@ class PostThreadViewModel @Inject constructor(
 
                 if (response.eventType == "error") {
                     Log.e(tag, "failed to subscribe to post: $message")
-                    // TODO: Handle error
+                    setErrorState()
                 }
 
                 if (response.eventType == "updated") {
                     data.postValue(response.data)
-                    isLoading.set(false)
+                    setReadyState()
                 }
             }
         }
+    }
+
+    private fun reconnect() {
+        if (client != null) {
+            client?.close()
+        }
+
+        client = makeClient(postId)
+        client?.connect()
+    }
+
+    private fun makeClient(postId: String): PostWebSocketClient {
+        val sslContext = SSLContext.getInstance("TLS")
+        sslContext.init(null, null, null)
+        val client = PostWebSocketClient(URI("wss://mvsp-api.ncmg.eu"), Draft_17(), postId)
+        client.setWebSocketFactory(DefaultSSLWebSocketClientFactory(sslContext))
+        return client
+    }
+
+    private fun setErrorState() {
+        hasFailed.set(true)
+        isLoading.set(false)
+    }
+
+    private fun setLoadingState() {
+        hasFailed.set(false)
+        isLoading.set(true)
+    }
+
+    private fun setReadyState() {
+        hasFailed.set(false)
+        isLoading.set(false)
     }
 }

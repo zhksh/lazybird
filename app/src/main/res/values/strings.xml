@@ -25,4 +25,6 @@
     <string name="search">Search!</string>
     <string name="add_a_comment">Add a comment</string>
     <string name="loading">Loading</string>
+    <string name="failed_to_load_post">Failed to load post</string>
+    <string name="retry">Retry</string>
 </resources>
