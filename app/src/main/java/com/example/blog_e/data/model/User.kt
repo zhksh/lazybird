@@ -19,5 +19,5 @@ enum class ProfilePicture(val res: Int) {
     PICTURE_02(R.drawable.baby_yoda_2),
     PICTURE_03(R.drawable.baby_yoda_3),
     PICTURE_04(R.drawable.among_us_0),
-    PICTURE_05(R.drawable.astronaout_horse_0),
+    PICTURE_05(R.drawable.astronaut_horse_0),
 }

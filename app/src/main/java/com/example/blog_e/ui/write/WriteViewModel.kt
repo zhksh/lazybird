@@ -72,6 +72,7 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
                     if (res.data.response.isBlank()) _uiState.update {
                         it.copy(success = false, errorMsg = "Empty response try later")}
                     else {
+                        _uiState.update { it.copy(errorMsg = "") }
                         _generatePostState.update { it.copy(generatedText = res.data.response, success = true) }
                     }
                 }

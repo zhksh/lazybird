@@ -109,7 +109,7 @@ class SignUpViewModel @Inject constructor(
     private suspend fun signUp(user: NewUserAPIModel): Boolean =
         when (val authorizationResult = userRepo.signUp(user)) {
             is ApiSuccess -> {
-                sessionManager.saveAuthToken(authorizationResult.data.accessToken)
+                sessionManager.saveSession(authorizationResult.data.accessToken, user.username)
                 true
             }
             is ApiError -> {

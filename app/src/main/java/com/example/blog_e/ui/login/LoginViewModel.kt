@@ -79,7 +79,7 @@ class LoginViewModel @Inject constructor(
     suspend fun login(loginPayload: LoginPayload): Boolean =
         when (val authorizationResult = userRepo.login(loginPayload)) {
             is ApiSuccess -> {
-                sessionManager.saveAuthToken(authorizationResult.data.accessToken)
+                sessionManager.saveSession(authorizationResult.data.accessToken, loginPayload.username)
                 true
             }
             is ApiError -> {
