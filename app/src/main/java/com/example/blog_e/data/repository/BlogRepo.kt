@@ -62,8 +62,10 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun createComment(comment: Comment, post: Post): ApiResult<Any> {
-        TODO("Not yet implemented")
+    override suspend fun createComment(postId: String, content: String): ApiResult<Unit> {
+        return apiHandler.handleApi {
+            backendS.createComment(postId, CommentPayload(content=content))
+        }
     }
 
     override suspend fun likeOrUnlikePost(like: Like, post: Post): ApiResult<Any> {

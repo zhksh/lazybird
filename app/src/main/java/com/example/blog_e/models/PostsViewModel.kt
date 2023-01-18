@@ -1,5 +1,6 @@
 package com.example.blog_e.models
 
+// TODO: Can this be removed?
 data class PostsViewModel(
     val profilePicture: Int,
     val username: String,

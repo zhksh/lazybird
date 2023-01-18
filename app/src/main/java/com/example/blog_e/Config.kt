@@ -2,8 +2,21 @@ package com.example.blog_e
 
 class Config {
     companion object {
+        // Use the commented settings for production
+        // private const val httpPrefix = "https://"
+        // const val socketPrefix = "wss://"
+        // private const val domain = "mvsp-api.ncmg.eu"
+
+        private const val httpPrefix = "http://"
+        const val socketPrefix = "ws://"
+        private const val domain = "10.0.2.2:6969"
+
+        const val apiAddress = httpPrefix + domain
+        const val socketAddress = socketPrefix + domain
+
 //        const val apiAddress = "https://mvsp-api.ncmg.eu"
-        const val apiAddress = "http://10.0.2.2:6969"
+//        const val apiAddress = "http://10.0.2.2:6969"
+
         const val clientTimout = 60 //s
         const val tagPref = "mvsp"
 

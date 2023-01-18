@@ -36,6 +36,9 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <activity android:name=".ui.post.PostThreadActivity" android:parentActivityName=".MainActivity" android:label="Comments">
+        </activity>
     </application>
 
 </manifest>

@@ -40,6 +40,7 @@ class ApiHandler(private val tag: String) {
                 Log.e(tag,"API request unsuccessful. Error ${response.code()}: ${response.message()}: ${errBody.toString()}")
                 ApiError(code = response.code(), message = errBody.toString())
             }
+
         } catch (e: HttpException) {
             Log.e(tag, "Could not fetch with http: " + e.message)
             ApiError(code = e.code(), message = e.message())

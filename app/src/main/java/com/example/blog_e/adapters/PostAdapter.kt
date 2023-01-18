@@ -1,5 +1,7 @@
 package com.example.blog_e.adapters
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +14,13 @@ import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.data.model.ProfilePicture
+import com.example.blog_e.ui.post.PostThreadActivity
 import com.example.blog_e.utils.Utils
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>) :
+class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>, private val context: Context) :
     PagingDataAdapter<PostAPIModel, PostAdapter.ViewHolder>(differCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -51,6 +54,19 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>) :
             holder.comments.text = it.commentCount.toString()
 
             holder.pastTime.text = calculatePastTime(it.timestamp)
+
+            val postId = it.id
+            holder.content.setOnClickListener {
+                openPost(postId)
+            }
+
+            holder.comments.setOnClickListener {
+                openPost(postId)
+            }
+
+            holder.commentBubble.setOnClickListener {
+                openPost(postId)
+            }
         }
     }
 
@@ -92,8 +108,12 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>) :
         val likes: TextView = itemView.findViewById(R.id.likeNumber)
         val comments: TextView = itemView.findViewById(R.id.commentNumber)
         val pastTime: TextView = itemView.findViewById(R.id.postPastTime)
-
+        val commentBubble: ImageView = itemView.findViewById(R.id.imageView)
     }
 
-
+    private fun openPost(postId: String) {
+        val intent = Intent(context, PostThreadActivity::class.java)
+        intent.putExtra("POST_ID", postId)
+        context.startActivity(intent)
+    }
 }

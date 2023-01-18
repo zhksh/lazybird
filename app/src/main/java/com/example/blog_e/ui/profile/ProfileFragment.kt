@@ -42,7 +42,7 @@ class ProfileFragment : Fragment() {
 
         val root: View = binding.root
 
-        postAdapter = PostAdapter(PostComparator())
+        postAdapter = PostAdapter(PostComparator(), root.context)
         recyclerView = binding.postsListRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         recyclerView.adapter = postAdapter

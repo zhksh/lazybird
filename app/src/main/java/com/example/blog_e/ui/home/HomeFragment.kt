@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        postAdapter = PostAdapter(PostComparator())
+        postAdapter = PostAdapter(PostComparator(), root.context)
         linearLayoutManager = LinearLayoutManager(root.context)
 
         recyclerView = binding.postsListRecyclerView
