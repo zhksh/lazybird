@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.blog_e.Config
-import com.example.blog_e.data.model.LoginPayload
 import com.example.blog_e.data.repository.*
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,64 +54,67 @@ class PostThreadViewModel @Inject constructor(
     private val blogRepo: BlogRepo,
 ) : ViewModel() {
 
-    private val TAG = Config.tag(this.toString())
+    private val tag = Config.tag(this.toString())
     private val gson = Gson()
     private val data: MutableLiveData<FullPost> = MutableLiveData()
-    private var postId: String = ""
+    private var client: PostWebSocketClient? = null
 
-    fun getPost(id: String): LiveData<FullPost> {
-        println(id)
-        loadPost(id)
+    fun postData(): LiveData<FullPost> {
         return data
     }
 
-    suspend fun addComment(content: String) {
+    fun openPostConnection(id: String) {
+        client = makeClient(id)
+        client?.connect()
+    }
+
+    fun closePostConnection() {
+        client?.close()
+        client = null
+    }
+
+    suspend fun addComment(content: String, postId: String) {
         when (blogRepo.createComment(postId, content)) {
             is ApiSuccess -> {}
             is ApiError -> {
-                Log.e(TAG, "api error")
+                Log.e(tag, "api error")
             }
             is ApiException -> {
-                Log.e(TAG, "api exception")
+                Log.e(tag, "api exception")
             }
         }
     }
 
-    private fun loadPost(id: String){
-        this.postId = id
-
+    private fun makeClient(postId: String): PostWebSocketClient {
         val sslContext = SSLContext.getInstance("TLS")
         sslContext.init(null, null, null)
-
-        val client = MyWebSocketClient(URI("wss://mvsp-api.ncmg.eu"), Draft_17())
+        val client = PostWebSocketClient(URI("wss://mvsp-api.ncmg.eu"), Draft_17(), postId)
         client.setWebSocketFactory(DefaultSSLWebSocketClientFactory(sslContext))
-
-        // val client = MyWebSocketClient(URI("ws://10.0.2.2:6969"), Draft_17())
-        client.connect()
+        return client
     }
 
-    inner class MyWebSocketClient(serverUri: URI?, draft: Draft?) : WebSocketClient(serverUri, draft) {
+    inner class PostWebSocketClient(serverUri: URI?, draft: Draft?, private val postId: String) : WebSocketClient(serverUri, draft) {
         override fun onError(ex: Exception?) {
+            Log.e(tag, "websocket error: $ex?.message")
             // TODO: Handle error?
-            println(ex)
         }
 
         override fun onOpen(handshakedata: ServerHandshake?) {
             val event = gson.toJson(WebsocketEvent(postId = postId))
             this.send(event)
         }
+
         override fun onClose(code: Int, reason: String?, remote: Boolean) {
-            println("connection closed code: $code reason: $reason")
+            Log.d(tag, "websocket closed: $reason")
         }
+
         override fun onMessage(message: String?) {
-            println(message)
             if (message != null) {
                 val response = gson.fromJson(message, WebsocketResponse::class.java)
-                println(response)
 
                 if (response.eventType == "error") {
+                    Log.e(tag, "failed to subscribe to post: $message")
                     // TODO: Handle error
-                    println("received websocket error")
                 }
 
                 if (response.eventType == "updated") {
