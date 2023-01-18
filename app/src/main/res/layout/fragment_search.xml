@@ -1,52 +1,28 @@
 <LinearLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <SearchView
+        android:id="@+id/search_view"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search for something..." />
 
-        <EditText
-            android:id="@+id/edit_view"
-            android:layout_width="332dp"
-            android:layout_height="69dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/textview_border"
-            android:queryHint="Search Blog/People/Tag"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:autofillHints=""
-            android:inputType=""
-            android:hint=""
-            tools:ignore="LabelFor" />
-
-        <ImageButton
-            android:id="@+id/image_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/ic_baseline_search_24"
-            android:backgroundTint="#000000"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/edit_view"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/search"
-            />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="269dp"
         android:orientation="vertical">
+
+        <include
+            android:id="@+id/userResult"
+            layout="@layout/user_search_result"></include>
 
         <TextView
             android:id="@+id/text_search"
@@ -77,10 +53,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:textAlignment="center"
-            android:textSize="20sp"
             android:text="@string/maybe_you_are_interested_in"
-            />
+            android:textAlignment="center"
+            android:textSize="20sp" />
 
         <ListView
             android:id="@+id/trend_list"
