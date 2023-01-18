@@ -6,13 +6,16 @@ import androidx.lifecycle.ViewModel
 import com.example.blog_e.data.repository.*
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.java_websocket.client.DefaultSSLWebSocketClientFactory
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.drafts.Draft
+import org.java_websocket.drafts.Draft_10
 import org.java_websocket.drafts.Draft_17
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 import java.sql.Timestamp
 import javax.inject.Inject
+import javax.net.ssl.SSLContext
 
 data class WebsocketEvent(
     val eventType: String = "subscribe",
@@ -62,10 +65,15 @@ class PostThreadViewModel @Inject constructor(
     }
 
     private fun loadPost(id: String){
-        // this.id = id
-        this.id = "d5a12370-13f4-4fac-862f-e66a28a5a116"
-        // val client = MyWebSocketClient(URI("wss://mvsp-api.ncmg.eu"), Draft_17())
-        val client = MyWebSocketClient(URI("ws://10.0.2.2:6969"), Draft_17())
+        this.id = id
+
+        val sslContext = SSLContext.getInstance("TLS")
+        sslContext.init(null, null, null)
+
+        val client = MyWebSocketClient(URI("wss://mvsp-api.ncmg.eu"), Draft_10())
+        client.setWebSocketFactory(DefaultSSLWebSocketClientFactory(sslContext))
+
+        // val client = MyWebSocketClient(URI("ws://10.0.2.2:6969"), Draft_17())
         client.connect()
     }
 
@@ -93,7 +101,7 @@ class PostThreadViewModel @Inject constructor(
                     println("received websocket error")
                 }
 
-                if (response.eventType == "update") {
+                if (response.eventType == "updated") {
                     data.postValue(response.data)
                 }
             }
