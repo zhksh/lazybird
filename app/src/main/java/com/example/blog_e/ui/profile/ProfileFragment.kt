@@ -1,7 +1,6 @@
 package com.example.blog_e.ui.profile
 
 // import com.example.blog_e.ui.home.generatePosts
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,10 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.adapters.PostAdapter
-import com.example.blog_e.data.model.ProfilePicture
+import com.example.blog_e.data.model.iconToResourceId
 import com.example.blog_e.databinding.FragmentProfileBinding
 import com.example.blog_e.utils.PostComparator
-import com.example.blog_e.utils.Utils
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -75,7 +73,7 @@ class ProfileFragment : Fragment() {
                         if (it.user != null){
                             binding.username.text = it.user.username
                             binding.nickname.text = it.user.displayName
-                            binding.profilePictureView.setImageResource(ProfilePicture.valueOf(it.user.iconId).res)
+                            binding.profilePictureView.setImageResource(iconToResourceId(it.user.iconId))
                         }
                         else {
                             if (it.errMsg.isNotBlank())
@@ -87,11 +85,7 @@ class ProfileFragment : Fragment() {
         }
 
         profileViewModel.loadUserData()
-        profileViewModel.fetchPosts(10, "next")
-
-
-
-
+        profileViewModel.fetchPosts(10)
         return root
     }
 
@@ -99,6 +93,4 @@ class ProfileFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }

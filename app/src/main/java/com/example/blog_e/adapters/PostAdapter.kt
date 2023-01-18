@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.data.model.PostAPIModel
-import com.example.blog_e.data.model.ProfilePicture
+import com.example.blog_e.data.model.iconToResourceId
 import com.example.blog_e.ui.post.PostThreadActivity
 import com.example.blog_e.utils.Utils
 import java.time.Duration
@@ -40,14 +40,7 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>, private v
             holder.username.text = username
             holder.displayName.text = it.user.displayName
 
-            var imageResourceId: Int
-            try {
-                imageResourceId = ProfilePicture.valueOf(it.user.iconId).res
-            }
-            catch (e: IllegalArgumentException){
-                imageResourceId = ProfilePicture.PICTURE_05.res
-            }
-
+            var imageResourceId = iconToResourceId(it.user.iconId)
             holder.profilePictureView.setImageResource(imageResourceId)
             holder.likes.text = it.likes.toString()
             holder.comments.text = it.commentCount.toString()
