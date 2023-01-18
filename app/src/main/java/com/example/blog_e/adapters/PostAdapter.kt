@@ -36,19 +36,20 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>, private v
         val postsViewModel = getItem(position)
         postsViewModel?.let {
             holder.content.text = it.content
-
             val username = "@" + it.user.username
-
             holder.username.text = username
-
             holder.displayName.text = it.user.displayName
 
-            val imageResourceId = ProfilePicture.valueOf(it.user.iconId)
+            var imageResourceId: Int
+            try {
+                imageResourceId = ProfilePicture.valueOf(it.user.iconId).res
+            }
+            catch (e: IllegalArgumentException){
+                imageResourceId = ProfilePicture.PICTURE_05.res
+            }
 
-            holder.profilePictureView.setImageResource(imageResourceId.res)
-
+            holder.profilePictureView.setImageResource(imageResourceId)
             holder.likes.text = it.likes.toString()
-
             holder.comments.text = it.commentCount.toString()
 
             holder.pastTime.text = calculatePastTime(it.timestamp)
