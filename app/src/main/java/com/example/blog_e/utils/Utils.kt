@@ -1,5 +1,8 @@
 package com.example.blog_e.utils
 
+import android.content.res.Resources
+import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import com.example.blog_e.Config
 import java.time.LocalDateTime
@@ -25,6 +28,11 @@ class Utils {
 
             return current.format(formatter)
 
+        }
+
+        fun getDrawableID(resourceName: String, activity: FragmentActivity?, resources:Resources): Int {
+            val uri = "@drawable/${resourceName}"
+            return  resources.getIdentifier(uri, null, activity?.packageName)
         }
     }
 

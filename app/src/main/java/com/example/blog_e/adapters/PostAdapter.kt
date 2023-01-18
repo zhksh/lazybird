@@ -43,11 +43,9 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>, private v
 
             holder.displayName.text = it.user.displayName
 
-            it.user.iconId
-            val imageResourceId = ProfilePicture.PICTURE_01
-            holder.profilePictureView.setImageResource(
-                ProfilePicture.values().toList().shuffled().first().res
-            )
+            val imageResourceId = ProfilePicture.valueOf(it.user.iconId)
+
+            holder.profilePictureView.setImageResource(imageResourceId.res)
 
             holder.likes.text = it.likes.toString()
 

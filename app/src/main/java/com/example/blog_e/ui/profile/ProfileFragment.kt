@@ -1,22 +1,32 @@
 package com.example.blog_e.ui.profile
 
 // import com.example.blog_e.ui.home.generatePosts
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.adapters.PostAdapter
-import com.example.blog_e.data.model.User
+import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.databinding.FragmentProfileBinding
 import com.example.blog_e.utils.PostComparator
+import com.example.blog_e.utils.Utils
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -29,6 +39,8 @@ class ProfileFragment : Fragment() {
     private val profileViewModel: ProfileViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
+
+    private val TAG = Config.tag(this.toString())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,15 +64,31 @@ class ProfileFragment : Fragment() {
             postAdapter.submitData(lifecycle, it)
         }
 
-        profileViewModel.getProfile().observe(viewLifecycleOwner, Observer<User?> { user ->
-            println("observer called")
-            if (user == null) {
-                findNavController().navigate(R.id.start_fragment)
-            } else {
-                // TODO: Update UI with user
-
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    profileViewModel.profileUiState.collect {
+                        Log.v(TAG, "collecting ui state: ${it.toString()}")
+                        if (it.logout){
+                            findNavController().navigate(R.id.start_fragment)
+                        }
+                        if (it.user != null){
+                            binding.username.text = it.user.username
+                            binding.nickname.text = it.user.displayName
+                            binding.profilePictureView.setImageResource(ProfilePicture.valueOf(it.user.iconId).res)
+                        }
+                        else {
+                            if (it.errMsg.isNotBlank())
+                                Snackbar.make(binding.root, it.errMsg, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
-        })
+        }
+
+        profileViewModel.loadUserData()
+        profileViewModel.fetchPosts(10, "next")
+
 
 
 
@@ -71,4 +99,6 @@ class ProfileFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 }
