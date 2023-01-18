@@ -14,6 +14,7 @@ import org.java_websocket.client.DefaultSSLWebSocketClientFactory
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.drafts.Draft
 import org.java_websocket.drafts.Draft_17
+import org.java_websocket.framing.CloseFrame
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 import java.sql.Timestamp
@@ -25,6 +26,7 @@ data class WebsocketEvent(
     val postId: String,
 )
 
+// TODO: Duplicate data definitions. We should clean up all models and then integrate the following ones.
 data class UserInfo(
     val username: String,
     val icon_id: String,
@@ -75,6 +77,7 @@ class PostThreadViewModel @Inject constructor(
     }
 
     fun closePostConnection() {
+        // TODO: Call unsubscribe?
         client?.close()
         client = null
     }
@@ -111,6 +114,10 @@ class PostThreadViewModel @Inject constructor(
         }
 
         override fun onClose(code: Int, reason: String?, remote: Boolean) {
+            if (code == CloseFrame.NORMAL) {
+                return
+            }
+
             setErrorState()
         }
 
@@ -141,10 +148,13 @@ class PostThreadViewModel @Inject constructor(
     }
 
     private fun makeClient(postId: String): PostWebSocketClient {
-        val sslContext = SSLContext.getInstance("TLS")
-        sslContext.init(null, null, null)
-        val client = PostWebSocketClient(URI("wss://mvsp-api.ncmg.eu"), Draft_17(), postId)
-        client.setWebSocketFactory(DefaultSSLWebSocketClientFactory(sslContext))
+        val client = PostWebSocketClient(URI(Config.socketAddress), Draft_17(), postId)
+        if (Config.socketPrefix == "wss://") {
+            val sslContext = SSLContext.getInstance("TLS")
+            sslContext.init(null, null, null)
+            client.setWebSocketFactory(DefaultSSLWebSocketClientFactory(sslContext))
+        }
+
         return client
     }
 

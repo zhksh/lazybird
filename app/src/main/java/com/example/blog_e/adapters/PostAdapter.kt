@@ -55,16 +55,17 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>, private v
 
             holder.pastTime.text = calculatePastTime(it.timestamp)
 
+            val postId = it.id
             holder.content.setOnClickListener {
-                openPost(postsViewModel.id)
+                openPost(postId)
             }
 
             holder.comments.setOnClickListener {
-                openPost(postsViewModel.id)
+                openPost(postId)
             }
 
             holder.commentBubble.setOnClickListener {
-                openPost(postsViewModel.id)
+                openPost(postId)
             }
         }
     }
