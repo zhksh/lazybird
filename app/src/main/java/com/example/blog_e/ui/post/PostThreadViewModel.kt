@@ -1,6 +1,7 @@
 package com.example.blog_e.ui.post
 
 import android.util.Log
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -54,6 +55,8 @@ class PostThreadViewModel @Inject constructor(
     private val blogRepo: BlogRepo,
 ) : ViewModel() {
 
+    val isLoading = ObservableBoolean(true)
+
     private val tag = Config.tag(this.toString())
     private val gson = Gson()
     private val data: MutableLiveData<FullPost> = MutableLiveData()
@@ -64,6 +67,7 @@ class PostThreadViewModel @Inject constructor(
     }
 
     fun openPostConnection(id: String) {
+        isLoading.set(true)
         client = makeClient(id)
         client?.connect()
     }
@@ -119,6 +123,7 @@ class PostThreadViewModel @Inject constructor(
 
                 if (response.eventType == "updated") {
                     data.postValue(response.data)
+                    isLoading.set(false)
                 }
             }
         }
