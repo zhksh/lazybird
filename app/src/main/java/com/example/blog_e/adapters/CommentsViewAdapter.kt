@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
 import com.example.blog_e.ui.post.Comment
 
-class CommentsViewAdapter(val comments: List<Comment>) :
+class CommentsViewAdapter(var comments: List<Comment>) :
     RecyclerView.Adapter<CommentsViewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -31,12 +31,14 @@ class CommentsViewAdapter(val comments: List<Comment>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val comment = comments[position]
 
-        viewHolder.content.text = comment.id
+        viewHolder.content.text = comment.content
         if (comment.user.display_name == null) {
             viewHolder.displayName.text = comments[position].user.username
         } else {
             viewHolder.displayName.text = comments[position].user.display_name
         }
+
+        // TODO: Add icon
     }
 
     override fun getItemCount() = comments.size

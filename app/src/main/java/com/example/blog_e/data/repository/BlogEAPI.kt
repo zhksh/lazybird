@@ -41,6 +41,8 @@ interface BlogEAPI {
     @POST("generate/complete")
     suspend fun generateCompletion(@Body completePayload: CompletePayload): Response<LLMResult>
 
+    @POST("posts/{postId}/comments")
+    suspend fun createComment(@Path("postId") postId: String, @Body comment: CommentPayload): Response<Unit>
 
     /*TODO: APIs for
        (WS) Watch post  http://localhost:6969/posts/{id}/watch

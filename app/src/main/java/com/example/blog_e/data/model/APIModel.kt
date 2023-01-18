@@ -67,5 +67,8 @@ data class CompletePayload(
     val ours: String
 )
 
+data class CommentPayload(
+    val content: String
+)
 
 

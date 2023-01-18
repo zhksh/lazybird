@@ -29,7 +29,7 @@ interface BlogPostRepository {
 
     suspend fun getComments(post: Post): ApiResult<List<Comment>>
 
-    suspend fun createComment(comment: Comment, post: Post): ApiResult<Any>
+    suspend fun createComment(postId: String, content: String): ApiResult<Unit>
 
     suspend fun likeOrUnlikePost(like: Like, post: Post): ApiResult<Any>
 
