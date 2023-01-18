@@ -46,21 +46,21 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id in HIDE_NAV_BAR_FRAGMENTS) {
-                navView.visibility = View.GONE
-            } else {
-
-                navView.visibility = View.VISIBLE
-            }
-        }
+//        navController.addOnDestinationChangedListener { _, destination, _ ->
+//            if (destination.id in HIDE_NAV_BAR_FRAGMENTS) {
+//                navView.visibility = View.GONE
+//            } else {
+//
+//                navView.visibility = View.VISIBLE
+//            }
+//        }
 
         if (sessionManager.fetchAuthToken() != null) {
-            Snackbar.make(
-                binding.root,
-                "Welcome back!",
-                Snackbar.LENGTH_LONG
-            ).show()
+//            Snackbar.make(
+//                binding.root,
+//                "Welcome back!",
+//                Snackbar.LENGTH_LONG
+//            ).show()
             navController.navigate(R.id.navigation_home)
         }
     }

@@ -1,79 +1,87 @@
 package com.example.blog_e.ui.home
 
-import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ToggleButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.blog_e.adapters.PostsViewAdapter
-import com.example.blog_e.data.model.PostAPIModel
+import com.example.blog_e.Config
+import com.example.blog_e.adapters.PostAdapter
 import com.example.blog_e.databinding.FragmentHomeBinding
+import com.example.blog_e.utils.PostComparator
+import com.example.blog_e.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
+    private val TAG = Config.tag(this.toString())
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
+    private lateinit var postAdapter: PostAdapter
+    private lateinit var linearLayoutManager: LinearLayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d(TAG, Utils.formatBackstack(findNavController()))
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        postAdapter = PostAdapter(PostComparator(), root.context)
+        linearLayoutManager = LinearLayoutManager(root.context)
+
         recyclerView = binding.postsListRecyclerView
+        recyclerView.layoutManager = linearLayoutManager
+        recyclerView.adapter = postAdapter
         recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(root.context)
 
+        setUpFragmentBinding()
 
-        setUpFragmentBinding(root.context)
+        homeViewModel.posts.observe(viewLifecycleOwner) {
+            postAdapter.submitData(lifecycle, it)
+        }
 
-        // fetch blogs from user feed
-        lifecycleScope.launch {
-            val postViewList: List<PostAPIModel> = homeViewModel.fetchBlogs(true)
-
-            recyclerView.adapter = PostsViewAdapter(postViewList, root.context)
+        homeViewModel.isUserFeed.observe(viewLifecycleOwner) {
+            onToggleClick(it)
         }
 
         return root
-    }
-
-    private fun setUpFragmentBinding(context: Context) {
-
-        val toggleButton: ToggleButton = binding.toggleButton
-
-        toggleButton.setOnCheckedChangeListener { _, showGlobal ->
-            if (showGlobal) {
-                lifecycleScope.launch {
-                    val postViewList: List<PostAPIModel> = homeViewModel.fetchBlogs(false)
-
-                    recyclerView.adapter = PostsViewAdapter(postViewList, context)
-                }
-            } else {
-                lifecycleScope.launch {
-                    val postViewList: List<PostAPIModel> = homeViewModel.fetchBlogs(true)
-
-                    recyclerView.adapter = PostsViewAdapter(postViewList, context)
-                }
-            }
-        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+
+    private fun setUpFragmentBinding() {
+        binding.toggleButton.setOnCheckedChangeListener { _, showGlobal ->
+            homeViewModel.onClickUserFeed(showGlobal)
+            recyclerView.smoothScrollToPosition(0)
+        }
+
+        binding.swipeRefresh.setOnRefreshListener {
+            homeViewModel.refreshPosts(true)
+            //TODO: Den Adapter zu refreshen sorgt aktuell dafür, dass hier das Paging nicht richtig funktioniert. Nochmal genauer naschschauen!!!
+//            postAdapter.refresh()
+            homeViewModel.refreshPosts(false)
+            binding.swipeRefresh.isRefreshing = false
+        }
+    }
+
+    private fun onToggleClick(isGlobal: Boolean) {
+        binding.toggleButton.isChecked = !isGlobal
+    }
+
 }
