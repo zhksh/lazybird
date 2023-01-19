@@ -1,6 +1,5 @@
 package com.example.blog_e.data.model
 
-import com.example.blog_e.Config
 import com.example.blog_e.utils.Utils
 import java.time.LocalDateTime
 import java.util.*

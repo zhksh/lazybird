@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.blog_e.Config
 import com.example.blog_e.adapters.CommentsViewAdapter
+import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.databinding.ActivityPostThreadBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -78,15 +79,15 @@ class PostThreadActivity : AppCompatActivity() {
         return true
     }
 
-    private fun updateView(post: FullPost, binding: ActivityPostThreadBinding) {
+    private fun updateView(post: PostAPIModel, binding: ActivityPostThreadBinding) {
         binding.content.text = post.content
         binding.username.text = "@${post.user.username}"
-        binding.likeNumber.text = post.likes.toString()
+        binding.likeNumber.text = post.likes.count().toString()
 
-        if (post.user.display_name == null) {
+        if (post.user.displayName == null) {
             binding.displayName.text = post.user.username
         } else {
-            binding.displayName.text = post.user.display_name
+            binding.displayName.text = post.user.displayName
         }
 
         // TODO: Add icon
