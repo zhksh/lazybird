@@ -1,14 +1,13 @@
 package com.example.blog_e.utils
 
 import android.content.res.Resources
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import com.example.blog_e.Config
+import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Date
 
 class Utils {
     companion object {
@@ -36,4 +35,31 @@ class Utils {
         }
     }
 
+}
+
+fun calculatePastTime(date: String): String {
+    val current = Utils.currentDate()
+    var formatter = DateTimeFormatter.ofPattern(Config.dateFormat)
+    val creationDate: LocalDateTime = LocalDateTime.parse(date, formatter)
+    val duration = Duration.between(creationDate, current)
+
+    if (duration.toDays() > 9) {
+        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        return creationDate.format(formatter)
+    }
+    if (duration.toDays() > 0) {
+        return "${duration.toDays()}d"
+    }
+    if (duration.toHours() > 0) {
+        return "${duration.toHours()}h"
+    }
+    if (duration.toMinutes() > 0) {
+        return "${duration.toMinutes()}m"
+    }
+
+    if (duration.seconds > 0) {
+        return "${duration.seconds}s"
+    }
+
+    return "just posted"
 }

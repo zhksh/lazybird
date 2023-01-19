@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.blog_e.Config
 import com.example.blog_e.adapters.CommentsViewAdapter
 import com.example.blog_e.data.model.PostAPIModel
+import com.example.blog_e.data.model.iconToResourceId
 import com.example.blog_e.databinding.ActivityPostThreadBinding
+import com.example.blog_e.utils.calculatePastTime
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -90,7 +92,9 @@ class PostThreadActivity : AppCompatActivity() {
             binding.displayName.text = post.user.displayName
         }
 
-        // TODO: Add icon
+        binding.profilePictureView.setImageResource(iconToResourceId(post.user.iconId))
+        binding.postPastTime.text = calculatePastTime(post.timestamp)
+
         // TODO: Add timestamp
         adapter.comments = post.comments
         adapter.notifyDataSetChanged()
