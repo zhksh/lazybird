@@ -24,7 +24,8 @@ data class SearchUIState(
 
 data class ResultUIState(
     val isSuccessful: Boolean = false,
-    val userAPIModel: GetUserAPIModel? = null
+    val isSearchStarted: Boolean = false,
+    val userAPIModel: GetUserAPIModel? = null,
 )
 
 @HiltViewModel
@@ -46,29 +47,52 @@ class SearchViewModel @Inject constructor(
     val resultUIState: StateFlow<ResultUIState> = _resultUIState.asStateFlow()
 
     suspend fun searchUser() {
-//        clearLastResult()
         Log.i(TAG, "searchUser: ${searchUIState.value.query}")
-
+        startSearching()
         val res = userRepo.getUser(_searchUIState.value.query)
+        stopSearching()
         when (res) {
             is ApiSuccess -> {
                 updateCurrentUserResult(res.data)
                 Log.i(TAG, "searchUser: war erflogreich")
             }
             is ApiError -> {
-
-                Log.i(TAG, "searchUser: war fehler")
+                revokeResultState()
+                Log.i(TAG, "searchUser: war fehler mit Message ${res.message}")
             }
             is ApiException -> Log.i(TAG, "searchUser: hat einen Fehler geworfen")
         }
     }
 
-    private fun clearLastResult() {
+    private fun startSearching() {
+        _searchUIState.update {
+            it.copy(
+                isSearching = true
+            )
+        }
+        _resultUIState.update {
+            it.copy(
+                isSearchStarted = true
+            )
+        }
+    }
+
+    private fun revokeResultState() {
+        _resultUIState.update {
+            it.copy(
+                userAPIModel = null,
+                isSuccessful = false,
+            )
+        }
+    }
+
+    fun clearLastResult() {
         if (_resultUIState.value.isSuccessful) {
             _resultUIState.update {
                 it.copy(
                     userAPIModel = null,
-                    isSuccessful = false
+                    isSuccessful = false,
+                    isSearchStarted = false
                 )
             }
         }
@@ -89,4 +113,9 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    private fun stopSearching() {
+        _searchUIState.update {
+            it.copy(isSearching = false)
+        }
+    }
 }
