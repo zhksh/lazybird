@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.blog_e.Config
+import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.data.repository.*
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,31 +27,9 @@ data class WebsocketEvent(
     val postId: String,
 )
 
-// TODO: Duplicate data definitions. We should clean up all models and then integrate the following ones.
-data class UserInfo(
-    val username: String,
-    val icon_id: String,
-    val display_name: String?,
-)
-
-data class Comment(
-    val id: String,
-    val user: UserInfo,
-    val content: String,
-)
-
-data class FullPost(
-    val id: String,
-    val content: String,
-    val user: UserInfo,
-    val timestamp: Timestamp,
-    val likes: Int,
-    val comments: List<Comment>,
-)
-
 data class WebsocketResponse(
     val eventType: String,
-    val data: FullPost,
+    val data: PostAPIModel,
 )
 
 @HiltViewModel
@@ -63,11 +42,11 @@ class PostThreadViewModel @Inject constructor(
 
     private val tag = Config.tag(this.toString())
     private val gson = Gson()
-    private val data: MutableLiveData<FullPost> = MutableLiveData()
+    private val data: MutableLiveData<PostAPIModel> = MutableLiveData()
     private var client: PostWebSocketClient? = null
     private var postId = ""
 
-    fun postData(): LiveData<FullPost> {
+    fun postData(): LiveData<PostAPIModel> {
         return data
     }
 

@@ -42,8 +42,8 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>, private v
 
             var imageResourceId = iconToResourceId(it.user.iconId)
             holder.profilePictureView.setImageResource(imageResourceId)
-            holder.likes.text = it.likes.toString()
-            holder.comments.text = it.commentCount.toString()
+            holder.likes.text = it.likes.count().toString()
+            holder.comments.text = it.comments.count().toString()
 
             holder.pastTime.text = calculatePastTime(it.timestamp)
 

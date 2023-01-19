@@ -2,19 +2,24 @@ package com.example.blog_e.data.model
 
 import com.google.gson.annotations.SerializedName
 
-
 data class PostAPIModel(
-    val commentCount: Int,
-    val content: String,
     val id: String,
-    val likes: Int,
+    val content: String,
+    val user: UserAPIModel,
     val timestamp: String,
-    val user: UserAPIModel
+    val likes: List<String>,
+    val comments: List<CommentAPIModel>,
+)
+
+data class CommentAPIModel(
+    val id: String,
+    val user: UserAPIModel,
+    val content: String,
 )
 
 data class UserAPIModel(
     @SerializedName("display_name")
-    val displayName: String,
+    val displayName: String?,
     //TODO wahrscheinlich wird das hier anders gemacht werden
     @SerializedName("followers")
     val followers: Int,
