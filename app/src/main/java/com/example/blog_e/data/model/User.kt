@@ -21,3 +21,12 @@ enum class ProfilePicture(val res: Int) {
     PICTURE_04(R.drawable.among_us_0),
     PICTURE_05(R.drawable.astronaut_horse_0),
 }
+
+fun iconToResourceId(iconId: String): Int {
+    return try {
+        ProfilePicture.valueOf(iconId).res
+    }
+    catch (e: IllegalArgumentException){
+        ProfilePicture.PICTURE_05.res
+    }
+}

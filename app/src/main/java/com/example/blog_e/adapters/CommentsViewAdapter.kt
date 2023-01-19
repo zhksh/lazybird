@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
-import com.example.blog_e.ui.post.Comment
+import com.example.blog_e.data.model.CommentAPIModel
 
-class CommentsViewAdapter(var comments: List<Comment>) :
+class CommentsViewAdapter(var comments: List<CommentAPIModel>) :
     RecyclerView.Adapter<CommentsViewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -32,10 +32,10 @@ class CommentsViewAdapter(var comments: List<Comment>) :
         val comment = comments[position]
 
         viewHolder.content.text = comment.content
-        if (comment.user.display_name == null) {
+        if (comment.user.displayName == null) {
             viewHolder.displayName.text = comments[position].user.username
         } else {
-            viewHolder.displayName.text = comments[position].user.display_name
+            viewHolder.displayName.text = comments[position].user.displayName
         }
 
         // TODO: Add icon
