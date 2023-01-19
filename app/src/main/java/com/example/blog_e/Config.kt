@@ -3,14 +3,14 @@ package com.example.blog_e
 class Config {
     companion object {
         // Use these settings for production with the live api
-        //private const val httpPrefix = "https://"
-        //const val socketPrefix = "wss://"
-        //private const val domain = "mvsp-api.ncmg.eu"
+        private const val httpPrefix = "https://"
+        const val socketPrefix = "wss://"
+        private const val domain = "mvsp-api.ncmg.eu"
 
         // Use these settings for testing with a local api
-        private const val httpPrefix = "http://"
-        const val socketPrefix = "ws://"
-        private const val domain = "10.0.2.2:6969"
+        // private const val httpPrefix = "http://"
+        // const val socketPrefix = "ws://"
+        // private const val domain = "10.0.2.2:6969"
 
         const val apiAddress = httpPrefix + domain
         const val socketAddress = socketPrefix + domain
