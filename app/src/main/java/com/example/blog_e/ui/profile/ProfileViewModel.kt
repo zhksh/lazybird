@@ -83,17 +83,20 @@ class ProfileViewModel @Inject constructor(
             isUserFeed = false,
             pageToken = pageToken
         )
-        when (val postsResult = blogRepo.getPosts(postsQueryModel)) {
+        val res = blogRepo.getPosts(postsQueryModel)
+        when (res) {
             is ApiSuccess -> {
                 // TODO: set next page token / store it
-                postsResult.data.nextPageToken
-                postsResult.data.posts
+                res.data.nextPageToken
+                res.data.posts
             }
             is ApiError -> {
-                Log.e(this.toString(), "Wähhhhhh") // do something
-                emptyList()
+                _profileUiState.update { it.copy(errMsg = res.message.toString())}
             }
-            is ApiException -> throw postsResult.e
+            is ApiException -> {
+                _profileUiState.update { it.copy(errMsg = res.e.message!!)}
+
+            }
         }
     }
 
