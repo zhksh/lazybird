@@ -34,9 +34,7 @@ class HomeViewModel @Inject constructor(
     val homeState = _homeState.asStateFlow()
 
     private var _posts: MutableLiveData<PagingData<PostAPIModel>> = _isUserFeed.switchMap {
-        Pager(
-            blogRepo.getDefaultPageConfig(),
-        ) {
+        Pager(blogRepo.getDefaultPageConfig()) {
             PostPagingSource(
                 blogRepo,
                 isUserFeed = it,
