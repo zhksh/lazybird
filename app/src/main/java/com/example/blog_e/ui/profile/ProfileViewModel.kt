@@ -2,7 +2,6 @@ package com.example.blog_e.ui.profile
 
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,7 +14,6 @@ import com.example.blog_e.Config
 import com.example.blog_e.data.model.*
 import com.example.blog_e.data.repository.*
 import com.example.blog_e.utils.SessionManager
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -63,11 +61,8 @@ class ProfileViewModel @Inject constructor(
 
     fun loadUserData() = viewModelScope.launch{
         val token = sessionManager.fetchAuthToken()
-        val username = sessionManager.getUsername()
-        if (token != null && username != null) {
-
-            val res = userRepo.getUser(username)
-            when (res) {
+        if (token != null) {
+            when (val res = userRepo.getUser("me")) {
                 is ApiException -> {
                     _profileUiState.update { it.copy(errMsg = res.e.message!!)}
                 }
@@ -108,5 +103,4 @@ class ProfileViewModel @Inject constructor(
     companion object {
         const val DEFAULT_USER = "me"
     }
-
 }

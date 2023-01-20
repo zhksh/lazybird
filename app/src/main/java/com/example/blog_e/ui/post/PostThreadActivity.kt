@@ -1,5 +1,6 @@
 package com.example.blog_e.ui.post
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
@@ -7,12 +8,13 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.blog_e.Config
+import com.example.blog_e.R
 import com.example.blog_e.adapters.CommentsViewAdapter
-import com.example.blog_e.data.model.PostAPIModel
+import com.example.blog_e.data.model.CommentAPIModel
+import com.example.blog_e.data.model.iconToResourceId
 import com.example.blog_e.databinding.ActivityPostThreadBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -21,7 +23,7 @@ import kotlinx.coroutines.launch
 class PostThreadActivity : AppCompatActivity() {
 
     private val tag = Config.tag(this.toString())
-    private val adapter = CommentsViewAdapter(comments = listOf())
+    private val adapter = CommentsViewAdapter()
     private val viewModel: PostThreadViewModel by viewModels()
     private var postId: String? = null
 
@@ -43,10 +45,19 @@ class PostThreadActivity : AppCompatActivity() {
             return
         }
 
-        val postData = viewModel.postData()
-        postData.observe(this, Observer { post ->
-            updateView(post, binding)
-        })
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    updateView(it, binding)
+                }
+            }
+        }
+
+        binding.likeButton.setOnClickListener {
+            lifecycleScope.launch {
+                viewModel.onClickLike()
+            }
+        }
 
         binding.sendButton.setOnClickListener {
             val comment = binding.commentEditText.text.toString()
@@ -79,21 +90,25 @@ class PostThreadActivity : AppCompatActivity() {
         return true
     }
 
-    private fun updateView(post: PostAPIModel, binding: ActivityPostThreadBinding) {
+    @SuppressLint("SetTextI18n")
+    private fun updateView(post: PostState, binding: ActivityPostThreadBinding) {
         binding.content.text = post.content
         binding.username.text = "@${post.user.username}"
-        binding.likeNumber.text = post.likes.count().toString()
+        binding.likeNumber.text = post.likes.toString()
 
-        if (post.user.displayName == null) {
-            binding.displayName.text = post.user.username
+        binding.displayName.text = post.user.displayName ?: post.user.username
+
+        val likeImageResource = if (post.isLiked) {
+            R.drawable.heart_filled
         } else {
-            binding.displayName.text = post.user.displayName
+            R.drawable.heart_outline
         }
+        binding.likeButton.setImageResource(likeImageResource)
 
-        // TODO: Add icon
-        // TODO: Add timestamp
-        adapter.comments = post.comments
-        adapter.notifyDataSetChanged()
+        binding.profilePictureView.setImageResource(iconToResourceId(post.user.iconId))
+        binding.postPastTime.text = post.timeSinceString
+
+        updateCommentAdapter(post.comments)
     }
 
     private fun hideKeyboard() {
@@ -104,5 +119,15 @@ class PostThreadActivity : AppCompatActivity() {
         }
 
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    /**
+     * Adds all comments not currently present in the comment adapter and notifies the adapter over the inserted items.
+     */
+    private fun updateCommentAdapter(comments: List<CommentAPIModel>) {
+        val newComments = comments.toSet().minus(adapter.comments.toSet())
+        val startIndex = adapter.comments.size
+        adapter.comments.addAll(newComments)
+        adapter.notifyItemRangeInserted(startIndex, newComments.size)
     }
 }
