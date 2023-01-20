@@ -3,15 +3,13 @@ package com.example.blog_e.ui.post
 import android.util.Log
 import android.view.View
 import androidx.databinding.ObservableBoolean
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.blog_e.Config
 import com.example.blog_e.data.model.CommentAPIModel
 import com.example.blog_e.data.model.PostAPIModel
-import com.example.blog_e.data.model.User
 import com.example.blog_e.data.model.UserAPIModel
 import com.example.blog_e.data.repository.*
+import com.example.blog_e.utils.SessionManager
 import com.example.blog_e.utils.calculatePastTime
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,6 +48,7 @@ data class PostState(
 @HiltViewModel
 class PostThreadViewModel @Inject constructor(
     private val blogRepo: BlogRepo,
+    private val sessionManager: SessionManager,
 ) : ViewModel() {
 
     val isLoading = ObservableBoolean(true)
@@ -60,13 +59,8 @@ class PostThreadViewModel @Inject constructor(
 
     private val tag = Config.tag(this.toString())
     private val gson = Gson()
-    private val data: MutableLiveData<PostAPIModel> = MutableLiveData()
     private var client: PostWebSocketClient? = null
     private var postId = ""
-
-    fun postData(): LiveData<PostAPIModel> {
-        return data
-    }
 
     fun openPostConnection(id: String) {
         postId = id
@@ -167,7 +161,7 @@ class PostThreadViewModel @Inject constructor(
                     content = post.content,
                     timeSinceString = calculatePastTime(post.timestamp),
                     user = post.user,
-                    isLiked = post.likes.contains("me"),
+                    isLiked = post.likes.contains(sessionManager.getUsername()),
                 )
             }
         }
@@ -187,7 +181,6 @@ class PostThreadViewModel @Inject constructor(
         if (client != null) {
             client?.close()
         }
-
         client = makeClient(postId)
         client?.connect()
     }
