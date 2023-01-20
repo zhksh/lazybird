@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
 import com.example.blog_e.data.model.CommentAPIModel
 
-class CommentsViewAdapter(var comments: List<CommentAPIModel>) :
+class CommentsViewAdapter(val comments: MutableList<CommentAPIModel> = mutableListOf()) :
     RecyclerView.Adapter<CommentsViewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

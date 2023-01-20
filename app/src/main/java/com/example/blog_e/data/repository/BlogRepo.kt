@@ -68,8 +68,16 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
         }
     }
 
-    override suspend fun likeOrUnlikePost(like: Like, post: Post): ApiResult<Any> {
-        TODO("Not yet implemented")
+    override suspend fun addLike(postId: String): ApiResult<Unit> {
+        return apiHandler.handleApi {
+            backendS.addLike(postId)
+        }
+    }
+
+    override suspend fun removeLike(postId: String): ApiResult<Unit> {
+        return apiHandler.handleApi {
+            backendS.removeLike(postId)
+        }
     }
 
     /**

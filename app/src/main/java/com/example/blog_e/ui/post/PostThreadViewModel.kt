@@ -7,10 +7,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.blog_e.Config
+import com.example.blog_e.data.model.CommentAPIModel
 import com.example.blog_e.data.model.PostAPIModel
+import com.example.blog_e.data.model.User
+import com.example.blog_e.data.model.UserAPIModel
 import com.example.blog_e.data.repository.*
+import com.example.blog_e.utils.calculatePastTime
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import org.java_websocket.client.DefaultSSLWebSocketClientFactory
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.drafts.Draft
@@ -18,7 +25,6 @@ import org.java_websocket.drafts.Draft_17
 import org.java_websocket.framing.CloseFrame
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
-import java.sql.Timestamp
 import javax.inject.Inject
 import javax.net.ssl.SSLContext
 
@@ -32,6 +38,15 @@ data class WebsocketResponse(
     val data: PostAPIModel,
 )
 
+data class PostState(
+    val user: UserAPIModel = UserAPIModel(username = "", followers = 0, iconId = "0", displayName = ""),
+    val content: String = "",
+    val timeSinceString: String = "",
+    val likes: Number = 0,
+    val comments: List<CommentAPIModel> = emptyList(),
+    val isLiked: Boolean = false,
+)
+
 @HiltViewModel
 class PostThreadViewModel @Inject constructor(
     private val blogRepo: BlogRepo,
@@ -39,6 +54,9 @@ class PostThreadViewModel @Inject constructor(
 
     val isLoading = ObservableBoolean(true)
     val hasFailed = ObservableBoolean(false)
+
+    private val _uiState = MutableStateFlow(PostState())
+    val uiState = _uiState.asStateFlow()
 
     private val tag = Config.tag(this.toString())
     private val gson = Gson()
@@ -77,6 +95,30 @@ class PostThreadViewModel @Inject constructor(
         }
     }
 
+    suspend fun onClickLike() {
+        val isLiked = !uiState.value.isLiked
+
+        // Optimistically update ui for better user experience.
+        // If the API call fails for some reason, the state might be changed again.
+        updateIsLiked(isLiked)
+
+        val result = if (isLiked) {
+            blogRepo.addLike(postId)
+        } else {
+            blogRepo.removeLike(postId)
+        }
+
+        when (result) {
+            is ApiSuccess -> {}
+            is ApiError -> {
+                Log.e(tag, "api error: $result.message")
+            }
+            is ApiException -> {
+                Log.e(tag, "api exception: $result.e")
+            }
+        }
+    }
+
     inner class PostWebSocketClient(serverUri: URI?, draft: Draft?, private val postId: String) : WebSocketClient(serverUri, draft) {
         init {
             setLoadingState()
@@ -110,10 +152,34 @@ class PostThreadViewModel @Inject constructor(
                 }
 
                 if (response.eventType == "updated") {
-                    data.postValue(response.data)
+                    updateUIState(response.data)
                     setReadyState()
                 }
             }
+        }
+
+        private fun updateUIState(post: PostAPIModel) {
+            _uiState.update {
+                it.copy(
+                    // TODO: Only update static fields if not set?
+                    comments = post.comments,
+                    likes = post.likes.count(),
+                    content = post.content,
+                    timeSinceString = calculatePastTime(post.timestamp),
+                    user = post.user,
+                    isLiked = post.likes.contains("me"),
+                )
+            }
+        }
+    }
+
+    /**
+     * Sets the uiState isLiked field to the given value and updates all observers if the value changed.
+     */
+    private fun updateIsLiked(to: Boolean) {
+        val current = _uiState.value.isLiked
+        if (to != current) {
+            _uiState.update { it.copy(isLiked = to) }
         }
     }
 
