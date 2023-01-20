@@ -40,6 +40,13 @@ interface BlogEAPI {
     @POST("posts/{postId}/comments")
     suspend fun createComment(@Path("postId") postId: String, @Body comment: CommentPayload): Response<Unit>
 
+    @POST("posts/{postId}/likes")
+    suspend fun addLike(@Path("postId") postId: String): Response<Unit>
+
+    @DELETE("posts/{postId}/likes")
+    suspend fun removeLike(@Path("postId") postId: String): Response<Unit>
+
+
     /*TODO: APIs for
        (WS) Watch post  http://localhost:6969/posts/{id}/watch
        Like/Unlike post http://localhost:6969/posts/{id}/likes

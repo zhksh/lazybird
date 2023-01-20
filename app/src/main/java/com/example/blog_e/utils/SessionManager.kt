@@ -35,6 +35,7 @@ class SessionManager(context: Context) {
     fun resetSession() {
         val editor = prefs.edit()
         editor.remove(USER_TOKEN)
+        editor.remove(USER_NAME)
         editor.apply()
     }
 

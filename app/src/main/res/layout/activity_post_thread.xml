@@ -87,7 +87,7 @@
                     android:layout_marginTop="2dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/content"
-                    app:srcCompat="@drawable/ic_baseline_favorite_24" />
+                    app:srcCompat="@drawable/heart_outline" />
 
                 <TextView
                     android:id="@+id/likeNumber"

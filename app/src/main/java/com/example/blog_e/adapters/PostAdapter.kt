@@ -10,15 +10,11 @@ import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.data.model.iconToResourceId
 import com.example.blog_e.ui.post.PostThreadActivity
-import com.example.blog_e.utils.Utils
-import java.time.Duration
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import com.example.blog_e.utils.calculatePastTime
 
 class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>, private val context: Context) :
     PagingDataAdapter<PostAPIModel, PostAdapter.ViewHolder>(differCallback) {
@@ -60,36 +56,6 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>, private v
                 openPost(postId)
             }
         }
-    }
-
-    private fun calculatePastTime(date: String): String {
-
-        val current = Utils.currentDate()
-        var formatter = DateTimeFormatter.ofPattern(Config.dateFormat)
-        val creationDate: LocalDateTime = LocalDateTime.parse(date, formatter)
-        val duration = Duration.between(creationDate, current)
-
-
-        if (duration.toDays() > 9) {
-            formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-            return creationDate.format(formatter)
-        }
-        if (duration.toDays() > 0) {
-            return "${duration.toDays()}d"
-        }
-        if (duration.toHours() > 0) {
-            return "${duration.toHours()}h"
-        }
-        if (duration.toMinutes() > 0) {
-            return "${duration.toMinutes()}m"
-        }
-
-        if (duration.seconds > 0) {
-            return "${duration.seconds}s"
-        }
-
-        return "just posted"
-
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
