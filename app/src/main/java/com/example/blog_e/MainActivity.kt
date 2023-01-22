@@ -55,22 +55,22 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect {
-                    updateView(it, binding, navController)
+                    updateView(it, navController)
                 }
             }
         }
 
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            if (destination.id in HIDE_NAV_BAR_FRAGMENTS) {
-//                navView.visibility = View.GONE
-//            } else {
-//
-//                navView.visibility = View.VISIBLE
-//            }
-//        }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id in HIDE_NAV_BAR_FRAGMENTS) {
+                navView.visibility = View.GONE
+            } else {
+
+                navView.visibility = View.VISIBLE
+            }
+        }
     }
 
-    private fun updateView(state: MainActivityState, binding: ActivityMainBinding, navController: NavController) {
+    private fun updateView(state: MainActivityState, navController: NavController) {
         if (state.user == null) {
             navController.navigate(R.id.start_fragment)
         } else {
