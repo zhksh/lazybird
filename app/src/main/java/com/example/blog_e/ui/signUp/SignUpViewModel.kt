@@ -16,7 +16,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
     val usernameError = ObservableField<String>()
     val passwordError = ObservableField<String>()
     val displayNameError = ObservableField<String>()
-    val displayName = ObservableField<String>()
+    val displayName = ObservableField("")
 
     val isLoading = ObservableBoolean(false)
     val signUpReady = ObservableBoolean(false)
