@@ -8,8 +8,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.blog_e.R
 import com.example.blog_e.UserViewModel
@@ -18,7 +16,6 @@ import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.databinding.FragmentSignUpBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
@@ -39,6 +36,8 @@ class SignUpFragment : Fragment() {
         }
 
         binding.btnSignUp.setOnClickListener{
+            viewModel.isLoading.set(true)
+
             // TODO: Validate input here?
             val username = binding.etUserName.editText?.text.toString()
             val displayName = binding.etDisplayName.editText?.text.toString()
@@ -51,27 +50,16 @@ class SignUpFragment : Fragment() {
                 iconId = ProfilePicture.PICTURE_00.toString(),
             )
 
-            userViewModel.signUp(payload).observe(viewLifecycleOwner) { user ->
-                if (user != null) {
-                    findNavController().navigate(R.id.action_sign_up_finished)
+            userViewModel.signUp(payload).observe(viewLifecycleOwner) { result ->
+                viewModel.isLoading.set(false)
+                if (result.errorMessage != null) {
+                    Snackbar.make(binding.root, result.errorMessage, Toast.LENGTH_SHORT).show()
+                } else {
+                    findNavController().navigate(R.id.action_login_finished)
                 }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            launch {
-                viewModel.uiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                    .collect { uiState -> handleStateChange(uiState, binding) }
-            }
-        }
-
         return binding.root
-    }
-
-    private fun handleStateChange(uiState: SignUpState, binding: FragmentSignUpBinding) {
-        if (uiState.errorMessage != null) {
-            Snackbar.make(binding.root, "${uiState.errorMessage}", Toast.LENGTH_SHORT)
-                .show()
-        }
     }
 }

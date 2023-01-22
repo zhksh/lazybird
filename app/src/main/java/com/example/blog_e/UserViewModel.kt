@@ -14,6 +14,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class SuccessResponse(
+    val errorMessage: String?,
+)
+
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val userRepo: UserRepo,
@@ -32,42 +36,55 @@ class UserViewModel @Inject constructor(
     }
 
     fun getUser(): LiveData<User?> {
-        // TODO: Check if observers are also notified, if value was already set before.
         return user
     }
 
-    fun login(username: String, password: String): LiveData<User?> {
+    fun login(username: String, password: String): LiveData<SuccessResponse> {
+        val response = MutableLiveData<SuccessResponse>()
+
         viewModelScope.launch {
             when (val result = userRepo.login(LoginPayload(username, password))) {
                 is ApiSuccess -> {
                     sessionManager.saveSession(result.data.accessToken, username)
                     fetchUser()
+                    response.value = SuccessResponse(errorMessage = null)
                 }
                 is ApiError -> {
-                    // TODO: Show error to user
+                    when (result.code) {
+                        401 -> response.value = SuccessResponse(errorMessage = "Password is incorrect")
+                        404 -> response.value = SuccessResponse(errorMessage = "Username is incorrect")
+                        else -> response.value = SuccessResponse(errorMessage = "Something went wrong, please try again")
+                    }
                 }
-                is ApiException -> throw result.e
+                is ApiException -> response.value = SuccessResponse(errorMessage = "Connection failed")
             }
         }
 
-        return user
+        return response
     }
 
-    fun signUp(newUser: NewUserAPIModel): LiveData<User?> {
+    fun signUp(newUser: NewUserAPIModel): LiveData<SuccessResponse> {
+        val response = MutableLiveData<SuccessResponse>()
+
         viewModelScope.launch {
             when (val result = userRepo.signUp(newUser)) {
                 is ApiSuccess -> {
                     sessionManager.saveSession(result.data.accessToken, newUser.username)
                     fetchUser()
+                    response.value = SuccessResponse(errorMessage = null)
                 }
                 is ApiError -> {
-                    // TODO: Show error to user
+                    when (result.code) {
+                        409 -> SuccessResponse(errorMessage = "This username is already taken")
+                        else -> response.value =
+                            SuccessResponse(errorMessage = "Something went wrong, please try again")
+                    }
                 }
-                is ApiException -> throw result.e
+                is ApiException -> response.value = SuccessResponse(errorMessage = "Connection failed")
             }
         }
 
-        return user
+        return response
     }
 
     fun logout() {

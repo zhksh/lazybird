@@ -1,26 +1,10 @@
 package com.example.blog_e.ui.signUp
 
-import android.view.View
-import androidx.annotation.IdRes
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.blog_e.R
-import com.example.blog_e.data.model.NewUserAPIModel
-import com.example.blog_e.data.model.ProfilePicture
-import com.example.blog_e.data.repository.*
-import com.example.blog_e.utils.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-data class SignUpState(
-    val errorMessage: String? = null,
-)
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor() : ViewModel() {
@@ -35,10 +19,6 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
 
     val isLoading = ObservableBoolean(false)
     val signUpReady = ObservableBoolean(false)
-
-    // Sending events as state https://developer.android.com/topic/architecture/ui-layer/events#handle-viewmodel-events
-    private val _uiState = MutableStateFlow(SignUpState())
-    val uiState = _uiState.asStateFlow()
 
     fun updatedUsername(s: CharSequence, start: Int, before: Int, count: Int) {
         this.username = s.toString()
