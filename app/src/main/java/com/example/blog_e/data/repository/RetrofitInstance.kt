@@ -22,7 +22,7 @@ class ApiClient {
 
         // Initialize ApiService if not initialized yet
         if (!::apiService.isInitialized) {
-            val gson = GsonBuilder().setDateFormat(Config.dateFormat).create()
+            val gson = GsonBuilder().setDateFormat(Config.dateFormat).setLenient().create()
             val retrofit = Retrofit.Builder()
                 .baseUrl(Config.apiAddress)
                 .client(okhttpClient(context))

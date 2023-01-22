@@ -13,5 +13,5 @@ interface UserRepository {
 
     suspend fun getUser(username: String): ApiResult<GetUserAPIModel>
 
-    suspend fun followOrUnfollowUser(actionUser: User, targetUser: User)
+    suspend fun followOrUnfollowUser(targetUser: String, isFollowing: Boolean): ApiResult<String>
 }
