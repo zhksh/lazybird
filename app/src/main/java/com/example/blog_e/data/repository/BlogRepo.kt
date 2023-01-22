@@ -54,14 +54,6 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
         return apiHandler.handleApi { backendS.generateCompletion(completePayload) }
     }
 
-    override fun getCommentsStream(): ApiResult<LiveData<List<Comment>>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getComments(post: Post): ApiResult<List<Comment>> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun createComment(postId: String, content: String): ApiResult<Unit> {
         return apiHandler.handleApi {
             backendS.createComment(postId, CommentPayload(content=content))

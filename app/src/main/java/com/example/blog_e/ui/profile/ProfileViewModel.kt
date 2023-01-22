@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ProfileUiState (
-    val user: GetUserAPIModel? = null,
+    val user: User? = null,
     val errMsg: String = "",
     val logout: Boolean = false
 )
@@ -70,7 +70,7 @@ class ProfileViewModel @Inject constructor(
                     _profileUiState.update { it.copy(logout = true) }
                 }
                 is ApiSuccess -> {
-                    _profileUiState.update { it.copy(user = res.data, errMsg = "") }
+                    _profileUiState.update { it.copy(user = mapApiUser(res.data), errMsg = "") }
                 }
             }
         }

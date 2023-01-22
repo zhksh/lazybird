@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
 import com.example.blog_e.data.model.PostAPIModel
-import com.example.blog_e.data.model.iconToResourceId
+import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.ui.post.PostThreadActivity
 import com.example.blog_e.utils.calculatePastTime
 
@@ -36,7 +36,7 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>, private v
             holder.username.text = username
             holder.displayName.text = it.user.displayName
 
-            var imageResourceId = iconToResourceId(it.user.iconId)
+            var imageResourceId = iconIdToProfilePicture(it.user.iconId).res
             holder.profilePictureView.setImageResource(imageResourceId)
             holder.likes.text = it.likes.count().toString()
             holder.comments.text = it.comments.count().toString()

@@ -17,11 +17,6 @@ class UserRepo(private val backendS: BlogEAPI) : UserRepository {
         return apiHandler.handleApi { backendS.login(loginBody) }
     }
 
-
-    override fun getUserStream(): ApiResult<LiveData<User>> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun getUser(username: String): ApiResult<GetUserAPIModel> {
         return apiHandler.handleApi { backendS.getUser(username) }
     }

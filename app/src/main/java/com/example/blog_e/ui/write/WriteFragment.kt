@@ -13,28 +13,19 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.navigateUp
 import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.data.model.CompletePayload
 import com.example.blog_e.data.model.Post
-import com.example.blog_e.data.model.User
-import com.example.blog_e.data.repository.BlogPostRepository
-import com.example.blog_e.data.repository.UserRepo
-import com.example.blog_e.databinding.FragmentHomeBinding
 import com.example.blog_e.databinding.FragmentWriteBinding
 import com.example.blog_e.utils.Utils
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.lang.NullPointerException
-import java.util.*
 
 @AndroidEntryPoint
 class WriteFragment() : Fragment() {

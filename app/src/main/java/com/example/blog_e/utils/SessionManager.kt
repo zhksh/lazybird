@@ -3,13 +3,10 @@ package com.example.blog_e.utils
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.blog_e.R
-import com.example.blog_e.data.model.User
 
 class SessionManager(context: Context) {
     private var prefs: SharedPreferences =
         context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
-
-    private lateinit var  user: User
 
     /**
      * Function to save auth token

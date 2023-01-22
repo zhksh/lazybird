@@ -20,10 +20,6 @@ interface BlogPostRepository {
 
     suspend fun completePost(completePayload: CompletePayload): ApiResult<LLMResult>
 
-    fun getCommentsStream(): ApiResult<LiveData<List<Comment>>>
-
-    suspend fun getComments(post: Post): ApiResult<List<Comment>>
-
     suspend fun createComment(postId: String, content: String): ApiResult<Unit>
 
     suspend fun addLike(postId: String): ApiResult<Unit>

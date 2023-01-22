@@ -14,7 +14,7 @@ import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.adapters.CommentsViewAdapter
 import com.example.blog_e.data.model.CommentAPIModel
-import com.example.blog_e.data.model.iconToResourceId
+import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.databinding.ActivityPostThreadBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -105,7 +105,7 @@ class PostThreadActivity : AppCompatActivity() {
         }
         binding.likeButton.setImageResource(likeImageResource)
 
-        binding.profilePictureView.setImageResource(iconToResourceId(post.user.iconId))
+        binding.profilePictureView.setImageResource(iconIdToProfilePicture(post.user.iconId).res)
         binding.postPastTime.text = post.timeSinceString
 
         updateCommentAdapter(post.comments)

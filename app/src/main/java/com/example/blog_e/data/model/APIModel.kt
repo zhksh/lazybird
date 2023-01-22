@@ -20,9 +20,6 @@ data class CommentAPIModel(
 data class UserAPIModel(
     @SerializedName("display_name")
     val displayName: String?,
-    //TODO wahrscheinlich wird das hier anders gemacht werden
-    @SerializedName("followers")
-    val followers: Int,
     @SerializedName("icon_id")
     val iconId: String,
     @SerializedName("username")
@@ -31,21 +28,11 @@ data class UserAPIModel(
 
 data class GetUserAPIModel(
     @SerializedName("display_name")
-    val displayName: String,
+    val displayName: String?,
     @SerializedName("icon_id")
     val iconId: String,
-    //TODO wahrscheinlich wird das hier anders gemacht werden
     @SerializedName("followers")
-    val followers: List<FollowerApiModel>,
-    @SerializedName("username")
-    val username: String
-)
-
-data class FollowerApiModel(
-    @SerializedName("display_name")
-    val displayName: String,
-    @SerializedName("icon_id")
-    val iconId: String,
+    val followers: List<UserAPIModel>,
     @SerializedName("username")
     val username: String
 )
@@ -86,11 +73,6 @@ data class Authorization(
 data class LoginPayload(
     val username: String,
     val password: String
-)
-
-data class FollowResult(
-    val code: Int,
-    val message: String
 )
 
 data class CompletePayload(

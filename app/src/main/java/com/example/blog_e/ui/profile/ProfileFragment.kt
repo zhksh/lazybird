@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.adapters.PostAdapter
-import com.example.blog_e.data.model.iconToResourceId
+import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.databinding.FragmentProfileBinding
 import com.example.blog_e.utils.PostComparator
 import com.google.android.material.snackbar.Snackbar
@@ -73,7 +73,7 @@ class ProfileFragment : Fragment() {
                         if (it.user != null) {
                             binding.username.text = it.user.username
                             binding.nickname.text = it.user.displayName
-                            binding.profilePictureView.setImageResource(iconToResourceId(it.user.iconId))
+                            binding.profilePictureView.setImageResource(it.user.profilePicture.res)
                         } else {
                             if (it.errMsg.isNotBlank())
                                 Snackbar.make(binding.root, it.errMsg, Toast.LENGTH_SHORT).show()
