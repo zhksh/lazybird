@@ -14,6 +14,7 @@ import com.example.blog_e.Config
 import com.example.blog_e.data.model.iconToResourceId
 import com.example.blog_e.databinding.FragmentSearchBinding
 import com.example.blog_e.databinding.UserSearchResultBinding
+import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -23,12 +24,13 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val searchViewModel: SearchViewModel by viewModels()
 
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
-
-    private lateinit var userResult: UserSearchResultBinding
+    private var _userResult: UserSearchResultBinding? = null
+    private val userResult get() = _userResult!!
 
 
     override fun onCreateView(
@@ -37,15 +39,11 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        val TAG = Config.tag(this.toString())
-        //init the view
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _userResult = binding.userResult
         val root: View = binding.root
 
-        userResult = binding.userResult
-
-        binding.errorMessage
-
+        setupBinding()
 
         viewLifecycleOwner.lifecycleScope.launch {
             searchViewModel.searchUIState.collect {
@@ -56,27 +54,39 @@ class SearchFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             searchViewModel.resultUIState.collect { resultState ->
-                if (!resultState.isSearchStarted) {
+                if (!resultState.isSuccessful) {
                     userResult.blogPost.visibility = View.GONE
-                }
-                if (resultState.isSearchStarted && resultState.isSuccessful) {
+                } else {
                     userResult.blogPost.visibility = View.VISIBLE
-//                    userResult.blogPost.animate().alpha(1.0f)
-                    resultState.userAPIModel?.let {
-                        userResult.displayName.text = it.displayName
-                        userResult.username.text = it.username
-                        userResult.profilePictureView.setImageResource(iconToResourceId(it.iconId))
-
+                    bindUserResultToView(resultState)
+                    if (resultState.isFollowing) {
+                        userResult.followBtn.text = "Unfollow"
+                        userResult.followCheck.isVisible = true
+                    } else {
+                        userResult.followBtn.text = "Follow"
+                        userResult.followCheck.isVisible = false
                     }
                 }
 
-                binding.errorMessage.isVisible =
-                    resultState.isSearchStarted && !resultState.isSuccessful
-
-
+                binding.errorMessage.isVisible = resultState.isUserNotFound
             }
         }
 
+        return root
+    }
+
+    private fun setupBinding() {
+        val followBtn: MaterialButton = userResult.followBtn
+        followBtn.setOnClickListener {
+            userResult.loadingSpinner.isVisible = true
+            if (searchViewModel.resultUIState.value.isFollowing) {
+                searchViewModel.unFollowUser()
+            } else {
+                searchViewModel.followUser()
+            }
+            userResult.loadingSpinner.isVisible = false
+
+        }
 
         binding.searchView.setOnQueryTextListener(
             object : OnQueryTextListener {
@@ -94,7 +104,6 @@ class SearchFragment : Fragment() {
             }
         )
 
-        return root
     }
 
     private fun performSearch(query: String) {
@@ -104,8 +113,26 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun bindUserResultToView(resultUIState: ResultUIState) {
+        val getUser = resultUIState.userAPIModel!!
+        userResult.displayName.text = getUser.displayName
+        val username = "@${getUser.username}"
+        userResult.username.text = username
+        userResult.profilePictureView.setImageResource(iconToResourceId(getUser.iconId))
+        if (resultUIState.isFollowing) {
+            userResult.followBtn.text = "Unfollow"
+        } else {
+            userResult.followBtn.text = "Follow"
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        _userResult = null;
         _binding = null
+    }
+
+    companion object {
+        private val TAG = Config.tag(this.toString())
     }
 }

@@ -10,6 +10,7 @@ import com.example.blog_e.data.repository.ApiError
 import com.example.blog_e.data.repository.ApiException
 import com.example.blog_e.data.repository.ApiSuccess
 import com.example.blog_e.data.repository.UserRepo
+import com.example.blog_e.utils.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,13 +25,15 @@ data class SearchUIState(
 
 data class ResultUIState(
     val isSuccessful: Boolean = false,
-    val isSearchStarted: Boolean = false,
+    val isUserNotFound: Boolean = false,
     val userAPIModel: GetUserAPIModel? = null,
+    val isFollowing: Boolean = false
 )
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val userRepo: UserRepo
+    private val userRepo: UserRepo,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
     val TAG = Config.tag(this.toString())
 
@@ -46,8 +49,9 @@ class SearchViewModel @Inject constructor(
     private val _resultUIState = MutableStateFlow(ResultUIState())
     val resultUIState: StateFlow<ResultUIState> = _resultUIState.asStateFlow()
 
+    private val currentUser = sessionManager.getUsername()
+
     suspend fun searchUser() {
-        Log.i(TAG, "searchUser: ${searchUIState.value.query}")
         startSearching()
         val res = userRepo.getUser(_searchUIState.value.query)
         stopSearching()
@@ -70,11 +74,6 @@ class SearchViewModel @Inject constructor(
                 isSearching = true
             )
         }
-        _resultUIState.update {
-            it.copy(
-                isSearchStarted = true
-            )
-        }
     }
 
     private fun revokeResultState() {
@@ -82,27 +81,30 @@ class SearchViewModel @Inject constructor(
             it.copy(
                 userAPIModel = null,
                 isSuccessful = false,
+                isUserNotFound = true
             )
         }
     }
 
     fun clearLastResult() {
-        if (_resultUIState.value.isSuccessful) {
-            _resultUIState.update {
-                it.copy(
-                    userAPIModel = null,
-                    isSuccessful = false,
-                    isSearchStarted = false
-                )
-            }
+        _resultUIState.update {
+            it.copy(
+                userAPIModel = null,
+                isSuccessful = false,
+                isFollowing = false,
+                isUserNotFound = false
+            )
         }
     }
 
     private fun updateCurrentUserResult(data: GetUserAPIModel) {
+        val isFollowing = data.followers.map { it.username }.contains(currentUser)
         _resultUIState.update {
             it.copy(
                 userAPIModel = data,
-                isSuccessful = true
+                isSuccessful = true,
+                isFollowing = isFollowing,
+                isUserNotFound = false
             )
         }
     }
@@ -117,5 +119,15 @@ class SearchViewModel @Inject constructor(
         _searchUIState.update {
             it.copy(isSearching = false)
         }
+    }
+
+    // TODO: add functionality
+    fun followUser() {
+        Log.i(TAG, "followUser: ${resultUIState.value.userAPIModel?.username}")
+    }
+
+    // TODO: add functionality
+    fun unFollowUser() {
+        Log.i(TAG, "unFollowUser: ${resultUIState.value.userAPIModel?.username}")
     }
 }
