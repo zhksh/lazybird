@@ -1,6 +1,5 @@
 package com.example.blog_e.ui.profile
 
-// import com.example.blog_e.ui.home.generatePosts
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.Config
 import com.example.blog_e.R
+import com.example.blog_e.UserViewModel
 import com.example.blog_e.adapters.PostAdapter
-import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.databinding.FragmentProfileBinding
 import com.example.blog_e.utils.PostComparator
 import com.google.android.material.snackbar.Snackbar
@@ -35,6 +35,7 @@ class ProfileFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private val profileViewModel: ProfileViewModel by viewModels()
+    private val userViewModel: UserViewModel by activityViewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
 
@@ -62,33 +63,32 @@ class ProfileFragment : Fragment() {
             postAdapter.submitData(lifecycle, it)
         }
 
+        userViewModel.getUser().observe(viewLifecycleOwner) {user ->
+            if (user != null) {
+                binding.username.text = user.username
+                binding.nickname.text = user.displayName
+                binding.profilePictureView.setImageResource(user.profilePicture.res)
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     profileViewModel.profileUiState.collect {
                         Log.v(TAG, "collecting ui state: ${it.toString()}")
-                        if (it.logout) {
-                            findNavController().navigate(R.id.start_fragment)
-                        }
-                        if (it.user != null) {
-                            binding.username.text = it.user.username
-                            binding.nickname.text = it.user.displayName
-                            binding.profilePictureView.setImageResource(it.user.profilePicture.res)
-                        } else {
-                            if (it.errMsg.isNotBlank())
-                                Snackbar.make(binding.root, it.errMsg, Toast.LENGTH_SHORT).show()
-                        }
+                        if (it.errMsg.isNotBlank())
+                            Snackbar.make(binding.root, it.errMsg, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
 
-        profileViewModel.loadUserData()
-        profileViewModel.fetchPosts(10, "next")
+        binding.logOutButton.setOnClickListener {
+            userViewModel.logout()
+            findNavController().navigate(R.id.action_logout)
+        }
 
-
-
-
+        profileViewModel.fetchPosts(10)
         return root
     }
 
@@ -96,6 +96,4 @@ class ProfileFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }

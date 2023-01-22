@@ -20,14 +20,10 @@ import javax.inject.Inject
 
 data class SignUpState(
     val errorMessage: String? = null,
-    @IdRes val navTo: Int? = null
 )
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(
-    private val userRepo: UserRepo,
-    private val sessionManager: SessionManager
-) : ViewModel() {
+class SignUpViewModel @Inject constructor() : ViewModel() {
     private val usernameRegex = """^[A-Za-z0-9]*$""".toRegex()
     private var username = ""
     private var displayName = ""
@@ -43,29 +39,6 @@ class SignUpViewModel @Inject constructor(
     // Sending events as state https://developer.android.com/topic/architecture/ui-layer/events#handle-viewmodel-events
     private val _uiState = MutableStateFlow(SignUpState())
     val uiState = _uiState.asStateFlow()
-
-    fun onClickSignUp(view: View) {
-        val newUser = makeUser() ?: return
-
-        viewModelScope.launch {
-            isLoading.set(true)
-
-            // TODO: Do we need to catch error?
-            val success = signUp(newUser)
-            if (success) {
-                _uiState.update {
-                    val navId = R.id.action_sign_up_fragment_to_navigation_home
-                    it.copy(navTo = navId)
-                }
-            } else {
-                _uiState.update {
-                    it.copy(errorMessage = "username already taken")
-                }
-            }
-
-            isLoading.set(false)
-        }
-    }
 
     fun updatedUsername(s: CharSequence, start: Int, before: Int, count: Int) {
         this.username = s.toString()
@@ -85,38 +58,6 @@ class SignUpViewModel @Inject constructor(
         this.passwordError.set(error)
         this.signUpReady.set(signUpIsReady())
     }
-
-    fun onClickAlreadySignedUp(view: View) {
-        _uiState.update {
-            val navId = R.id.action_sign_up_fragment_to_login_fragment
-            it.copy(navTo = navId)
-        }
-    }
-
-    private fun makeUser(): NewUserAPIModel? {
-        if (!signUpIsReady()) {
-            return null
-        }
-
-        return NewUserAPIModel(
-            username = this.username,
-            password = this.password,
-            displayName = this.displayName,
-            iconId = ProfilePicture.PICTURE_01.toString(),
-        )
-    }
-
-    private suspend fun signUp(user: NewUserAPIModel): Boolean =
-        when (val authorizationResult = userRepo.signUp(user)) {
-            is ApiSuccess -> {
-                sessionManager.saveSession(authorizationResult.data.accessToken, user.username)
-                true
-            }
-            is ApiError -> {
-                false
-            }
-            is ApiException -> throw authorizationResult.e
-        }
 
     private fun validateUsername(name: String): String {
         if (name.length < 3) {

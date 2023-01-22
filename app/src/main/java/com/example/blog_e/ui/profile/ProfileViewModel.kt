@@ -23,23 +23,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ProfileUiState (
-    val user: User? = null,
     val errMsg: String = "",
-    val logout: Boolean = false
 )
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val sessionManager: SessionManager,
     private val blogRepo: BlogRepo,
-    private val userRepo: UserRepo
 ) : ViewModel() {
-
-    private val TAG = Config.tag(this.toString())
 
     private var _profileUiState = MutableStateFlow(ProfileUiState())
     var profileUiState: StateFlow<ProfileUiState> = _profileUiState.asStateFlow()
-
-    private val user: MutableLiveData<User?> = MutableLiveData()
 
     private var _posts: MutableLiveData<PagingData<PostAPIModel>> =
         Pager(
@@ -54,28 +46,6 @@ class ProfileViewModel @Inject constructor(
 
 
     var posts: LiveData<PagingData<PostAPIModel>> = _posts
-    fun onClickLogout(view: View) {
-        sessionManager.resetSession()
-        _profileUiState.update { it.copy(logout = true) }
-    }
-
-    fun loadUserData() = viewModelScope.launch{
-        val token = sessionManager.fetchAuthToken()
-        if (token != null) {
-            when (val res = userRepo.getUser("me")) {
-                is ApiException -> {
-                    _profileUiState.update { it.copy(errMsg = res.e.message!!)}
-                }
-                is ApiError -> {
-                    _profileUiState.update { it.copy(logout = true) }
-                }
-                is ApiSuccess -> {
-                    _profileUiState.update { it.copy(user = mapApiUser(res.data), errMsg = "") }
-                }
-            }
-        }
-    }
-
     fun fetchPosts(pageSize: Int = 20, pageToken: String? = null) = viewModelScope.launch{
         val postsQueryModel = GetPostsQueryModel(
             usernames = listOf("me"),
