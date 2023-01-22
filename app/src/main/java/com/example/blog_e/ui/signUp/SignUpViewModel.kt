@@ -23,7 +23,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
 
     fun updatedUsername(s: CharSequence, start: Int, before: Int, count: Int) {
         if (this.username == displayName.get()) {
-            displayName.set(s.toString())
+            updatedDisplayName(s, start, before, count)
         }
         this.username = s.toString()
         val error = validateUsername(this.username)
@@ -35,6 +35,8 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
         this.displayName.set(s.toString())
         if (s.toString().isEmpty()) {
             displayNameError.set("Please enter a display name")
+        } else {
+            displayNameError.set("")
         }
 
         this.signUpReady.set(signUpIsReady())

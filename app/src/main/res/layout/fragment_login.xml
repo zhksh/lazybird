@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="64dp"
-                    android:hint="Username"
+                    android:hint="@string/username"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:hint="Password"
+                    android:hint="@string/password"
                     app:endIconMode="password_toggle"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -90,6 +90,7 @@
                         android:background="@drawable/textview_border"
                         android:ems="10"
                         android:inputType="textPassword"
+                        android:imeOptions="actionDone"
                         android:onTextChanged="@{viewModel::updatedPassword}"
                         tools:ignore="LabelFor,TextFields" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -115,7 +116,6 @@
                     android:text="@string/i_don_t_have_an_account"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    android:imeOptions="actionDone"
                     app:layout_constraintTop_toBottomOf="@+id/btnLogin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -134,13 +134,12 @@
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:visibility="visible" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:text="Loading"
+                android:text="@string/loading"
                 />
         </LinearLayout>
     </FrameLayout>
