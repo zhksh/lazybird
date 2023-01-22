@@ -17,7 +17,12 @@ interface BlogEAPI {
     suspend fun getUser(@Path("username") user: String): Response<GetUserAPIModel>
 
     @POST("users/{username}/follow")
-    suspend fun follow(@Path("username") username: String): Response<FollowResult>
+    @Headers("Content-Type: text/plain")
+    suspend fun follow(@Path("username") username: String): Response<String>
+
+    @DELETE("users/{username}/follow")
+    @Headers("Content-Type: text/html")
+    suspend fun unFollow(@Path("username") username: String): Response<String>
 
     // Post
     @POST("posts")

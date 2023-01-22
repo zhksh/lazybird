@@ -3,7 +3,6 @@ package com.example.blog_e.data.repository
 import androidx.lifecycle.LiveData
 import com.example.blog_e.Config
 import com.example.blog_e.data.model.*
-import java.util.*
 
 class UserRepo(private val backendS: BlogEAPI) : UserRepository {
 
@@ -27,8 +26,15 @@ class UserRepo(private val backendS: BlogEAPI) : UserRepository {
         return apiHandler.handleApi { backendS.getUser(username) }
     }
 
-    override suspend fun followOrUnfollowUser(actionUser: User, targetUser: User) {
-        TODO("Not yet implemented")
+    override suspend fun followOrUnfollowUser(
+        targetUser: String,
+        isFollowing: Boolean
+    ): ApiResult<String> {
+        return if (isFollowing) {
+            apiHandler.handleApi { backendS.unFollow(targetUser) }
+        } else {
+            apiHandler.handleApi { backendS.follow(targetUser) }
+        }
     }
 
 }

@@ -79,11 +79,13 @@ class SearchFragment : Fragment() {
         val followBtn: MaterialButton = userResult.followBtn
         followBtn.setOnClickListener {
             userResult.loadingSpinner.isVisible = true
+            userResult.followBtn.isVisible = false
             if (searchViewModel.resultUIState.value.isFollowing) {
                 searchViewModel.unFollowUser()
             } else {
                 searchViewModel.followUser()
             }
+            userResult.followBtn.isVisible = true
             userResult.loadingSpinner.isVisible = false
 
         }

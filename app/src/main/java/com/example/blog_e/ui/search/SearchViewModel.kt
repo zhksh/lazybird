@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.blog_e.Config
 import com.example.blog_e.data.model.GetUserAPIModel
 import com.example.blog_e.data.repository.ApiError
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class SearchUIState(
@@ -121,13 +123,29 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    // TODO: add functionality
     fun followUser() {
-        Log.i(TAG, "followUser: ${resultUIState.value.userAPIModel?.username}")
+        viewModelScope.launch {
+            userRepo.followOrUnfollowUser(
+                resultUIState.value.userAPIModel!!.username,
+                false
+            )
+            updateFollowStatus(true)
+        }
     }
 
-    // TODO: add functionality
     fun unFollowUser() {
-        Log.i(TAG, "unFollowUser: ${resultUIState.value.userAPIModel?.username}")
+        viewModelScope.launch {
+            userRepo.followOrUnfollowUser(
+                resultUIState.value.userAPIModel!!.username,
+                true
+            )
+            updateFollowStatus(false)
+        }
+    }
+
+    private fun updateFollowStatus(isFollowingNow: Boolean) {
+        _resultUIState.update {
+            it.copy(isFollowing = isFollowingNow)
+        }
     }
 }
