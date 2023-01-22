@@ -12,6 +12,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.blog_e.R
 import com.example.blog_e.UserViewModel
 import com.example.blog_e.databinding.FragmentLoginBinding
+import com.example.blog_e.utils.validatePassword
+import com.example.blog_e.utils.validateUsername
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,6 +42,12 @@ class LoginFragment : Fragment() {
             val username = binding.etUserName.editText?.text.toString()
             val password = binding.etPassword.editText?.text.toString()
 
+            val error = validateInput(username, password)
+            if (error != "") {
+                Snackbar.make(binding.root, error, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             userViewModel.login(username, password).observe(viewLifecycleOwner) { result ->
                 viewModel.isLoading.set(false)
                 if (result.errorMessage != null) {
@@ -51,5 +59,14 @@ class LoginFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun validateInput(username: String, password: String): String {
+        val err = validateUsername(username)
+        if (err != "") {
+            return err
+        }
+
+        return validatePassword(password)
     }
 }

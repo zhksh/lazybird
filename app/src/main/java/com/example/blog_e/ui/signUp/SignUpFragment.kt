@@ -14,6 +14,8 @@ import com.example.blog_e.UserViewModel
 import com.example.blog_e.data.model.NewUserAPIModel
 import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.databinding.FragmentSignUpBinding
+import com.example.blog_e.utils.validatePassword
+import com.example.blog_e.utils.validateUsername
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,10 +40,15 @@ class SignUpFragment : Fragment() {
         binding.btnSignUp.setOnClickListener{
             viewModel.isLoading.set(true)
 
-            // TODO: Validate input here?
             val username = binding.etUserName.editText?.text.toString()
             val displayName = binding.etDisplayName.editText?.text.toString()
             val password = binding.etPassword.editText?.text.toString()
+
+            val error = validateInput(username, password, displayName)
+            if (error != "") {
+                Snackbar.make(binding.root, error, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             val payload = NewUserAPIModel(
                 displayName = displayName,
@@ -55,11 +62,24 @@ class SignUpFragment : Fragment() {
                 if (result.errorMessage != null) {
                     Snackbar.make(binding.root, result.errorMessage, Toast.LENGTH_SHORT).show()
                 } else {
-                    findNavController().navigate(R.id.action_login_finished)
+                    findNavController().navigate(R.id.action_sign_up_finished)
                 }
             }
         }
 
         return binding.root
+    }
+
+    private fun validateInput(username: String, password: String, displayName : String): String {
+        val err = validateUsername(username)
+        if (err != "") {
+            return err
+        }
+
+        if (displayName == "") {
+            return "Please enter a display name"
+        }
+
+        return validatePassword(password)
     }
 }

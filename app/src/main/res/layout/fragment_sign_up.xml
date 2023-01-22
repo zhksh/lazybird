@@ -127,6 +127,7 @@
                     android:layout_height="60dp"
                     android:background="@drawable/textview_border"
                     android:onTextChanged="@{viewModel::updatedDisplayName}"
+                    android:text="@{viewModel.displayName}"
                     android:inputType="textPersonName"
                     tools:ignore="LabelFor" />
 

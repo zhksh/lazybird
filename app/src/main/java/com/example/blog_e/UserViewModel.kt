@@ -75,9 +75,8 @@ class UserViewModel @Inject constructor(
                 }
                 is ApiError -> {
                     when (result.code) {
-                        409 -> SuccessResponse(errorMessage = "This username is already taken")
-                        else -> response.value =
-                            SuccessResponse(errorMessage = "Something went wrong, please try again")
+                        409 -> response.value = SuccessResponse(errorMessage = "This username is already taken")
+                        else -> response.value = SuccessResponse(errorMessage = "Something went wrong, please try again")
                     }
                 }
                 is ApiException -> response.value = SuccessResponse(errorMessage = "Connection failed")
