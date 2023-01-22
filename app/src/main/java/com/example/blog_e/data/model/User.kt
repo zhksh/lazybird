@@ -1,16 +1,13 @@
 package com.example.blog_e.data.model
 
 import com.example.blog_e.R
-import java.util.*
 
 
 data class User(
-    val id: UUID = UUID.randomUUID(),
     val username: String,
-    // TODO anders mit umgehen
-    val password: String,
-    // Resource
-    val profilePicture: ProfilePicture
+    val displayName: String,
+    val profilePicture: ProfilePicture,
+    val followers: Int,
 )
 
 enum class ProfilePicture(val res: Int) {
@@ -22,11 +19,25 @@ enum class ProfilePicture(val res: Int) {
     PICTURE_05(R.drawable.astronaut_horse_0),
 }
 
-fun iconToResourceId(iconId: String): Int {
+fun mapApiUser(apiUser: GetUserAPIModel): User {
+    var displayName = apiUser.displayName
+    if (displayName == null) {
+        displayName = apiUser.username
+    }
+
+    return User(
+        username = apiUser.username,
+        displayName = displayName,
+        profilePicture = iconIdToProfilePicture(apiUser.iconId),
+        followers = apiUser.followers.count(),
+    )
+}
+
+fun iconIdToProfilePicture(iconId: String): ProfilePicture {
     return try {
-        ProfilePicture.valueOf(iconId).res
+        ProfilePicture.valueOf(iconId)
     }
     catch (e: IllegalArgumentException){
-        ProfilePicture.PICTURE_05.res
+        ProfilePicture.PICTURE_05
     }
 }

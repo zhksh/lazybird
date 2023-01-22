@@ -63,3 +63,34 @@ fun calculatePastTime(date: String): String {
 
     return "just posted"
 }
+
+/**
+ * Checks whether the given username is valid or not. If not, a descriptive error message is returned.
+ */
+fun validateUsername(name: String): String {
+    if (name.length < 3) {
+        return "username too short"
+    }
+
+    if (name.length > 15) {
+        return "username too long"
+    }
+
+    val usernameRegex = """^[A-Za-z0-9]*$""".toRegex()
+    if (!usernameRegex.matches(name)) {
+        return "only letters and numbers allowed in username"
+    }
+
+    return ""
+}
+
+/**
+ * Checks whether the given password is valid or not. If not, a descriptive error message is returned.
+ */
+fun validatePassword(password: String): String {
+    if (password.length < 6) {
+        return "password too short"
+    }
+
+    return ""
+}

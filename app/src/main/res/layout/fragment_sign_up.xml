@@ -127,6 +127,7 @@
                     android:layout_height="60dp"
                     android:background="@drawable/textview_border"
                     android:onTextChanged="@{viewModel::updatedDisplayName}"
+                    android:text="@{viewModel.displayName}"
                     android:inputType="textPersonName"
                     tools:ignore="LabelFor" />
 
@@ -174,7 +175,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:enabled="@{viewModel.signUpReady}"
-                android:onClick="@{viewModel::onClickSignUp}"
                 android:text="@string/sign_up"
                 android:textAllCaps="false"
                 android:imeOptions="actionDone"
@@ -190,7 +190,6 @@
                 android:text="@string/i_already_have_an_account"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
-                android:onClick="@{viewModel::onClickAlreadySignedUp}"
                 app:layout_constraintTop_toBottomOf="@+id/btn_sign_up"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

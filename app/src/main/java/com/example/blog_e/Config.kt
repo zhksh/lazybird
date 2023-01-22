@@ -9,8 +9,8 @@ class Config {
 
         // Use these settings for testing with a local api
         // private const val httpPrefix = "http://"
-        // const val socketPrefix = "ws://"
-//         private const val domain = "10.0.2.2:6969"
+        //const val socketPrefix = "ws://"
+        // private const val domain = "10.0.2.2:6969"
 
         const val apiAddress = httpPrefix + domain
         const val socketAddress = socketPrefix + domain

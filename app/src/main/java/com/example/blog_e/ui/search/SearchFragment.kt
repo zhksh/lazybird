@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.blog_e.Config
-import com.example.blog_e.data.model.iconToResourceId
+import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.databinding.FragmentSearchBinding
 import com.example.blog_e.databinding.UserSearchResultBinding
 import com.google.android.material.button.MaterialButton
@@ -120,7 +120,7 @@ class SearchFragment : Fragment() {
         userResult.displayName.text = getUser.displayName
         val username = "@${getUser.username}"
         userResult.username.text = username
-        userResult.profilePictureView.setImageResource(iconToResourceId(getUser.iconId))
+        userResult.profilePictureView.setImageResource(iconIdToProfilePicture(getUser.iconId).res)
         if (resultUIState.isFollowing) {
             userResult.followBtn.text = "Unfollow"
         } else {

@@ -2,28 +2,30 @@ package com.example.blog_e
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.blog_e.data.model.User
 import com.example.blog_e.databinding.ActivityMainBinding
 import com.example.blog_e.utils.SessionManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 var HIDE_NAV_BAR_FRAGMENTS = listOf(R.id.start_fragment, R.id.login_fragment, R.id.sign_up_fragment)
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMainBinding
-
     private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        supportActionBar?.hide()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -46,22 +48,15 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            if (destination.id in HIDE_NAV_BAR_FRAGMENTS) {
-//                navView.visibility = View.GONE
-//            } else {
-//
-//                navView.visibility = View.VISIBLE
-//            }
-//        }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id in HIDE_NAV_BAR_FRAGMENTS) {
+                navView.visibility = View.GONE
+            } else {
 
-        if (sessionManager.fetchAuthToken() != null) {
-//            Snackbar.make(
-//                binding.root,
-//                "Welcome back!",
-//                Snackbar.LENGTH_LONG
-//            ).show()
-            navController.navigate(R.id.navigation_home)
+                navView.visibility = View.VISIBLE
+            }
         }
+
+        navController.navigate(R.id.start_fragment)
     }
 }

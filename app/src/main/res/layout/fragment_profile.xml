@@ -24,6 +24,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
+                    android:id="@+id/logOutButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -32,7 +33,6 @@
                     android:src="@drawable/exit_to_app"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:onClick="@{viewModel::onClickLogout}"
                     />
 
                 <RelativeLayout
