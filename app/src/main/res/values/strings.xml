@@ -27,4 +27,5 @@
     <string name="loading">Loading</string>
     <string name="failed_to_load_post">Failed to load post</string>
     <string name="retry">Retry</string>
+    <string name="cancel">Cancel</string>
 </resources>

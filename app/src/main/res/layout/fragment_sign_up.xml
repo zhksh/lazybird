@@ -72,7 +72,8 @@
                     android:text="@string/choose_avatar"
                     android:textSize="20sp" />
 
-                <ImageButton
+                <com.google.android.material.imageview.ShapeableImageView
+                    app:shapeAppearanceOverlay="@style/Circular"
                     android:id="@+id/avatar_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -81,7 +82,7 @@
                     android:background="@drawable/btn_round"
                     android:contentDescription="@string/choose_avatar"
                     android:scaleType="centerInside"
-                    android:src="@drawable/logo_app" />
+                    android:src="@drawable/astronaut_horse_0" />
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
