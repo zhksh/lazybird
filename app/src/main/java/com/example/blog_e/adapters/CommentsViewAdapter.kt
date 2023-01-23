@@ -3,10 +3,12 @@ package com.example.blog_e.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
 import com.example.blog_e.data.model.CommentAPIModel
+import com.example.blog_e.data.model.iconIdToProfilePicture
 
 class CommentsViewAdapter(val comments: MutableList<CommentAPIModel> = mutableListOf()) :
     RecyclerView.Adapter<CommentsViewAdapter.ViewHolder>() {
@@ -14,10 +16,12 @@ class CommentsViewAdapter(val comments: MutableList<CommentAPIModel> = mutableLi
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val content: TextView
         val displayName: TextView
+        val profilePicture: ImageView
 
         init {
             content = view.findViewById(R.id.content)
             displayName = view.findViewById(R.id.displayName)
+            profilePicture = view.findViewById(R.id.profilePictureView)
         }
     }
 
@@ -38,7 +42,7 @@ class CommentsViewAdapter(val comments: MutableList<CommentAPIModel> = mutableLi
             viewHolder.displayName.text = comments[position].user.displayName
         }
 
-        // TODO: Add icon
+        viewHolder.profilePicture.setImageResource(iconIdToProfilePicture(comment.user.iconId).res)
     }
 
     override fun getItemCount() = comments.size
