@@ -17,6 +17,9 @@ enum class ProfilePicture(val res: Int) {
     PICTURE_03(R.drawable.baby_yoda_3),
     PICTURE_04(R.drawable.among_us_0),
     PICTURE_05(R.drawable.astronaut_horse_0),
+    PICTURE_06(R.drawable.darth_vader_0),
+    PICTURE_07(R.drawable.pinguin_0),
+    PICTURE_08(R.drawable.otter_0),
 }
 
 fun mapApiUser(apiUser: GetUserAPIModel): User {

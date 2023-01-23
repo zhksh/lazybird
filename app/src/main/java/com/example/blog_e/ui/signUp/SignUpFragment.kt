@@ -33,11 +33,15 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
-    private val TAG = Config.tag(this.toString())
     private val binding get() = _binding!!
-    private val imagess: MutableList<ProfilePicture> = ProfilePicture.values().toMutableList()
+
+    private val TAG = Config.tag(this.toString())
+
+    private val images: MutableList<ProfilePicture> = ProfilePicture.values().toMutableList()
     private var imagePos: Int? = null
+
     private lateinit var dialog: AlertDialog
+
     val viewModel: SignUpViewModel by viewModels()
     val userViewModel: UserViewModel by activityViewModels()
 
@@ -53,6 +57,11 @@ class SignUpFragment : Fragment() {
         setupBinding()
 
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setupBinding() {
@@ -78,11 +87,11 @@ class SignUpFragment : Fragment() {
             }
         }
 
-        binding.avatarBtn.setImageResource(ProfilePicture.PICTURE_05.res)
+        binding.avatarBtn.setImageResource(DEFAULT_PROFILE_PICTURE.res)
 
         binding.avatarBtn.setOnClickListener {
             val imagesAdapter = ProfilePictureAdapter(
-                imagess,
+                images,
                 object : ProfilePictureAdapter.OnItemClickListener {
                     override fun onItemClick(position: Int) {
                         Log.i(TAG, "Picture at index $position was selected")
@@ -93,21 +102,17 @@ class SignUpFragment : Fragment() {
             )
             val dialogView = layoutInflater.inflate(R.layout.dialog_profile_picutres, null)
             val recyclerView =
-                dialogView.findViewById<RecyclerView>(R.id.profile_images_list).apply {
-                    layoutManager = FlexboxLayoutManager(binding.root.context)
-                    adapter = imagesAdapter
-                }
-
+                dialogView.findViewById<RecyclerView>(R.id.profile_images_list)
+            recyclerView.layoutManager = FlexboxLayoutManager(binding.root.context)
+            recyclerView.adapter = imagesAdapter
             val builder = MaterialAlertDialogBuilder(binding.root.context)
                 .setTitle("Select a profile picture")
                 .setView(dialogView)
-                .setNeutralButton(R.string.cancel) { dialog, which ->
-                    Log.i(TAG, "Abbrechen")
-                    dialog.cancel()
+                .setNeutralButton(R.string.cancel) { dialoParam, _ ->
+                    dialoParam.cancel()
                 }
             dialog = builder.create()
             dialog.show()
-
         }
     }
 
@@ -148,16 +153,16 @@ class SignUpFragment : Fragment() {
 
     private fun getProfilePicture(): String {
         return if (imagePos != null) {
-            imagess[imagePos!!].toString()
+            images[imagePos!!].toString()
         } else {
-            // if non is selected, choose defau
+            // if non is selected, choose default
             DEFAULT_PROFILE_PICTURE.toString()
         }
     }
 
     private fun updateProfilePicture(imgIdx: Int) {
         imagePos = imgIdx
-        val currentImageRes = imagess[imgIdx].res
+        val currentImageRes = images[imgIdx].res
         binding.avatarBtn.setImageResource(currentImageRes)
     }
 
@@ -172,11 +177,6 @@ class SignUpFragment : Fragment() {
         }
 
         return validatePassword(password)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     companion object {
