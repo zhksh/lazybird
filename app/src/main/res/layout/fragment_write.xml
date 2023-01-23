@@ -15,31 +15,32 @@
         android:layout_margin="8dp"
         android:orientation="vertical"
         tools:context=".ui.write.WriteFragment">
-        <TextView
-            android:id="@+id/header_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Write a post"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+<!--        <TextView-->
+<!--            android:id="@+id/header_title"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:text="Write a post"-->
+<!--            android:textSize="24sp"-->
+<!--            android:textStyle="bold" />-->
         <LinearLayout
             android:id="@+id/aiToggleFeature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <Switch
-                android:id="@+id/aiSwitchButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@+id/textField"
-                app:layout_constraintStart_toStartOf="parent">
-            </Switch>
-            <TextView
-                    android:id="@+id/aiSwitchText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="AI feature" />
+<!--            <Switch-->
+<!--                android:id="@+id/aiSwitchButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="some AI"-->
+<!--                app:layout_constraintBottom_toTopOf="@+id/textField"-->
+<!--                app:layout_constraintStart_toStartOf="parent">-->
+<!--            </Switch>-->
+<!--            <TextView-->
+<!--                    android:id="@+id/aiSwitchText"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="AI feature" />-->
             <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -73,7 +74,7 @@
                 android:gravity="top"
                 android:inputType="textMultiLine"
                 android:minHeight="200dp"
-                android:text="Frank Zappa goes to town and"/>
+                android:text="Frank Zappa takes your momma for to some guitar loving "/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
@@ -81,7 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/emotionButtonsGroup"
@@ -117,24 +118,6 @@
                     android:text="Sad" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Influence from your blog history"></TextView>
-
-            </LinearLayout>
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -142,39 +125,46 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="32px"
-                    android:text="choose craziness: "></TextView>
-
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="temperature:"></TextView>
                 <com.google.android.material.slider.Slider
                     android:id="@+id/writeGenerateTemperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="craziness"
                     android:valueFrom="0.0"
                     android:valueTo="1.0"
                     android:value="0.5" />
 
             </LinearLayout>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.google.android.material.checkbox.MaterialCheckBox
+            <com.google.android.material.checkbox.MaterialCheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="auto reply"
                     android:id="@+id/autoReplyFlag">
-                </com.google.android.material.checkbox.MaterialCheckBox>
+            </com.google.android.material.checkbox.MaterialCheckBox>
+            <LinearLayout
+                    android:id="@+id/autoCompleteOptions"
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="auto generate response"></TextView>
-
+                    android:orientation="horizontal">
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="history length:"></TextView>
+                <com.google.android.material.slider.Slider
+                        android:id="@+id/autpreplyHistoryLength"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:valueFrom="1.0"
+                        android:valueTo="7.0"
+                        android:stepSize="1.0"
+                        android:value="2.0" />
             </LinearLayout>
+
         </LinearLayout>
 
 
@@ -188,19 +178,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:enabled="false"
-                android:text="Generate post from prompt"
-                android:visibility="gone">
-
-            </Button>
-
-            <Button
-                android:id="@+id/generatePostFromNothingButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:text="Generate"
-                android:visibility="gone">
+                android:enabled="true"
+                android:text="Complete"
+                android:visibility="visible">
 
             </Button>
 
@@ -209,7 +189,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:enabled="false"
+                android:enabled="true"
                 android:text="Post">
 
             </Button>

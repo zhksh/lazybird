@@ -53,14 +53,17 @@ class WriteFragment() : Fragment() {
 
 
         val postBtn = binding.postButton
-        val generatePromptBtn = binding.generatePostFromNothingButton
         val generateEmptyBtn = binding.generatePostFromPromptButton
-        val aiSwitch = binding.aiSwitchButton
+//        val aiSwitch = binding.aiSwitchButton
+//        val autoCompleteSwitchOptions = binding.autoCompleteOptions
         val spinner = binding.completeSpinner
         val postInput = binding.postInput
         val generationTemperature = binding.writeGenerateTemperature
         val moodChoices = binding.emotionButtonsGroup
         val autoReplyFlag = binding.autoReplyFlag
+
+        binding.autoCompleteOptions.visibility = View.GONE
+
 
         binding.lifecycleOwner = this
         Log.v(TAG, Utils.formatBackstack(findNavController()))
@@ -119,37 +122,40 @@ class WriteFragment() : Fragment() {
             )
         }
 
-        postInput.addTextChangedListener(
-            object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {}
+//        postInput.addTextChangedListener(
+//            object : TextWatcher {
+//                override fun afterTextChanged(s: Editable?) {}
+//
+//                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                    if (s.toString().isNotBlank()) {
+//                        postBtn.isEnabled = true
+//                        generateEmptyBtn.isEnabled = true
+//
+//                    } else {
+//                        generateEmptyBtn.isEnabled = false
+//                    }
+//                }
+//            }
+//        )
 
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    if (s.toString().isNotBlank()) {
-                        postBtn.isEnabled = true
-                        generatePromptBtn.visibility = View.GONE
-                        generateEmptyBtn.isEnabled = true
+//        aiSwitch.setOnCheckedChangeListener { _, isChecked ->
+//            if (isChecked) {
+//                binding.aiOptions.visibility = View.VISIBLE
+//                generateEmptyBtn.visibility = View.VISIBLE
+//                binding.aiOptions.visibility = View.VISIBLE
+//            } else {
+//                binding.aiOptions.visibility = View.GONE
+//                generateEmptyBtn.visibility = View.GONE
+//                binding.aiOptions.visibility = View.GONE
+//            }
+//        }
 
-                    } else {
-                        postBtn.isEnabled = false
-                        generateEmptyBtn.isEnabled = false
-                        generatePromptBtn.visibility = View.VISIBLE
-                    }
-                }
-            }
-        )
-
-        aiSwitch.setOnCheckedChangeListener { _, isChecked ->
+        autoReplyFlag.setOnCheckedChangeListener {_, isChecked ->
             if (isChecked) {
-                binding.aiOptions.visibility = View.VISIBLE
-                generateEmptyBtn.visibility = View.VISIBLE
-                generatePromptBtn.visibility = View.VISIBLE
-                binding.aiOptions.visibility = View.VISIBLE
+               binding.autoCompleteOptions.visibility = View.VISIBLE
             } else {
-                binding.aiOptions.visibility = View.GONE
-                generateEmptyBtn.visibility = View.GONE
-                generatePromptBtn.visibility = View.GONE
-                binding.aiOptions.visibility = View.GONE
+                binding.autoCompleteOptions.visibility = View.GONE
             }
         }
 
