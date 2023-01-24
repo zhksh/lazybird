@@ -74,7 +74,7 @@
                 android:gravity="top"
                 android:inputType="textMultiLine"
                 android:minHeight="200dp"
-                android:text="Bruce Lee and your sister took a saxophone and a knive, then"/>
+                android:text="Bruce Lee and your sister took a saxophone and a knife, then"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
