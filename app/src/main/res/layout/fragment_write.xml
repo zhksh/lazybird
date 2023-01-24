@@ -74,7 +74,7 @@
                 android:gravity="top"
                 android:inputType="textMultiLine"
                 android:minHeight="200dp"
-                android:text="Frank Zappa takes your momma for some guitar loving "/>
+                android:text="Bruce Lee and your sister took a saxophone and a knive, then"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout

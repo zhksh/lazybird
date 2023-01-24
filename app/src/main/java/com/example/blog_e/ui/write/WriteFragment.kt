@@ -56,12 +56,8 @@ class WriteFragment() : Fragment() {
 
         _binding = FragmentWriteBinding.inflate(inflater, container, false)
 
-        var currentText = ""
-
         val postBtn = binding.postButton
         val generateEmptyBtn = binding.generatePostFromPromptButton
-//        val aiSwitch = binding.aiSwitchButton
-//        val autoCompleteSwitchOptions = binding.autoCompleteOptions
         val spinner = binding.completeSpinner
         val postInput = binding.postInput
         val generationTemperature = binding.writeGenerateTemperature
@@ -100,7 +96,7 @@ class WriteFragment() : Fragment() {
                         if (it.success)  {
                             val prefix = postInput.text.toString()
                             val generated = it.generatedText
-                            val completed = prefix + generated
+                            val completed = prefix + " " + generated
                             val span = SpannableString(completed)
 
                             span.setSpan(
@@ -146,7 +142,6 @@ class WriteFragment() : Fragment() {
             try { mood = binding.root.findViewById<Button>(moodChoices.checkedButtonId).text.toString().lowercase()}
             catch (e: NullPointerException){ mood = Config.defaultMood}
 
-            currentText = postInput.text.toString()
             writeViewModel.completePost(
                 CompletePayload(
                     postInput.text.toString(),
@@ -155,34 +150,6 @@ class WriteFragment() : Fragment() {
             )
         }
 
-//        postInput.addTextChangedListener(
-//            object : TextWatcher {
-//                override fun afterTextChanged(s: Editable?) {}
-//
-//                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-//                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                    if (s.toString().isNotBlank()) {
-//                        postBtn.isEnabled = true
-//                        generateEmptyBtn.isEnabled = true
-//
-//                    } else {
-//                        generateEmptyBtn.isEnabled = false
-//                    }
-//                }
-//            }
-//        )
-
-//        aiSwitch.setOnCheckedChangeListener { _, isChecked ->
-//            if (isChecked) {
-//                binding.aiOptions.visibility = View.VISIBLE
-//                generateEmptyBtn.visibility = View.VISIBLE
-//                binding.aiOptions.visibility = View.VISIBLE
-//            } else {
-//                binding.aiOptions.visibility = View.GONE
-//                generateEmptyBtn.visibility = View.GONE
-//                binding.aiOptions.visibility = View.GONE
-//            }
-//        }
 
         autoReplyFlag.setOnCheckedChangeListener {_, isChecked ->
             if (isChecked) {
