@@ -48,8 +48,6 @@ class ProfileFragment : Fragment() {
     ): View {
 
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-        binding.viewModel = profileViewModel
 
         val root: View = binding.root
 
@@ -63,7 +61,7 @@ class ProfileFragment : Fragment() {
             postAdapter.submitData(lifecycle, it)
         }
 
-        userViewModel.getUser().observe(viewLifecycleOwner) {user ->
+        userViewModel.getUser().observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 binding.username.text = user.username
                 binding.nickname.text = user.displayName
@@ -88,7 +86,10 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_logout)
         }
 
-        profileViewModel.fetchPosts(10)
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+        }
+
         return root
     }
 
