@@ -146,7 +146,7 @@ class WriteFragment() : Fragment() {
                 CompletePayload(
                     postInput.text.toString(),
                     generationTemperature.value,
-                    mood, "false")
+                    mood, "true")
             )
         }
 
