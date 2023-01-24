@@ -74,7 +74,7 @@
                 android:gravity="top"
                 android:inputType="textMultiLine"
                 android:minHeight="200dp"
-                android:text="Frank Zappa takes your momma for to some guitar loving "/>
+                android:text="Frank Zappa takes your momma for some guitar loving "/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
@@ -127,14 +127,15 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="temperature:"></TextView>
+                        android:text="temperature:">
+
+                </TextView>
                 <com.google.android.material.slider.Slider
                     android:id="@+id/writeGenerateTemperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="craziness"
                     android:valueFrom="0.0"
-                    android:valueTo="1.0"
+                    android:valueTo="2.0"
                     android:value="0.5" />
 
             </LinearLayout>

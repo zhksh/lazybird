@@ -1,9 +1,13 @@
 package com.example.blog_e.ui.write
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
-import android.text.SpannableStringBuilder
-import android.text.TextWatcher
+import android.os.Handler
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.BackgroundColorSpan
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +29,7 @@ import com.example.blog_e.utils.Utils
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.lang.NullPointerException
+
 
 @AndroidEntryPoint
 class WriteFragment() : Fragment() {
@@ -41,6 +45,7 @@ class WriteFragment() : Fragment() {
 
     private val writeViewModel: WriteViewModel by viewModels()
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,6 +56,7 @@ class WriteFragment() : Fragment() {
 
         _binding = FragmentWriteBinding.inflate(inflater, container, false)
 
+        var currentText = ""
 
         val postBtn = binding.postButton
         val generateEmptyBtn = binding.generatePostFromPromptButton
@@ -61,9 +67,7 @@ class WriteFragment() : Fragment() {
         val generationTemperature = binding.writeGenerateTemperature
         val moodChoices = binding.emotionButtonsGroup
         val autoReplyFlag = binding.autoReplyFlag
-
         binding.autoCompleteOptions.visibility = View.GONE
-
 
         binding.lifecycleOwner = this
         Log.v(TAG, Utils.formatBackstack(findNavController()))
@@ -93,7 +97,35 @@ class WriteFragment() : Fragment() {
                 launch {
                     writeViewModel.generateState.collect {
                         Log.v(TAG, "collecting generation state: ${it.toString()}")
-                        if (it.success)  postInput.setText(it.generatedText)
+                        if (it.success)  {
+                            val prefix = postInput.text.toString()
+                            val generated = it.generatedText
+                            val completed = prefix + generated
+                            val span = SpannableString(completed)
+
+                            span.setSpan(
+                                ForegroundColorSpan(Color.LTGRAY),
+                                prefix.length, completed.length,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                            )
+                            postInput.setText(span)
+                            var i = prefix.length
+                            var handler = Handler()
+                            var runnable = object : Runnable {
+                                override fun run() {
+                                    span.setSpan(ForegroundColorSpan(Color.BLACK),
+                                        0, i,
+                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    postInput.setText(span)
+                                    if (i++ < completed.length){
+                                        handler.postDelayed(this, Config.generatePostDelay.random())
+                                    }
+                                }
+                            }
+                            handler.postDelayed(runnable, 0)
+                            postInput.setSelection(postInput.length())
+                        }
                     }
                 }
             }
@@ -114,6 +146,7 @@ class WriteFragment() : Fragment() {
             try { mood = binding.root.findViewById<Button>(moodChoices.checkedButtonId).text.toString().lowercase()}
             catch (e: NullPointerException){ mood = Config.defaultMood}
 
+            currentText = postInput.text.toString()
             writeViewModel.completePost(
                 CompletePayload(
                     postInput.text.toString(),
