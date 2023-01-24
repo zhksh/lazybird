@@ -8,6 +8,7 @@ data class User(
     val displayName: String,
     val profilePicture: ProfilePicture,
     val followers: Int,
+    val selfDescription: String?
 )
 
 enum class ProfilePicture(val res: Int) {
@@ -33,6 +34,7 @@ fun mapApiUser(apiUser: GetUserAPIModel): User {
         displayName = displayName,
         profilePicture = iconIdToProfilePicture(apiUser.iconId),
         followers = apiUser.followers.count(),
+        selfDescription = apiUser.selfDescription
     )
 }
 
