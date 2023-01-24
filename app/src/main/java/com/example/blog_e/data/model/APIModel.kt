@@ -34,7 +34,9 @@ data class GetUserAPIModel(
     @SerializedName("followers")
     val followers: List<UserAPIModel>,
     @SerializedName("username")
-    val username: String
+    val username: String,
+    @SerializedName("bio")
+    val selfDescription: String?
 )
 
 data class PostRequest(

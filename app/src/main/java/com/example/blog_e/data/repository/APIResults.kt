@@ -10,4 +10,9 @@ data class LLMResult(
     val prefix: String
 )
 
-
+data class LLMSelfDescription(
+    @SerializedName("response")
+    val response: String,
+    @SerializedName("entity")
+    val entity: String
+)

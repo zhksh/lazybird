@@ -21,6 +21,10 @@ class UserRepo(private val backendS: BlogEAPI) : UserRepository {
         return apiHandler.handleApi { backendS.getUser(username) }
     }
 
+    override suspend fun createSelfDescription(completePayload: CompletePayload): ApiResult<LLMSelfDescription> {
+        return apiHandler.handleApi {backendS.createSelfDescription(completePayload)}
+    }
+
     override suspend fun followOrUnfollowUser(
         targetUser: String,
         isFollowing: Boolean
