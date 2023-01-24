@@ -24,6 +24,7 @@ data class WriteUiState(
 data class GeneratePostState(
     val success: Boolean = false,
     val generatedText: String = "",
+    val prefix: String = ""
 )
 
 
@@ -70,7 +71,7 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
                 }
                 is ApiSuccess -> {
                     if (res.data.response.isBlank()) _uiState.update {
-                        it.copy(success = false, errorMsg = "Empty response try later")}
+                        it.copy(success = false, errorMsg = "Empty response, try changing the prompt")}
                     else {
                         _uiState.update { it.copy(errorMsg = "") }
                         _generatePostState.update { it.copy(generatedText = res.data.response, success = true) }
