@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.adapters.CommentsViewAdapter
@@ -27,21 +28,25 @@ class PostThreadActivity : AppCompatActivity() {
     private val viewModel: PostThreadViewModel by viewModels()
     private var postId: String? = null
 
+    private lateinit var commentListRecyclerView: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         val binding = ActivityPostThreadBinding.inflate(layoutInflater)
-        binding.commentListRecyclerView.adapter = adapter
-        binding.commentListRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        commentListRecyclerView = binding.commentListRecyclerView
+        commentListRecyclerView.adapter = adapter
+        commentListRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.viewModel = viewModel
         setContentView(binding.root)
 
         postId = intent.getStringExtra("POST_ID")
 
         if (postId == null) {
-            Log.e(tag,"failed to retrieve postId")
+            Log.e(tag, "failed to retrieve postId")
             return
         }
 
@@ -112,7 +117,8 @@ class PostThreadActivity : AppCompatActivity() {
     }
 
     private fun hideKeyboard() {
-        val imm: InputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm: InputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         var view = currentFocus
         if (view == null) {
             view = View(this)
@@ -129,5 +135,8 @@ class PostThreadActivity : AppCompatActivity() {
         val startIndex = adapter.comments.size
         adapter.comments.addAll(newComments)
         adapter.notifyItemRangeInserted(startIndex, newComments.size)
+
+        // scroll to the last comment
+        commentListRecyclerView.scrollToPosition(adapter.itemCount - 1)
     }
 }
