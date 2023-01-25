@@ -65,7 +65,6 @@
                 android:id="@+id/nickname"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Max Mustermann"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
