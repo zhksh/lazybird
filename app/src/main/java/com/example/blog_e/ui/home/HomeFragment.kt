@@ -88,14 +88,18 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToVisitProfileFragment(username: String) {
-        val detailFragment = VisitProfileFragment.newInstance(username)
-        Log.v(TAG, Utils.formatBackstack(findNavController()))
-        parentFragmentManager.beginTransaction()
 
-            .replace(vg.id, detailFragment)
-            .addToBackStack(null)
-            .setReorderingAllowed(true)
-            .commit()
+        if (username == homeViewModel.username) {
+            findNavController().navigate(R.id.navigation_profile)
+        } else {
+            val detailFragment = VisitProfileFragment.newInstance(username)
+            parentFragmentManager.beginTransaction()
+                .replace(vg.id, detailFragment)
+                .addToBackStack(null)
+                .setReorderingAllowed(true)
+                .commit()
+        }
+
     }
 
 }
