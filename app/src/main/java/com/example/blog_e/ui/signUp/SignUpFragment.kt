@@ -103,6 +103,7 @@ class SignUpFragment : Fragment() {
             val dialogView = layoutInflater.inflate(R.layout.dialog_profile_picutres, null)
             val recyclerView =
                 dialogView.findViewById<RecyclerView>(R.id.profile_images_list)
+
             recyclerView.layoutManager = FlexboxLayoutManager(binding.root.context)
             recyclerView.adapter = imagesAdapter
             val builder = MaterialAlertDialogBuilder(binding.root.context)

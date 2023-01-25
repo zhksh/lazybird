@@ -24,14 +24,9 @@ enum class ProfilePicture(val res: Int) {
 }
 
 fun mapApiUser(apiUser: GetUserAPIModel): User {
-    var displayName = apiUser.displayName
-    if (displayName == null) {
-        displayName = apiUser.username
-    }
-
     return User(
         username = apiUser.username,
-        displayName = displayName,
+        displayName = apiUser.displayName ?: apiUser.username,
         profilePicture = iconIdToProfilePicture(apiUser.iconId),
         followers = apiUser.followers.count(),
         selfDescription = apiUser.selfDescription

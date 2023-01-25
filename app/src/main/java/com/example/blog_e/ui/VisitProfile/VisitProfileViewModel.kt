@@ -30,7 +30,6 @@ data class VisitUserUIModel(
     val isFollowing: Boolean = false
 )
 
-
 @HiltViewModel
 class ProfileVisitViewModel @Inject constructor(
     private val blogRepo: BlogRepo,

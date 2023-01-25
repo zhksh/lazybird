@@ -36,12 +36,7 @@ class CommentsViewAdapter(val comments: MutableList<CommentAPIModel> = mutableLi
         val comment = comments[position]
 
         viewHolder.content.text = comment.content
-        if (comment.user.displayName == null) {
-            viewHolder.displayName.text = comments[position].user.username
-        } else {
-            viewHolder.displayName.text = comments[position].user.displayName
-        }
-
+        viewHolder.displayName.text = comment.user.displayName ?: comment.user.username
         viewHolder.profilePicture.setImageResource(iconIdToProfilePicture(comment.user.iconId).res)
     }
 

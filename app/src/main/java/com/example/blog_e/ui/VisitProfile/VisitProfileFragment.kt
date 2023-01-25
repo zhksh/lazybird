@@ -78,7 +78,7 @@ class VisitProfileFragment : Fragment() {
                     binding.username.text = user.username
                     binding.nickname.text = user.displayName
                     binding.profilePictureView.setImageResource(iconIdToProfilePicture(user.iconId).res)
-                    val postsTitle = "${user.displayName}' posts"
+                    val postsTitle = "${user.displayName ?: user.username}' posts"
                     binding.postsTitle.text = postsTitle
                     binding.selfDescription.text = user.selfDescription
                 }

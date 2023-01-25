@@ -89,7 +89,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToVisitProfileFragment(username: String) {
-
         if (username == homeViewModel.username) {
             findNavController().navigate(R.id.navigation_profile)
         } else {
@@ -100,7 +99,5 @@ class HomeFragment : Fragment() {
                 .setReorderingAllowed(true)
                 .commit()
         }
-
     }
-
 }
