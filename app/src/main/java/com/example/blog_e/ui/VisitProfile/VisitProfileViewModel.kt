@@ -16,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class VisitUserUIModel(
@@ -75,6 +76,32 @@ class ProfileVisitViewModel @Inject constructor(
                 user = userAPIModel,
                 isFollowing = isFollowing
             )
+        }
+    }
+
+    fun followUser() {
+        viewModelScope.launch {
+            userRepo.followOrUnfollowUser(
+                uiState.value.user!!.username,
+                false
+            )
+            updateFollowStatus(true)
+        }
+    }
+
+    fun unFollowUser() {
+        viewModelScope.launch {
+            userRepo.followOrUnfollowUser(
+                uiState.value.user!!.username,
+                true
+            )
+            updateFollowStatus(false)
+        }
+    }
+
+    private fun updateFollowStatus(isFollowingNow: Boolean) {
+        _uiState.update {
+            it.copy(isFollowing = isFollowingNow)
         }
     }
 }

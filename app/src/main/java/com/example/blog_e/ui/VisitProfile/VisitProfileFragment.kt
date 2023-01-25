@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -98,6 +97,19 @@ class VisitProfileFragment : Fragment() {
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
             Log.i(TAG, "Es wurde refresht")
+        }
+
+        binding.followBtn.setOnClickListener {
+            binding.loadingSpinner.isVisible = true
+            binding.followBtn.isVisible = false
+            if (visitUserModel.uiState.value.isFollowing) {
+                visitUserModel.unFollowUser()
+            } else {
+                visitUserModel.followUser()
+            }
+            binding.followBtn.isVisible = true
+            binding.loadingSpinner.isVisible = false
+
         }
 
         return root
