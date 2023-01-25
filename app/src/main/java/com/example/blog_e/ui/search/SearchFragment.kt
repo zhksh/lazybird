@@ -60,8 +60,4 @@ class SearchFragment : Fragment() {
 
         return binding.root
     }
-
-    companion object {
-        private val TAG = Config.tag(this.toString())
-    }
 }
