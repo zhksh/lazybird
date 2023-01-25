@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,11 +18,8 @@
             android:id="@+id/follow_elements"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintBottom_toBottomOf="@+id/relativeLayout3"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <ImageView
                 android:id="@+id/follow_check"
@@ -42,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:enabled="true"
-                android:text="follow"
+                android:text="unfollow"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -97,22 +93,41 @@
 
             <TextView
                 android:id="@+id/nickname"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Max Mustermann"
-                android:textSize="32sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/at"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="\@"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@id/nickname"
+                app:layout_constraintTop_toTopOf="@+id/nickname" />
+
+            <TextView
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="maxMrMustermann"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@id/at"
+                app:layout_constraintTop_toTopOf="@+id/nickname" />
+
+            <TextView
+                android:id="@+id/selfDescription"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="\@maxMrMustermann"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/nickname"
+                android:text="A random description"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nickname" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -70,8 +70,7 @@ class ProfileFragment : Fragment() {
 
         userViewModel.getUser().observe(viewLifecycleOwner) { user ->
             if (user != null) {
-                val username = "@${user.username}"
-                binding.username.text = username
+                binding.username.text = user.username
                 binding.nickname.text = user.displayName
                 binding.selfDescription.text = user.selfDescription
 

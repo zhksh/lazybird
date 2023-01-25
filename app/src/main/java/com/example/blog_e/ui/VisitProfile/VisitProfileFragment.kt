@@ -75,12 +75,12 @@ class VisitProfileFragment : Fragment() {
             visitUserModel.uiState.collect { uiState ->
                 Log.i(TAG, "Aktueller UI state: " + uiState)
                 uiState.user?.let { user ->
-                    val username = "@${user.username}"
-                    binding.username.text = username
+                    binding.username.text = user.username
                     binding.nickname.text = user.displayName
                     binding.profilePictureView.setImageResource(iconIdToProfilePicture(user.iconId).res)
                     val postsTitle = "${user.displayName}' posts"
                     binding.postsTitle.text = postsTitle
+                    binding.selfDescription.text = user.selfDescription
                 }
 
                 if (uiState.isFollowing) {

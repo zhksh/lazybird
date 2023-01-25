@@ -24,7 +24,8 @@ data class VisitUserUIModel(
         username = "",
         iconId = "0",
         displayName = "",
-        followers = emptyList()
+        followers = emptyList(),
+        selfDescription = ""
     ),
     val isFollowing: Boolean = false
 )
