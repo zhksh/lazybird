@@ -10,10 +10,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.blog_e.Config
+import com.example.blog_e.R
 import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.databinding.FragmentSearchBinding
 import com.example.blog_e.databinding.UserSearchResultBinding
+import com.example.blog_e.ui.VisitProfile.VisitProfileFragment
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -21,6 +24,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
+    private lateinit var vg: ViewGroup
     private var _binding: FragmentSearchBinding? = null
     private val searchViewModel: SearchViewModel by viewModels()
 
@@ -40,6 +44,7 @@ class SearchFragment : Fragment() {
     ): View {
 
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        vg = container!!
         _userResult = binding.userResult
         val root: View = binding.root
 
@@ -106,6 +111,24 @@ class SearchFragment : Fragment() {
             }
         )
 
+        binding.userResult.blogPost.setOnClickListener {
+            navigateToUser()
+        }
+
+    }
+
+    private fun navigateToUser() {
+        val toUser = searchViewModel.resultUIState.value.userAPIModel!!.username
+        if (toUser == searchViewModel.currentUser) {
+            findNavController().navigate(R.id.navigation_profile)
+        } else {
+            val detailFragment = VisitProfileFragment.newInstance(toUser)
+            parentFragmentManager.beginTransaction()
+                .replace(vg.id, detailFragment)
+                .addToBackStack(null)
+                .setReorderingAllowed(true)
+                .commit()
+        }
     }
 
     private fun performSearch(query: String) {
