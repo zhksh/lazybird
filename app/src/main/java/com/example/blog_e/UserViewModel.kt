@@ -4,14 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.blog_e.data.model.LoginPayload
-import com.example.blog_e.data.model.NewUserAPIModel
-import com.example.blog_e.data.model.User
-import com.example.blog_e.data.model.mapApiUser
+import com.example.blog_e.data.model.*
 import com.example.blog_e.data.repository.*
 import com.example.blog_e.utils.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.StringJoiner
 import javax.inject.Inject
 
 data class SuccessResponse(
@@ -63,6 +61,13 @@ class UserViewModel @Inject constructor(
         return response
     }
 
+    fun createSelfDesc(username: String) {
+        viewModelScope.launch {
+            val res = userRepo.createSelfDescription(CompletePayload("",
+                Config.defaultTemperature, Config.defaultMood, "false"))
+        }
+    }
+
     fun signUp(newUser: NewUserAPIModel): LiveData<SuccessResponse> {
         val response = MutableLiveData<SuccessResponse>()
 
@@ -91,6 +96,11 @@ class UserViewModel @Inject constructor(
         user.value = null
     }
 
+    fun renewUserData(){
+        viewModelScope.launch {
+            fetchUser()
+        }
+    }
     private suspend fun fetchUser() {
         when (val result = userRepo.getUser("me")) {
             is ApiSuccess -> {

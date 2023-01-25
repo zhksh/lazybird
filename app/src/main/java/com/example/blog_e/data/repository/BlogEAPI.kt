@@ -24,6 +24,8 @@ interface BlogEAPI {
     @Headers("Content-Type: text/html")
     suspend fun unFollow(@Path("username") username: String): Response<String>
 
+    @POST("generate/self-descpription")
+    suspend fun createSelfDescription(@Body completePayload: CompletePayload): Response<LLMSelfDescription>
     // Post
     @POST("posts")
     suspend fun createPost(@Body post: PostRequest): Response<PostAPIModel>

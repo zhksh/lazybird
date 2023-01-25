@@ -62,6 +62,8 @@ class ProfileFragment : Fragment() {
         recyclerView.adapter = postAdapter
         recyclerView.setHasFixedSize(true)
 
+
+
         profileViewModel.posts.observe(viewLifecycleOwner) {
             postAdapter.submitData(lifecycle, it)
         }
@@ -71,6 +73,8 @@ class ProfileFragment : Fragment() {
                 val username = "@${user.username}"
                 binding.username.text = username
                 binding.nickname.text = user.displayName
+                binding.selfDescription.text = user.selfDescription
+
                 binding.profilePictureView.setImageResource(user.profilePicture.res)
             }
         }
@@ -84,6 +88,7 @@ class ProfileFragment : Fragment() {
                             Snackbar.make(binding.root, it.errMsg, Toast.LENGTH_SHORT).show()
                     }
                 }
+                userViewModel.renewUserData()
             }
         }
 
@@ -94,6 +99,7 @@ class ProfileFragment : Fragment() {
 
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
+            userViewModel.renewUserData()
         }
 
         return root
