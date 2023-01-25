@@ -8,15 +8,20 @@ import android.view.ViewGroup
 import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.blog_e.Config
+import com.example.blog_e.R
 import com.example.blog_e.adapters.SearchResultsAdapter
 import com.example.blog_e.data.model.UserAPIModel
 import com.example.blog_e.databinding.FragmentSearchBinding
+import com.example.blog_e.ui.VisitProfile.VisitProfileFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
+    private lateinit var vg: ViewGroup
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -26,7 +31,18 @@ class SearchFragment : Fragment() {
         val viewModel: SearchViewModel by viewModels()
         val binding = FragmentSearchBinding.inflate(inflater)
 
-        val adapter = SearchResultsAdapter(emptyList())
+        val navigate: (String) -> Unit = { username ->
+            if (container != null) {
+                val detailFragment = VisitProfileFragment.newInstance(username)
+                parentFragmentManager.beginTransaction()
+                    .replace(container.id, detailFragment)
+                    .addToBackStack(null)
+                    .setReorderingAllowed(true)
+                    .commit()
+            }
+        }
+
+        val adapter = SearchResultsAdapter(emptyList(), navigate)
         val searchResultRecyclerView = binding.usersRecyclerView
         searchResultRecyclerView.adapter = adapter
         searchResultRecyclerView.layoutManager = LinearLayoutManager(binding.root.context)

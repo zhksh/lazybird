@@ -11,8 +11,10 @@ import com.example.blog_e.data.model.CommentAPIModel
 import com.example.blog_e.data.model.UserAPIModel
 import com.example.blog_e.data.model.iconIdToProfilePicture
 
-class SearchResultsAdapter(var users: List<UserAPIModel> = emptyList()) :
-    RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>() {
+class SearchResultsAdapter(
+    var users: List<UserAPIModel> = emptyList(),
+    private val navigateToUserProfile: (String) -> Unit
+) : RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val username: TextView = view.findViewById(R.id.username)
@@ -36,6 +38,10 @@ class SearchResultsAdapter(var users: List<UserAPIModel> = emptyList()) :
             viewHolder.displayName.text = user.username
         } else {
             viewHolder.displayName.text = user.displayName
+        }
+
+        viewHolder.itemView.setOnClickListener {
+            navigateToUserProfile(user.username)
         }
     }
 
