@@ -46,6 +46,8 @@ class HomeViewModel @Inject constructor(
             .cachedIn(viewModelScope)
     } as MutableLiveData<PagingData<PostAPIModel>>
 
+    val username = sessionManager.getUsername()
+
     var posts: LiveData<PagingData<PostAPIModel>> = _posts
 
 
