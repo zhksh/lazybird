@@ -48,4 +48,8 @@ class SearchViewModel @Inject constructor(
 
         return users
     }
+
+    fun resetQuery() {
+        users.value = emptyList()
+    }
 }

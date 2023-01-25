@@ -32,7 +32,9 @@ class SearchResultsAdapter(var users: List<UserAPIModel> = emptyList()) :
 
         viewHolder.username.text = user.username
         viewHolder.profilePicture.setImageResource(iconIdToProfilePicture(user.iconId).res)
-        if (user.displayName != null) {
+        if (user.displayName == null) {
+            viewHolder.displayName.text = user.username
+        } else {
             viewHolder.displayName.text = user.displayName
         }
     }
