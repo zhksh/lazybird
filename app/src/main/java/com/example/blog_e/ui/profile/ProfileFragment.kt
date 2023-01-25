@@ -51,7 +51,12 @@ class ProfileFragment : Fragment() {
 
         val root: View = binding.root
 
-        postAdapter = PostAdapter(PostComparator(), root.context)
+        postAdapter = PostAdapter(
+            PostComparator(),
+            root.context
+        ) {
+            // pass no function when click on your own profile}#
+        }
         recyclerView = binding.postsListRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         recyclerView.adapter = postAdapter
@@ -63,7 +68,8 @@ class ProfileFragment : Fragment() {
 
         userViewModel.getUser().observe(viewLifecycleOwner) { user ->
             if (user != null) {
-                binding.username.text = user.username
+                val username = "@${user.username}"
+                binding.username.text = username
                 binding.nickname.text = user.displayName
                 binding.profilePictureView.setImageResource(user.profilePicture.res)
             }

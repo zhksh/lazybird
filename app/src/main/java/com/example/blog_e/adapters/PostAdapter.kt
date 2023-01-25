@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.navigation.NavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +18,11 @@ import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.ui.post.PostThreadActivity
 import com.example.blog_e.utils.calculatePastTime
 
-class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>, private val context: Context) :
+class PostAdapter(
+    differCallback: DiffUtil.ItemCallback<PostAPIModel>,
+    private val context: Context,
+    private val navigateToUserProfile: (String) -> Unit
+) :
     PagingDataAdapter<PostAPIModel, PostAdapter.ViewHolder>(differCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,7 +42,7 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>, private v
             holder.username.text = username
             holder.displayName.text = it.user.displayName
 
-            var imageResourceId = iconIdToProfilePicture(it.user.iconId).res
+            val imageResourceId = iconIdToProfilePicture(it.user.iconId).res
             holder.profilePictureView.setImageResource(imageResourceId)
             holder.likes.text = it.likes.count().toString()
             holder.comments.text = it.comments.count().toString()
@@ -54,6 +60,10 @@ class PostAdapter(differCallback: DiffUtil.ItemCallback<PostAPIModel>, private v
 
             holder.commentBubble.setOnClickListener {
                 openPost(postId)
+            }
+
+            holder.profilePictureView.setOnClickListener { _ ->
+                navigateToUserProfile(it.user.username)
             }
         }
     }
