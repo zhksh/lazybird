@@ -51,7 +51,7 @@ class SearchViewModel @Inject constructor(
     private val _resultUIState = MutableStateFlow(ResultUIState())
     val resultUIState: StateFlow<ResultUIState> = _resultUIState.asStateFlow()
 
-    private val currentUser = sessionManager.getUsername()
+    val currentUser = sessionManager.getUsername()
 
     suspend fun searchUser() {
         startSearching()

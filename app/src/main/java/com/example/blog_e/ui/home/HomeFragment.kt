@@ -11,8 +11,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.Config
+import com.example.blog_e.R
 import com.example.blog_e.adapters.PostAdapter
 import com.example.blog_e.databinding.FragmentHomeBinding
+import com.example.blog_e.ui.VisitProfile.VisitProfileFragment
 import com.example.blog_e.utils.PostComparator
 import com.example.blog_e.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +29,7 @@ class HomeFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var vg: ViewGroup
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,11 +37,12 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         Log.d(TAG, Utils.formatBackstack(findNavController()))
+        vg = container!!
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        postAdapter = PostAdapter(PostComparator(), root.context)
+        postAdapter = PostAdapter(PostComparator(), root.context) { item -> navigateToVisitProfileFragment(item)}
         linearLayoutManager = LinearLayoutManager(root.context)
 
         recyclerView = binding.postsListRecyclerView
@@ -82,6 +86,21 @@ class HomeFragment : Fragment() {
 
     private fun onToggleClick(isGlobal: Boolean) {
         binding.toggleButton.isChecked = !isGlobal
+    }
+
+    private fun navigateToVisitProfileFragment(username: String) {
+
+        if (username == homeViewModel.username) {
+            findNavController().navigate(R.id.navigation_profile)
+        } else {
+            val detailFragment = VisitProfileFragment.newInstance(username)
+            parentFragmentManager.beginTransaction()
+                .replace(vg.id, detailFragment)
+                .addToBackStack(null)
+                .setReorderingAllowed(true)
+                .commit()
+        }
+
     }
 
 }
