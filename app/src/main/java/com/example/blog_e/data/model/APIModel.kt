@@ -23,7 +23,14 @@ data class UserAPIModel(
     @SerializedName("icon_id")
     val iconId: String,
     @SerializedName("username")
-    val username: String
+    val username: String,
+    @SerializedName("bio")
+    val bio: String
+)
+
+data class FindUsersAPIModel(
+    @SerializedName("users")
+    val users: List<UserAPIModel>
 )
 
 data class GetUserAPIModel(

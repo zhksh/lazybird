@@ -10,6 +10,9 @@ interface BlogEAPI {
     @POST("users")
     suspend fun signUp(@Body params: NewUserAPIModel): Response<Authorization>
 
+    @GET("users")
+    suspend fun findUsers(@Query("search") search: String): Response<FindUsersAPIModel>
+
     @POST("users/auth")
     suspend fun login(@Body loginPayload: LoginPayload): Response<Authorization>
 

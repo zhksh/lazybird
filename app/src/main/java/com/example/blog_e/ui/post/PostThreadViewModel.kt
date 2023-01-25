@@ -37,7 +37,7 @@ data class WebsocketResponse(
 )
 
 data class PostState(
-    val user: UserAPIModel = UserAPIModel(username = "", iconId = "0", displayName = ""),
+    val user: UserAPIModel = UserAPIModel(username = "", iconId = "0", displayName = "", bio = ""),
     val content: String = "",
     val timeSinceString: String = "",
     val likes: Number = 0,
