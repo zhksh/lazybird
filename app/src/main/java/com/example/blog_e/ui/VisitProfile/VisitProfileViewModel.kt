@@ -35,19 +35,15 @@ class ProfileVisitViewModel @Inject constructor(
     private val userRepo: UserRepo,
     private val sessionManager: SessionManager
 ) : ViewModel() {
+    private val TAG = com.example.blog_e.Config.tag(this.toString())
 
     private var _uiState = MutableStateFlow(VisitUserUIModel())
     val uiState = _uiState.asStateFlow()
 
     private val currentUser = sessionManager.getUsername()
 
-    private var _posts: MutableLiveData<PagingData<PostAPIModel>> = MutableLiveData()
-
-    val posts: LiveData<PagingData<PostAPIModel>> = _posts
-
-
-    fun initPager(username: String) {
-        val pager = Pager(
+    fun getPosts(username: String): LiveData<PagingData<PostAPIModel>> {
+        return Pager(
             blogRepo.getDefaultPageConfig(),
         ) {
             PostPagingSource(
@@ -55,10 +51,7 @@ class ProfileVisitViewModel @Inject constructor(
                 isUserFeed = false,
                 usernames = listOf(username)
             )
-        }
-
-        _posts =
-            pager.liveData.cachedIn(viewModelScope) as MutableLiveData<PagingData<PostAPIModel>>
+        }.liveData.cachedIn(viewModelScope) as MutableLiveData<PagingData<PostAPIModel>>
     }
 
     suspend fun fetchUser(currentUser: String) {

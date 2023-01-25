@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -47,17 +48,29 @@ class VisitProfileFragment : Fragment() {
         val root: View = binding.root
 
         val currentUser = requireArguments().getString("username")!!
-        Log.i(TAG, "Übergebene Username: ${currentUser}")
+        Log.i(TAG, "Übergebener Username: ${currentUser}")
 
+        postAdapter = PostAdapter(
+            PostComparator(),
+            root.context
+        ) {
+            // pass no function for on click events
+        }
+        recyclerView = binding.postsListRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(root.context)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = postAdapter
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 visitUserModel.fetchUser(currentUser)
-                Log.i(TAG, "User Profil geladen")
-                visitUserModel.initPager(currentUser)
-                Log.i(TAG, "Pager erstell")
             }
         }
+
+        visitUserModel.getPosts(currentUser).observe(viewLifecycleOwner) {
+            postAdapter.submitData(lifecycle, it)
+        }
+
 
         viewLifecycleOwner.lifecycleScope.launch {
             visitUserModel.uiState.collect { uiState ->
@@ -82,27 +95,14 @@ class VisitProfileFragment : Fragment() {
         }
 
 
-        postAdapter = PostAdapter(
-            PostComparator(),
-            root.context
-        ) { name -> navigateToVisitProfileFragment(name) }
-        recyclerView = binding.postsListRecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(root.context)
-        recyclerView.adapter = postAdapter
-        recyclerView.setHasFixedSize(true)
-
-        visitUserModel.posts.observe(viewLifecycleOwner) {
-            postAdapter.submitData(lifecycle, it)
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+            Log.i(TAG, "Es wurde refresht")
         }
 
         return root
 
     }
-
-    private fun navigateToVisitProfileFragment(username: String) {
-
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -116,5 +116,4 @@ class VisitProfileFragment : Fragment() {
             }
         }
     }
-
 }
