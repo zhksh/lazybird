@@ -25,7 +25,7 @@ data class UserAPIModel(
     @SerializedName("username")
     val username: String,
     @SerializedName("bio")
-    val bio: String
+    val bio: String?
 )
 
 data class FindUsersAPIModel(

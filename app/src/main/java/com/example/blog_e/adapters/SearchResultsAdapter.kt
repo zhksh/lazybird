@@ -10,10 +10,11 @@ import com.example.blog_e.R
 import com.example.blog_e.data.model.CommentAPIModel
 import com.example.blog_e.data.model.UserAPIModel
 import com.example.blog_e.data.model.iconIdToProfilePicture
+import com.example.blog_e.ui.search.SearchResult
 
 class SearchResultsAdapter(
-    var users: List<UserAPIModel> = emptyList(),
-    private val navigateToUserProfile: (String) -> Unit
+    var users: List<SearchResult> = emptyList(),
+    private val navigateToUserProfile: (String) -> Unit,
 ) : RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -33,15 +34,19 @@ class SearchResultsAdapter(
         val user = users[position]
 
         viewHolder.username.text = user.username
-        viewHolder.profilePicture.setImageResource(iconIdToProfilePicture(user.iconId).res)
-        if (user.displayName == null) {
-            viewHolder.displayName.text = user.username
-        } else {
-            viewHolder.displayName.text = user.displayName
-        }
+        viewHolder.profilePicture.setImageResource(user.icon.res)
 
-        viewHolder.itemView.setOnClickListener {
-            navigateToUserProfile(user.username)
+        var displayName = user.displayName
+        if (user.isOwnUser) {
+            // TODO: Instead of you, add indicator on right of search result
+            displayName += " (you)"
+        }
+        viewHolder.displayName.text = displayName
+
+        if (!user.isOwnUser) {
+            viewHolder.itemView.setOnClickListener {
+                navigateToUserProfile(user.username)
+            }
         }
     }
 
