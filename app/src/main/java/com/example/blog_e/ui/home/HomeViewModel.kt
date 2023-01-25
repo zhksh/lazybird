@@ -8,6 +8,7 @@ import androidx.paging.liveData
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.data.repository.BlogRepo
 import com.example.blog_e.data.repository.PostPagingSource
+import com.example.blog_e.utils.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +23,8 @@ data class HomeState(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val blogRepo: BlogRepo
+    private val blogRepo: BlogRepo,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _isUserFeed = MutableLiveData(IS_USER_FEED_STARTING_PAGE)
@@ -43,6 +45,8 @@ class HomeViewModel @Inject constructor(
         }.liveData
             .cachedIn(viewModelScope)
     } as MutableLiveData<PagingData<PostAPIModel>>
+
+    val username = sessionManager.getUsername()
 
     var posts: LiveData<PagingData<PostAPIModel>> = _posts
 
