@@ -1,5 +1,6 @@
 package com.example.blog_e.data.model
 
+import android.util.Log
 import com.example.blog_e.R
 
 
@@ -24,6 +25,8 @@ enum class ProfilePicture(val res: Int) {
 }
 
 fun mapApiUser(apiUser: GetUserAPIModel): User {
+    Log.e("t", "$apiUser")
+
     return User(
         username = apiUser.username,
         displayName = apiUser.displayName ?: apiUser.username,

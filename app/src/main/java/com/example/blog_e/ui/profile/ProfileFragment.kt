@@ -63,8 +63,6 @@ class ProfileFragment : Fragment() {
         recyclerView.adapter = postAdapter
         recyclerView.setHasFixedSize(true)
 
-
-
         profileViewModel.posts.observe(viewLifecycleOwner) {
             postAdapter.submitData(lifecycle, it)
         }
@@ -74,7 +72,6 @@ class ProfileFragment : Fragment() {
                 binding.username.text = user.username
                 binding.nickname.text = user.displayName
                 binding.selfDescription.text = user.selfDescription
-
                 binding.profilePictureView.setImageResource(user.profilePicture.res)
             }
         }
