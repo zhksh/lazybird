@@ -28,4 +28,7 @@
     <string name="failed_to_load_post">Failed to load post</string>
     <string name="retry">Retry</string>
     <string name="cancel">Cancel</string>
+    <string name="bio">Bio</string>
+    <string name="display_name">Display Name</string>
+    <string name="save">Save</string>
 </resources>

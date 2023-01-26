@@ -61,6 +61,22 @@ class UserViewModel @Inject constructor(
         return response
     }
 
+    fun updateUserInfo(info: UpdateUserAPIModel): LiveData<SuccessResponse> {
+        val response = MutableLiveData<SuccessResponse>()
+
+        viewModelScope.launch {
+            when (userRepo.updateUser("me", info)) {
+                is ApiSuccess -> response.value = SuccessResponse(null)
+                is ApiError -> response.value = SuccessResponse("Something went wrong, please try again")
+                is ApiException -> response.value = SuccessResponse("Connection failed")
+            }
+
+            fetchUser()
+        }
+
+        return response
+    }
+
     fun createSelfDesc(username: String) {
         viewModelScope.launch {
             val res = userRepo.createSelfDescription(CompletePayload("",
