@@ -28,6 +28,9 @@ class SearchFragment : Fragment() {
         val binding = FragmentSearchBinding.inflate(inflater)
 
         val navigate: (String) -> Unit = { username ->
+            // TODO: Close keyboard on navigate
+            // TODO: Display action bar with back button on navigate
+
             val detailFragment = VisitProfileFragment.newInstance(username)
             parentFragmentManager.beginTransaction()
                 .add(R.id.nav_host_fragment_activity_main, detailFragment)

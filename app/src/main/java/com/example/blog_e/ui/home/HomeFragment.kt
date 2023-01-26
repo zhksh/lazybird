@@ -22,7 +22,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
@@ -37,10 +37,9 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(R.id.navigation_profile)
             } else {
                 val detailFragment = VisitProfileFragment.newInstance(username)
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.nav_host_fragment_activity_main, detailFragment)
-                    ?.addToBackStack(null)
-                    ?.commit()
+
+                // TODO: Passing this lambda is not optimal.
+                openFragment(detailFragment)
             }
         }
         val postAdapter = PostAdapter(PostComparator(), binding.root.context, navigateToProfile)
@@ -78,7 +77,7 @@ class HomePagerFragment(): Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val adapter = HomePagerAdapter(this)
+        val adapter = HomePagerAdapter(this) { openFragment(it) }
         val viewPager: ViewPager2 = view.findViewById(R.id.pager)
         viewPager.adapter = adapter
 
@@ -89,13 +88,21 @@ class HomePagerFragment(): Fragment() {
             }
         }.attach()
     }
+
+    private fun openFragment(fragment: Fragment) {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_activity_main, fragment)
+            .addToBackStack(null)
+            .setReorderingAllowed(true)
+            .commit()
+    }
 }
 
-class HomePagerAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
+class HomePagerAdapter(fragment: Fragment, private val openFragment: (Fragment) -> Unit): FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = TABS.count()
 
     override fun createFragment(position: Int): Fragment {
-        val fragment = HomeFragment()
+        val fragment = HomeFragment(openFragment)
         fragment.arguments = Bundle().apply {
             putBoolean(IS_USER_FEED_KEY, position == 0)
         }
