@@ -8,62 +8,25 @@ import androidx.paging.liveData
 import com.example.blog_e.data.model.PostAPIModel
 import com.example.blog_e.data.repository.BlogRepo
 import com.example.blog_e.data.repository.PostPagingSource
+import com.example.blog_e.ui.profile.ProfileViewModel
 import com.example.blog_e.utils.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
-data class HomeState(
-    val isNotUserFeed: Boolean = false,
-    val isRefreshingPosts: Boolean = false,
-    //TODO: das hier irgendwie benutzen
-    val isChangingFeed: Boolean = false,
-)
-
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val blogRepo: BlogRepo,
-    private val sessionManager: SessionManager
-) : ViewModel() {
-
-    private val _isUserFeed = MutableLiveData(IS_USER_FEED_STARTING_PAGE)
-
-    val isUserFeed: LiveData<Boolean> = _isUserFeed
-
-    // TODO: home state aktuell nicht benutzt
-    private val _homeState = MutableStateFlow(HomeState())
-    val homeState = _homeState.asStateFlow()
-
-    private var _posts: MutableLiveData<PagingData<PostAPIModel>> = _isUserFeed.switchMap {
-        Pager(blogRepo.getDefaultPageConfig()) {
-            PostPagingSource(
-                blogRepo,
-                isUserFeed = it,
-                usernames = listOf()
-            )
-        }.liveData
-            .cachedIn(viewModelScope)
-    } as MutableLiveData<PagingData<PostAPIModel>>
-
+class HomeViewModel @Inject constructor(sessionManager: SessionManager, private val blogRepo: BlogRepo) : ViewModel() {
     val username = sessionManager.getUsername()
 
-    var posts: LiveData<PagingData<PostAPIModel>> = _posts
-
-
-    fun onClickUserFeed(isGlobal: Boolean) {
-        _isUserFeed.value = !isGlobal
+    fun getPosts(isUserFeed: Boolean): LiveData<PagingData<PostAPIModel>> {
+        return Pager(blogRepo.getDefaultPageConfig()) {
+                PostPagingSource(
+                    blogRepo,
+                    isUserFeed = isUserFeed,
+                    usernames = emptyList()
+                )
+            }.liveData.cachedIn(viewModelScope) as MutableLiveData<PagingData<PostAPIModel>>
     }
-
-    fun refreshPosts(isRefreshing: Boolean) {
-//        _homeState.update {
-//            it.copy(isRefreshingPosts = isRefreshing)
-//        }
-    }
-
-    companion object {
-        const val IS_USER_FEED_STARTING_PAGE = false
-    }
-
 }
 

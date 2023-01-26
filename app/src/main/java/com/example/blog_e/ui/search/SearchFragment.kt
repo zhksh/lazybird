@@ -1,13 +1,16 @@
 package com.example.blog_e.ui.search
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.blog_e.R
 import com.example.blog_e.adapters.SearchResultsAdapter
 import com.example.blog_e.databinding.FragmentSearchBinding
 import com.example.blog_e.ui.VisitProfile.VisitProfileFragment
@@ -25,14 +28,11 @@ class SearchFragment : Fragment() {
         val binding = FragmentSearchBinding.inflate(inflater)
 
         val navigate: (String) -> Unit = { username ->
-            if (container != null) {
-                val detailFragment = VisitProfileFragment.newInstance(username)
-                parentFragmentManager.beginTransaction()
-                    .replace(container.id, detailFragment)
-                    .addToBackStack(null)
-                    .setReorderingAllowed(true)
-                    .commit()
-            }
+            val detailFragment = VisitProfileFragment.newInstance(username)
+            parentFragmentManager.beginTransaction()
+                .add(R.id.nav_host_fragment_activity_main, detailFragment)
+                .addToBackStack(null)
+                .commit()
         }
 
         val adapter = SearchResultsAdapter(emptyList(), navigate)
