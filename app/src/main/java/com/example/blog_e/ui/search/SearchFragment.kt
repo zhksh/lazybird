@@ -1,10 +1,12 @@
 package com.example.blog_e.ui.search
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.replace
@@ -28,9 +30,8 @@ class SearchFragment : Fragment() {
         val binding = FragmentSearchBinding.inflate(inflater)
 
         val navigate: (String) -> Unit = { username ->
-            // TODO: Close keyboard on navigate
             // TODO: Display action bar with back button on navigate
-
+            binding.searchView.clearFocus()
             val detailFragment = VisitProfileFragment.newInstance(username)
             parentFragmentManager.beginTransaction()
                 .add(R.id.nav_host_fragment_activity_main, detailFragment)
