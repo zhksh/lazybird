@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.os.bundleOf
-import androidx.navigation.NavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -22,8 +20,7 @@ class PostAdapter(
     differCallback: DiffUtil.ItemCallback<PostAPIModel>,
     private val context: Context,
     private val navigateToUserProfile: (String) -> Unit
-) :
-    PagingDataAdapter<PostAPIModel, PostAdapter.ViewHolder>(differCallback) {
+) : PagingDataAdapter<PostAPIModel, PostAdapter.ViewHolder>(differCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
