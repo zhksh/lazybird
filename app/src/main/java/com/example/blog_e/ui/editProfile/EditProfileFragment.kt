@@ -14,6 +14,7 @@ import com.example.blog_e.adapters.ProfilePictureAdapter
 import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.data.model.UpdateUserAPIModel
 import com.example.blog_e.databinding.FragmentEditProfileBinding
+import com.example.blog_e.ui.profile.ProfileFragment
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -47,7 +48,7 @@ class EditProfileFragment(): Fragment() {
         }
 
         binding.cancelButton.setOnClickListener {
-            parentFragmentManager.beginTransaction().remove(this).commit()
+            close()
         }
 
         // TODO: Same as in Signup, should not be repeated
@@ -101,7 +102,7 @@ class EditProfileFragment(): Fragment() {
 
             userViewModel.updateUserInfo(info).observe(viewLifecycleOwner) { response ->
                 if (response.errorMessage == null) {
-                    parentFragmentManager.beginTransaction().remove(this).commit()
+                    close()
                 } else {
                     Snackbar.make(binding.root, response.errorMessage, Toast.LENGTH_SHORT).show()
                 }
@@ -110,5 +111,13 @@ class EditProfileFragment(): Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun close() {
+        val fragment = ProfileFragment()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_activity_main, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
