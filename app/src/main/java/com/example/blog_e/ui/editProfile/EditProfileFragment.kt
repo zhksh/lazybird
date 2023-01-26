@@ -96,12 +96,16 @@ class EditProfileFragment(): Fragment() {
                 iconId = newIconId,
                 password = null
             )
+
+            binding.loadingOverlay.visibility = View.VISIBLE
+
             userViewModel.updateUserInfo(info).observe(viewLifecycleOwner) { response ->
                 if (response.errorMessage == null) {
                     parentFragmentManager.beginTransaction().remove(this).commit()
                 } else {
                     Snackbar.make(binding.root, response.errorMessage, Toast.LENGTH_SHORT).show()
                 }
+                binding.loadingOverlay.visibility = View.INVISIBLE
             }
         }
 
