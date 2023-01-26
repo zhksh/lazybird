@@ -102,7 +102,7 @@ class ProfileFragment : Fragment() {
         binding.editProfile.setOnClickListener {
             val fragment = EditProfileFragment()
             parentFragmentManager.beginTransaction()
-                .add(R.id.nav_host_fragment_activity_main, fragment)
+                .replace(R.id.nav_host_fragment_activity_main, fragment)
                 .addToBackStack(null)
                 .commit()
         }
