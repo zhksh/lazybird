@@ -66,12 +66,18 @@ data class GetPostsQueryModel(
     val isUserFeed: Boolean?= null
 )
 
-// TODO: change iconId to string
 data class NewUserAPIModel(
     val displayName: String,
     val password: String,
     val iconId: String,
     val username: String
+)
+
+data class UpdateUserAPIModel(
+    val displayName: String?,
+    val iconId: String?,
+    val password: String?,
+    val bio: String?,
 )
 
 data class Authorization(

@@ -42,7 +42,8 @@ interface BlogEAPI {
 
         ): Response<PostsResult>
 
-
+    @POST("users/{username}")
+    suspend fun updateUser(@Path("username") username: String, @Body completePayload: UpdateUserAPIModel): Response<Unit>
 
     @POST("generate/complete")
     suspend fun generateCompletion(@Body completePayload: CompletePayload): Response<LLMResult>

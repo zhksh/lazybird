@@ -20,6 +20,7 @@ import com.example.blog_e.R
 import com.example.blog_e.UserViewModel
 import com.example.blog_e.adapters.PostAdapter
 import com.example.blog_e.databinding.FragmentProfileBinding
+import com.example.blog_e.ui.editProfile.EditProfileFragment
 import com.example.blog_e.utils.PostComparator
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,8 +63,6 @@ class ProfileFragment : Fragment() {
         recyclerView.adapter = postAdapter
         recyclerView.setHasFixedSize(true)
 
-
-
         profileViewModel.posts.observe(viewLifecycleOwner) {
             postAdapter.submitData(lifecycle, it)
         }
@@ -73,7 +72,6 @@ class ProfileFragment : Fragment() {
                 binding.username.text = user.username
                 binding.nickname.text = user.displayName
                 binding.selfDescription.text = user.selfDescription
-
                 binding.profilePictureView.setImageResource(user.profilePicture.res)
             }
         }
@@ -99,6 +97,14 @@ class ProfileFragment : Fragment() {
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
             userViewModel.renewUserData()
+        }
+
+        binding.editProfile.setOnClickListener {
+            val fragment = EditProfileFragment()
+            parentFragmentManager.beginTransaction()
+                .add(R.id.nav_host_fragment_activity_main, fragment)
+                .addToBackStack(null)
+                .commit()
         }
 
         return root

@@ -12,6 +12,8 @@ interface UserRepository {
 
     suspend fun findUsers(search: String): ApiResult<FindUsersAPIModel>
 
+    suspend fun updateUser(username: String, info: UpdateUserAPIModel): ApiResult<Unit>
+
     suspend fun followOrUnfollowUser(targetUser: String, isFollowing: Boolean): ApiResult<String>
 
     suspend fun createSelfDescription(completePayload: CompletePayload): ApiResult<LLMSelfDescription>

@@ -25,6 +25,10 @@ class UserRepo(private val backendS: BlogEAPI) : UserRepository {
         return apiHandler.handleApi { backendS.findUsers(search) }
     }
 
+    override suspend fun updateUser(username: String, info: UpdateUserAPIModel): ApiResult<Unit> {
+        return  apiHandler.handleApi { backendS.updateUser(username, info) }
+    }
+
     override suspend fun createSelfDescription(completePayload: CompletePayload): ApiResult<LLMSelfDescription> {
         return apiHandler.handleApi {backendS.createSelfDescription(completePayload)}
     }
