@@ -1,11 +1,13 @@
 package com.example.blog_e.ui.profile
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -42,6 +44,16 @@ class ProfileFragment : Fragment() {
 
     private val TAG = Config.tag(this.toString())
 
+    private val startForPostThreadResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            // No need for handling the data; always refresh the adapter when coming back
+            //it.data?.let { intent -> }
+            postAdapter.refresh()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,9 +66,10 @@ class ProfileFragment : Fragment() {
 
         postAdapter = PostAdapter(
             PostComparator(),
-            root.context
+            root.context,
+            startForPostThreadResult
         ) {
-            // pass no function when click on your own profile}#
+            // pass no function when click on your own profile
         }
         recyclerView = binding.postsListRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
@@ -95,6 +108,7 @@ class ProfileFragment : Fragment() {
         }
 
         binding.swipeRefresh.setOnRefreshListener {
+            postAdapter.refresh()
             binding.swipeRefresh.isRefreshing = false
             userViewModel.renewUserData()
         }

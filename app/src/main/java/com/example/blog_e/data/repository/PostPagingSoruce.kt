@@ -35,6 +35,6 @@ class PostPagingSource(
     }
 
     override fun getRefreshKey(state: PagingState<String, PostAPIModel>): String? {
-        return state.anchorPosition?.let { state.closestItemToPosition(it)?.id }
+        return null
     }
 }
