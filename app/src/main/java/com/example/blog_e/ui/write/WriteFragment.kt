@@ -1,13 +1,7 @@
 package com.example.blog_e.ui.write
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.BackgroundColorSpan
-import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,10 +16,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.blog_e.Config
 import com.example.blog_e.R
-import com.example.blog_e.data.model.CompletePayload
+import com.example.blog_e.data.model.AutoCompleteOptions
+import com.example.blog_e.data.model.AutogenrationOptions
 import com.example.blog_e.data.model.Post
 import com.example.blog_e.databinding.FragmentWriteBinding
 import com.example.blog_e.utils.Utils
+import com.example.blog_e.utils.displayGeneratedContent
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -38,11 +34,6 @@ class WriteFragment() : Fragment() {
     private var _binding: FragmentWriteBinding? = null
 
     private val binding get() = _binding!!
-
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-
     private val writeViewModel: WriteViewModel by viewModels()
 
     @SuppressLint("SetTextI18n")
@@ -58,109 +49,62 @@ class WriteFragment() : Fragment() {
 
         val postBtn = binding.postButton
         val generateEmptyBtn = binding.generatePostFromPromptButton
-        val spinner = binding.completeSpinner
-        val postInput = binding.postInput
-        val generationTemperature = binding.writeGenerateTemperature
-        val moodChoices = binding.emotionButtonsGroup
-        val autoReplyFlag = binding.autoReplyFlag
+
         binding.autoCompleteOptions.visibility = View.GONE
-
         binding.lifecycleOwner = this
-        Log.v(TAG, Utils.formatBackstack(findNavController()))
 
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    writeViewModel.uiState.collect {
-                        Log.v(TAG, "collecting ui state: ${it.toString()}")
-                        if (it.success){
-                            findNavController().navigate(R.id.action_write_fragment_to_nav_host_fragment_activity_main)
-                        }
-                        if (it.running){
-                            spinner.visibility = View.VISIBLE
-                        }
-                        else {
-                            spinner.visibility = View.GONE
-                            if (!it.success){
-                                if (it.errorMsg.isNotBlank())
-                                    Snackbar.make(binding.root, it.errorMsg, Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                   }
-                }
+        fun getMood(): String {
+            var mood : String
+            try { mood = binding.root.findViewById<Button>(
+                binding.emotionButtonsGroup.checkedButtonId).text.toString().lowercase()}
+            catch (e: NullPointerException){ mood = Config.defaultMood}
 
-                launch {
-                    writeViewModel.generateState.collect {
-                        Log.v(TAG, "collecting generation state: ${it.toString()}")
-                        if (it.success)  {
-                            val prefix = postInput.text.toString()
-                            val generated = it.generatedText
-                            val completed = prefix + " " + generated
-                            val span = SpannableString(completed)
-
-                            span.setSpan(
-                                ForegroundColorSpan(Color.LTGRAY),
-                                prefix.length, completed.length,
-                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                            )
-                            postInput.setText(span)
-                            var i = prefix.length
-                            var handler = Handler()
-                            var runnable = object : Runnable {
-                                override fun run() {
-                                    span.setSpan(ForegroundColorSpan(Color.BLACK),
-                                        0, i,
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    postInput.setText(span)
-                                    if (i++ < completed.length){
-                                        handler.postDelayed(this, Config.generatePostDelay.random())
-                                    }
-                                }
-                            }
-                            handler.postDelayed(runnable, 0)
-                            postInput.setSelection(postInput.length())
-                        }
-                    }
-                }
-            }
+            return mood
         }
 
         postBtn.setOnClickListener {
-            Log.e(TAG, moodChoices.checkedButtonId.toString())
-            writeViewModel.createPost(
-                Post(
-                    content=postInput.text.toString(),
-                    autogenerateResponses = autoReplyFlag.isChecked
-                )
+            Log.e(TAG, getMood())
+            val post = Post(
+                content=binding.postInput.text.toString(),
+                autogenerateResponses = binding.autoReplyFlag.isChecked
             )
+            val params = AutogenrationOptions(mood = getMood(),
+                temperature = binding.writeGenerateTemperature.value,
+                historyLength = binding.autpreplyHistoryLength.value.toInt())
+            writeViewModel.createPost(post, params).observe(viewLifecycleOwner){res ->
+                if (res.errorMessage == null)
+                    findNavController().navigate(R.id.action_write_fragment_to_nav_host_fragment_activity_main)
+                else Snackbar.make(binding.root, res.errorMessage, Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         generateEmptyBtn.setOnClickListener {
-            var mood : String
-            try { mood = binding.root.findViewById<Button>(moodChoices.checkedButtonId).text.toString().lowercase()}
-            catch (e: NullPointerException){ mood = Config.defaultMood}
-
-            writeViewModel.completePost(
-                CompletePayload(
-                    postInput.text.toString(),
-                    generationTemperature.value,
-                    mood, "true")
-            )
+            val params =  AutoCompleteOptions(
+                binding.postInput.text.toString(),
+                binding.writeGenerateTemperature.value,
+                getMood(), "false")
+            writeViewModel.completePost(params).observe(viewLifecycleOwner){ res ->
+                if (res.errResponse == null)
+                   displayGeneratedContent(binding.postInput, res.generatedText, Config.generatePostDelay)
+                else Snackbar.make(binding.root, res.errResponse.errorMessage.toString(), Toast.LENGTH_SHORT).show()
+            }
         }
 
-
-        autoReplyFlag.setOnCheckedChangeListener {_, isChecked ->
+        binding.autoReplyFlag.setOnCheckedChangeListener {_, isChecked ->
             if (isChecked) {
                binding.autoCompleteOptions.visibility = View.VISIBLE
             } else {
                 binding.autoCompleteOptions.visibility = View.GONE
             }
         }
+        
 
         return binding.root
     }
+    
+
 
     override fun onDestroyView() {
         super.onDestroyView()

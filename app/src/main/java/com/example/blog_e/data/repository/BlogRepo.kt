@@ -27,30 +27,12 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
         }
     }
 
-    override suspend fun refreshPosts() {
-        TODO("Not yet implemented")
-    }
-
-    override fun getPostStream(): ApiResult<LiveData<Post>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getPost(post: Post): ApiResult<Post> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun createPost(post: Post): ApiResult<PostAPIModel> {
-        val postReq = PostRequest(
-            post.content,
-            "happy",
-            true,
-            shouldAutoComplete = false,
-            0
-        )
+    override suspend fun createPost(post: Post, params: AutogenrationOptions): ApiResult<PostAPIModel> {
+        val postReq = PostRequest(post, params)
         return apiHandler.handleApi { backendS.createPost(postReq) }
     }
 
-    override suspend fun completePost(completePayload: CompletePayload): ApiResult<LLMResult> {
+    override suspend fun completePost(completePayload: AutoCompleteOptions): ApiResult<LLMResult> {
         return apiHandler.handleApi { backendS.generateCompletion(completePayload) }
     }
 
@@ -77,13 +59,10 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
      */
     fun getDefaultPageConfig(): PagingConfig {
         return PagingConfig(
-            pageSize = DEFAULT_PAGE_SIZE,
-            enablePlaceholders = false,
-            prefetchDistance = 1,
+            pageSize = Config.defaultPageSize,
+            enablePlaceholders = Config.enablePlaceHolders,
+            prefetchDistance = Config.prefetchDistance,
         )
     }
 
-    companion object {
-        const val DEFAULT_PAGE_SIZE = 10
-    }
 }

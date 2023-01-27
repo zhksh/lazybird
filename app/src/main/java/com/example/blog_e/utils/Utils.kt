@@ -1,9 +1,15 @@
 package com.example.blog_e.utils
 
 import android.content.res.Resources
+import android.graphics.Color
+import android.os.Handler
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import com.example.blog_e.Config
+import com.google.android.material.textfield.TextInputEditText
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -93,4 +99,38 @@ fun validatePassword(password: String): String {
     }
 
     return ""
+}
+
+
+/**
+ * Populates a textedit views with a affix preserving its prefix, with hickups
+ */
+fun displayGeneratedContent(view: TextInputEditText, content: String, range: LongRange){
+    val prefix = view.text.toString()
+    val completed = prefix + " " + content
+    val span = SpannableString(completed)
+
+    span.setSpan(
+        ForegroundColorSpan(Color.LTGRAY),
+        prefix.length, completed.length,
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+    )
+    view.setText(span)
+    var i = prefix.length
+    var handler = Handler()
+    var runnable = object : Runnable {
+        override fun run() {
+            span.setSpan(
+                ForegroundColorSpan(Color.BLACK),
+                0, i,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            view.setText(span)
+            if (i++ < completed.length){
+                handler.postDelayed(this, range.random())
+            }
+        }
+    }
+    handler.postDelayed(runnable, 0)
+    view.setSelection(view.length())
 }

@@ -12,6 +12,11 @@ data class Post(
     val commentCount: Int = 0,
     val likes: List<Like>? = emptyList(),
     val author: User? = null,
-    val autogenerateResponses: Boolean? = false,
-    val isAIEnabled: Boolean = false,
+    val autogenerateResponses: Boolean? = false
+)
+
+data class AutogenrationOptions(
+    val mood: String,
+    val temperature: Float,
+    val historyLength: Int
 )

@@ -28,7 +28,7 @@ interface BlogEAPI {
     suspend fun unFollow(@Path("username") username: String): Response<String>
 
     @POST("generate/self-description")
-    suspend fun createSelfDescription(@Body completePayload: CompletePayload): Response<LLMSelfDescription>
+    suspend fun createSelfDescription(@Body completePayload: AutoCompleteOptions): Response<LLMSelfDescription>
     // Post
     @POST("posts")
     suspend fun createPost(@Body post: PostRequest): Response<PostAPIModel>
@@ -46,7 +46,7 @@ interface BlogEAPI {
     suspend fun updateUser(@Path("username") username: String, @Body completePayload: UpdateUserAPIModel): Response<Unit>
 
     @POST("generate/complete")
-    suspend fun generateCompletion(@Body completePayload: CompletePayload): Response<LLMResult>
+    suspend fun generateCompletion(@Body completePayload: AutoCompleteOptions): Response<LLMResult>
 
     @POST("posts/{postId}/comments")
     suspend fun createComment(@Path("postId") postId: String, @Body comment: CommentPayload): Response<Unit>

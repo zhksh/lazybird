@@ -1,10 +1,15 @@
 package com.example.blog_e.ui.write
 
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blog_e.Config
-import com.example.blog_e.data.model.CompletePayload
+import com.example.blog_e.SelfDescription
+import com.example.blog_e.data.model.AutogenrationOptions
+import com.example.blog_e.data.model.AutoCompleteOptions
 import com.example.blog_e.data.model.Post
 import com.example.blog_e.data.repository.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,16 +20,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class WriteUiState(
-    val errorMsg: String = "",
-    val success: Boolean = false,
-    val running: Boolean = false
-    )
 
-data class GeneratePostState(
-    val success: Boolean = false,
+data class GeneratePostResponse (
     val generatedText: String = "",
-    val prefix: String = ""
+    val errResponse: SuccessResponse? = null
 )
 
 
@@ -33,53 +32,52 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
 
     private val TAG = Config.tag(this.toString())
 
-    private var _uiState = MutableStateFlow(WriteUiState())
-    var uiState: StateFlow<WriteUiState> = _uiState.asStateFlow()
-
-    private var _generatePostState = MutableStateFlow(GeneratePostState())
-    var generateState: StateFlow<GeneratePostState> = _generatePostState.asStateFlow()
-
-
-    fun createPost(data: Post) = viewModelScope.launch {
-        _uiState.update { it.copy( running = true, errorMsg = "") }
-       val res =  postRepo.createPost(data)
-        _uiState.update { it.copy( running = false) }
-        when (res) {
-            is ApiException -> {
-                _uiState.update { it.copy(errorMsg = res.e.message!!, success = false) }
-            }
-            is ApiError -> {
-                _uiState.update { it.copy(errorMsg = "Api not callable, try tomorrow or so", success = false) }
-            }
-            is ApiSuccess -> {
-                _uiState.update {it.copy(success = true)}
-            }
-        }
-    }
-
-    fun completePost(data: CompletePayload){
+    fun createPost(data: Post, params: AutogenrationOptions): LiveData<SuccessResponse> {
+        val response = MutableLiveData<SuccessResponse>()
         viewModelScope.launch {
-            _uiState.update { it.copy( running = true, errorMsg = "") }
-            val res = postRepo.completePost(data)
-            _uiState.update { it.copy( running = false) }
-            when (res) {
+            val res = postRepo.createPost(data, params)
+            when(res){
+                is ApiSuccess ->  {
+                    response.value = SuccessResponse(null)
+                }
+                is ApiError ->{
+                    Log.e(TAG, "sending post failed: ${res} ")
+                    response.value = SuccessResponse("posting failed, try tommorrow or after the weekend")
+                }
                 is ApiException -> {
-                    _uiState.update { it.copy(errorMsg = res.e.message!!, success = false) }
-                }
-                is ApiError -> {
-                    _uiState.update { it.copy(errorMsg = "Api not callable, try tomorrow or so", success = false) }
-                }
-                is ApiSuccess -> {
-                    if (res.data.response.isBlank()) _uiState.update {
-                        it.copy(success = false, errorMsg = "Empty response, try changing the prompt")}
-                    else {
-                        _uiState.update { it.copy(errorMsg = "") }
-                        _generatePostState.update { it.copy(generatedText = res.data.response, success = true) }
-                    }
+                    Log.e(TAG, "sending post failed: ${res} ")
+                    response.value = SuccessResponse("posting failed, try tommorrow or after the weekend")
                 }
             }
         }
+        return response
     }
+
+    fun completePost(data: AutoCompleteOptions): LiveData<GeneratePostResponse> {
+        val response = MutableLiveData<GeneratePostResponse>()
+        viewModelScope.launch {
+            val res = postRepo.completePost(data)
+            when(res){
+                is ApiSuccess ->  {
+                    response.value = GeneratePostResponse(generatedText = res.data.response)
+                }
+                is ApiError ->{
+                    Log.e(TAG, "sending post failed: ${res} ")
+                    response.value =
+                        GeneratePostResponse(errResponse =
+                            SuccessResponse("posting failed, try tommorrow or after the weekend"))
+                }
+                is ApiException -> {
+                    Log.e(TAG, "sending post failed: ${res} ")
+                    response.value =
+                        GeneratePostResponse(errResponse =
+                        SuccessResponse("posting failed, try tommorrow or after the weekend"))
+                }
+            }
+        }
+        return response
+    }
+
 
 
 

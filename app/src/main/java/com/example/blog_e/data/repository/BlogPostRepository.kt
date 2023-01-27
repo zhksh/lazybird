@@ -10,15 +10,9 @@ interface BlogPostRepository {
 
     suspend fun getPosts(postsQueryModel: GetPostsQueryModel): ApiResult<PostsResult>
 
-    suspend fun refreshPosts()
+    suspend fun createPost(post: Post, params: AutogenrationOptions): ApiResult<PostAPIModel>
 
-    fun getPostStream(): ApiResult<LiveData<Post>>
-
-    suspend fun getPost(post: Post): ApiResult<Post>
-
-    suspend fun createPost(post: Post): ApiResult<PostAPIModel>
-
-    suspend fun completePost(completePayload: CompletePayload): ApiResult<LLMResult>
+    suspend fun completePost(completePayload: AutoCompleteOptions): ApiResult<LLMResult>
 
     suspend fun createComment(postId: String, content: String): ApiResult<Unit>
 
