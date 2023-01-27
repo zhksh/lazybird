@@ -14,6 +14,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class Utils {
     companion object {
@@ -133,4 +134,17 @@ fun displayGeneratedContent(view: TextInputEditText, content: String, range: Lon
     }
     handler.postDelayed(runnable, 0)
     view.setSelection(view.length())
+}
+
+companion object {
+    private val
+}
+
+private fun getRandomString(sizeOfRandomString: Int): String {
+    val ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm"
+    val random = Random()
+    val sb = StringBuilder(sizeOfRandomString)
+    for (i in 0 until sizeOfRandomString)
+        sb.append(ALLOWED_CHARACTERS[random.nextInt(ALLOWED_CHARACTERS.length)])
+    return sb.toString()
 }
