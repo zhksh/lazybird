@@ -47,7 +47,7 @@ data class GetUserAPIModel(
 )
 
 data class PostRequest(
-    val content: String,
+    val post : Post,
     val params: AutogenrationOptions
 
 )

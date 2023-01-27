@@ -31,7 +31,7 @@ interface BlogEAPI {
     suspend fun createSelfDescription(@Body completePayload: AutoCompleteOptions): Response<LLMSelfDescription>
     // Post
     @POST("posts")
-    suspend fun createPost(@Body post: PostRequest, params: AutogenrationOptions): Response<PostAPIModel>
+    suspend fun createPost(@Body post: PostRequest): Response<PostAPIModel>
 
     @GET("posts")
     suspend fun getPosts(

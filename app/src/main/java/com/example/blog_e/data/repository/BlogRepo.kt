@@ -28,11 +28,8 @@ class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {
     }
 
     override suspend fun createPost(post: Post, params: AutogenrationOptions): ApiResult<PostAPIModel> {
-        val postReq = PostRequest(
-            post.content,
-            params
-        )
-        return apiHandler.handleApi { backendS.createPost(postReq, params) }
+        val postReq = PostRequest(post, params)
+        return apiHandler.handleApi { backendS.createPost(postReq) }
     }
 
     override suspend fun completePost(completePayload: AutoCompleteOptions): ApiResult<LLMResult> {
