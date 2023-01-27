@@ -99,7 +99,7 @@ class ProfileFragment : Fragment() {
             userViewModel.renewUserData()
         }
 
-        binding.editProfile.setOnClickListener {
+        binding.editButton.setOnClickListener {
             val fragment = EditProfileFragment()
             parentFragmentManager.beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, fragment)

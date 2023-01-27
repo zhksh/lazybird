@@ -1,13 +1,19 @@
 package com.example.blog_e
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blog_e.data.model.*
 import com.example.blog_e.data.repository.*
+import com.example.blog_e.ui.write.GeneratePostState
 import com.example.blog_e.utils.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.StringJoiner
 import javax.inject.Inject
@@ -16,12 +22,18 @@ data class SuccessResponse(
     val errorMessage: String?,
 )
 
+data class SelfDescription(
+    val bio: String = "",
+    val err: SuccessResponse? = null
+)
+
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val userRepo: UserRepo,
     private val sessionManager: SessionManager,
 ) : ViewModel() {
     private val user: MutableLiveData<User?> = MutableLiveData<User?>()
+    private val TAG = Config.tag(this.toString())
 
     init {
         if (sessionManager.fetchAuthToken() == null) {
@@ -77,11 +89,26 @@ class UserViewModel @Inject constructor(
         return response
     }
 
-    fun createSelfDesc(username: String) {
+    fun createSelfDesc(): LiveData<SelfDescription> {
+        val response = MutableLiveData<SelfDescription>()
+
         viewModelScope.launch {
             val res = userRepo.createSelfDescription(CompletePayload("",
                 Config.defaultTemperature, Config.defaultMood, "false"))
+            when(res){
+                is ApiSuccess ->  {
+                    response.value = SelfDescription(bio = res.data.response)
+                }
+                is ApiError ->{
+                    Log.e(TAG, "generating Desc for ${user.value?.username} failed ")
+                    response.value = SelfDescription(err = SuccessResponse("Connection failed"))
+                }
+                is ApiException -> {
+                    response.value = SelfDescription(err = SuccessResponse("Connection failed"))
+                }
+            }
         }
+        return response
     }
 
     fun signUp(newUser: NewUserAPIModel): LiveData<SuccessResponse> {
