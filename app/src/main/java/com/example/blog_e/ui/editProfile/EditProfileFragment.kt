@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.paging.Config
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
 import com.example.blog_e.UserViewModel
@@ -16,7 +15,7 @@ import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.data.model.UpdateUserAPIModel
 import com.example.blog_e.databinding.FragmentEditProfileBinding
 import com.example.blog_e.ui.profile.ProfileFragment
-import com.example.blog_e.utils.displayGeneratedContent
+import com.example.blog_e.utils.displayGeneratedContentGarbled
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -118,7 +117,7 @@ class EditProfileFragment(): Fragment() {
             userViewModel.createSelfDesc().observe(viewLifecycleOwner){ response ->
                 if (response.err == null) {
                     binding.editBio.setText("")
-                    displayGeneratedContent(binding.editBio, response.bio, com.example.blog_e.Config.generatePostDelay)
+                    displayGeneratedContentGarbled(binding.editBio, response.bio, com.example.blog_e.Config.generatePostDelay)
                 }
                 else Snackbar.make(binding.root, response.err.errorMessage.toString(), Toast.LENGTH_SHORT).show()
                 binding.loadingOverlay.visibility = View.INVISIBLE

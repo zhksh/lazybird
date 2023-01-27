@@ -6,7 +6,6 @@ import android.os.Handler
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import com.example.blog_e.Config
@@ -16,7 +15,6 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.logging.Logger
 
 class Utils {
     companion object {
@@ -108,28 +106,60 @@ fun validatePassword(password: String): String {
 /**
  * Populates a textedit views with a affix preserving its prefix, with hickups
  */
-fun displayGeneratedContent(view: TextInputEditText, content: String, range: LongRange){
+
+fun displayGeneratedContentSpanedBkg(view: TextInputEditText, content: String, range: LongRange){
+    val prefix = view.text.toString()
+    val completed = prefix + " " + content
+    val span = SpannableString(completed)
+
+    span.setSpan(
+        ForegroundColorSpan(Color.LTGRAY),
+        prefix.length, completed.length,
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+    )
+    view.setText(span)
+    var i = prefix.length
+    var handler = Handler()
+    var runnable = object : Runnable {
+        override fun run() {
+            span.setSpan(
+                ForegroundColorSpan(Color.BLACK),
+                0, i,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            view.setText(span)
+            if (i++ < completed.length){
+                handler.postDelayed(this, range.random())
+            }
+        }
+    }
+    handler.postDelayed(runnable, 0)
+    view.setSelection(view.length())
+}
+
+fun displayGeneratedContentGarbled(view: TextInputEditText, content: String, range: LongRange){
     if (content.length < 1) return
     val prefix = view.text.toString()
     val preserve = " "
     val indices = Regex(preserve).findAll(content).map { it.range.first }.toSet()
-    val completed = prefix + " " + getRandomString(content.length-1, preserve, indices)
+    val completeLen = prefix.length + content.length
 
     var i = 0
     var handler = Handler()
     var runnable = object : Runnable {
         override fun run() {
-            val str = prefix + " " + content.subSequence(0, i) + getRandomString(content.length-i, preserve, indices)
+            val str = prefix + " " + content.subSequence(0, i) +
+                    getRandomString(content.length-i, preserve, indices)
             val span = SpannableString(str)
 
             span.setSpan(
                 ForegroundColorSpan(Color.BLACK),
-                0, completed.length,
+                0, completeLen,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
             view.setText(span)
-            if (prefix.length + i++ < completed.length){
+            if (prefix.length + i++ < completeLen){
                 handler.postDelayed(this, range.random())
             }
         }

@@ -17,7 +17,7 @@ import com.example.blog_e.data.model.AutoCompleteOptions
 import com.example.blog_e.data.model.AutogenrationOptions
 import com.example.blog_e.data.model.Post
 import com.example.blog_e.databinding.FragmentWriteBinding
-import com.example.blog_e.utils.displayGeneratedContent
+import com.example.blog_e.utils.displayGeneratedContentGarbled
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -82,7 +82,7 @@ class WriteFragment() : Fragment() {
                 getMood(), "false")
             writeViewModel.completePost(params).observe(viewLifecycleOwner){ res ->
                 if (res.errResponse == null)
-                   displayGeneratedContent(binding.postInput, res.generatedText, Config.generatePostDelay)
+                   displayGeneratedContentGarbled(binding.postInput, res.generatedText, Config.generatePostDelay)
                 else Snackbar.make(binding.root, res.errResponse.errorMessage.toString(), Toast.LENGTH_SHORT).show()
             }
         }
