@@ -55,7 +55,7 @@ class WriteFragment() : Fragment() {
 
 
         fun getMood(): String {
-            var mood : String
+            var mood : Stringn
             try { mood = binding.root.findViewById<Button>(
                 binding.emotionButtonsGroup.checkedButtonId).text.toString().lowercase()}
             catch (e: NullPointerException){ mood = Config.defaultMood}
