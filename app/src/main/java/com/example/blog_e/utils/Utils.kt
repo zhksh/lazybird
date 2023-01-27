@@ -6,6 +6,7 @@ import android.os.Handler
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import com.example.blog_e.Config
@@ -15,6 +16,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.logging.Logger
 
 class Utils {
     companion object {
@@ -107,27 +109,27 @@ fun validatePassword(password: String): String {
  * Populates a textedit views with a affix preserving its prefix, with hickups
  */
 fun displayGeneratedContent(view: TextInputEditText, content: String, range: LongRange){
+    if (content.length < 1) return
     val prefix = view.text.toString()
-    val completed = prefix + " " + content
-    val span = SpannableString(completed)
+    val preserve = " "
+    val indices = Regex(preserve).findAll(content).map { it.range.first }.toSet()
+    val completed = prefix + " " + getRandomString(content.length-1, preserve, indices)
 
-    span.setSpan(
-        ForegroundColorSpan(Color.LTGRAY),
-        prefix.length, completed.length,
-        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-    )
-    view.setText(span)
-    var i = prefix.length
+    var i = 0
     var handler = Handler()
     var runnable = object : Runnable {
         override fun run() {
+            val str = prefix + " " + content.subSequence(0, i) + getRandomString(content.length-i, preserve, indices)
+            val span = SpannableString(str)
+
             span.setSpan(
                 ForegroundColorSpan(Color.BLACK),
-                0, i,
+                0, completed.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
+
             view.setText(span)
-            if (i++ < completed.length){
+            if (prefix.length + i++ < completed.length){
                 handler.postDelayed(this, range.random())
             }
         }
@@ -136,15 +138,15 @@ fun displayGeneratedContent(view: TextInputEditText, content: String, range: Lon
     view.setSelection(view.length())
 }
 
-companion object {
-    private val
-}
 
-private fun getRandomString(sizeOfRandomString: Int): String {
-    val ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm"
+private fun getRandomString(sizeOfRandomString: Int, c: String, indices: Set<Int>): String {
+    val ALLOWED_CHARACTERS = "qwertyuiopasdfghjklzxcvbnm"
     val random = Random()
     val sb = StringBuilder(sizeOfRandomString)
     for (i in 0 until sizeOfRandomString)
-        sb.append(ALLOWED_CHARACTERS[random.nextInt(ALLOWED_CHARACTERS.length)])
+        if (indices.contains(i)) sb.append(c)
+        else sb.append(ALLOWED_CHARACTERS[random.nextInt(ALLOWED_CHARACTERS.length)])
     return sb.toString()
 }
+
+
