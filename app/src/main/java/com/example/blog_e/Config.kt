@@ -28,6 +28,12 @@ class Config {
 
         const val defaultMood = "ironic"
         const val defaultTemperature: Float = 0.8f
+        const val defaultHistoryLength = 5
+
+
+        const val defaultPageSize = 10
+        const val enablePlaceHolders = false
+        const val prefetchDistance = 1
 
         fun tag(str: String): String {return tagPref + "_" + str }
     }

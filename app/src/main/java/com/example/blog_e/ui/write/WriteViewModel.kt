@@ -4,7 +4,8 @@ package com.example.blog_e.ui.write
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blog_e.Config
-import com.example.blog_e.data.model.CompletePayload
+import com.example.blog_e.data.model.AutogenrationOptions
+import com.example.blog_e.data.model.AutoCompleteOptions
 import com.example.blog_e.data.model.Post
 import com.example.blog_e.data.repository.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,9 +41,9 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
     var generateState: StateFlow<GeneratePostState> = _generatePostState.asStateFlow()
 
 
-    fun createPost(data: Post) = viewModelScope.launch {
+    fun createPost(data: Post, params: AutogenrationOptions) = viewModelScope.launch {
         _uiState.update { it.copy( running = true, errorMsg = "") }
-       val res =  postRepo.createPost(data)
+       val res =  postRepo.createPost(data, params)
         _uiState.update { it.copy( running = false) }
         when (res) {
             is ApiException -> {
@@ -57,7 +58,7 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
         }
     }
 
-    fun completePost(data: CompletePayload){
+    fun completePost(data: AutoCompleteOptions){
         viewModelScope.launch {
             _uiState.update { it.copy( running = true, errorMsg = "") }
             val res = postRepo.completePost(data)

@@ -48,10 +48,8 @@ data class GetUserAPIModel(
 
 data class PostRequest(
     val content: String,
-    val mood: String,
-    val autogenerateAnswers: Boolean,
-    val shouldAutoComplete: Boolean,
-    val temperature: Int
+    val params: AutogenrationOptions
+
 )
 
 data class PostsResult(
@@ -90,7 +88,7 @@ data class LoginPayload(
     val password: String
 )
 
-data class CompletePayload(
+data class AutoCompleteOptions(
     val prefix: String,
     val temperature: Float,
     val mood: String,
