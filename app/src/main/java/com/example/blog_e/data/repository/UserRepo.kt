@@ -1,6 +1,5 @@
 package com.example.blog_e.data.repository
 
-import androidx.lifecycle.LiveData
 import com.example.blog_e.Config
 import com.example.blog_e.data.model.*
 
@@ -29,7 +28,7 @@ class UserRepo(private val backendS: BlogEAPI) : UserRepository {
         return  apiHandler.handleApi { backendS.updateUser(username, info) }
     }
 
-    override suspend fun createSelfDescription(completePayload: CompletePayload): ApiResult<LLMSelfDescription> {
+    override suspend fun createSelfDescription(completePayload: AutoCompleteOptions): ApiResult<LLMSelfDescription> {
         return apiHandler.handleApi {backendS.createSelfDescription(completePayload)}
     }
 
