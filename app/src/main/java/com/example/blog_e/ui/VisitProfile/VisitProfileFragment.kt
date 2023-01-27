@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -36,6 +37,14 @@ class VisitProfileFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
 
+    private val startForPostThreadResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == android.app.Activity.RESULT_OK) {
+            postAdapter.refresh()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,7 +60,8 @@ class VisitProfileFragment : Fragment() {
 
         postAdapter = PostAdapter(
             PostComparator(),
-            root.context
+            root.context,
+            startForPostThreadResult
         ) {
             // pass no function for on click events
         }
