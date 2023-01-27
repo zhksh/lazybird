@@ -1,18 +1,12 @@
 package com.example.blog_e.ui.write
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -22,13 +16,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.blog_e.Config
 import com.example.blog_e.R
-import com.example.blog_e.data.model.AutogenrationOptions
 import com.example.blog_e.data.model.AutoCompleteOptions
+import com.example.blog_e.data.model.AutogenrationOptions
 import com.example.blog_e.data.model.Post
 import com.example.blog_e.databinding.FragmentWriteBinding
 import com.example.blog_e.utils.Utils
+import com.example.blog_e.utils.displayGeneratedContent
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -66,35 +60,6 @@ class WriteFragment() : Fragment() {
 
         binding.lifecycleOwner = this
         Log.v(TAG, Utils.formatBackstack(findNavController()))
-
-        fun displayGeneratedContent(view: TextInputEditText, content: String, range: LongRange){
-            val prefix = view.text.toString()
-            val completed = prefix + " " + content
-            val span = SpannableString(completed)
-
-            span.setSpan(
-                ForegroundColorSpan(Color.LTGRAY),
-                prefix.length, completed.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            view.setText(span)
-            var i = prefix.length
-            var handler = Handler()
-            var runnable = object : Runnable {
-                override fun run() {
-                    span.setSpan(ForegroundColorSpan(Color.BLACK),
-                        0, i,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    view.setText(span)
-                    if (i++ < completed.length){
-                        handler.postDelayed(this, range.random())
-                    }
-                }
-            }
-            handler.postDelayed(runnable, 0)
-            view.setSelection(view.length())
-        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
