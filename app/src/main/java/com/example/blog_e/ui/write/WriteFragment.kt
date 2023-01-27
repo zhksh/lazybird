@@ -50,12 +50,10 @@ class WriteFragment() : Fragment() {
 
 
         fun getMood(): String {
-            var mood : String
-            try { mood = binding.root.findViewById<Button>(
-                binding.emotionButtonsGroup.checkedButtonId).text.toString().lowercase()}
-            catch (e: NullPointerException){ mood = Config.defaultMood}
-
-            return mood
+            binding.root.findViewById<Button>(binding.emotionButtonsGroup.checkedButtonId)?.let { mmodbtn ->
+                return mmodbtn.text.toString().lowercase()
+            }
+            return Config.defaultMood
         }
 
         postBtn.setOnClickListener {
@@ -72,7 +70,6 @@ class WriteFragment() : Fragment() {
                     findNavController().navigate(R.id.action_write_fragment_to_nav_host_fragment_activity_main)
                 else Snackbar.make(binding.root, res.errorMessage, Toast.LENGTH_SHORT).show()
             }
-
         }
 
         generateEmptyBtn.setOnClickListener {
@@ -81,8 +78,11 @@ class WriteFragment() : Fragment() {
                 binding.writeGenerateTemperature.value,
                 getMood(), "false")
             writeViewModel.completePost(params).observe(viewLifecycleOwner){ res ->
-                if (res.errResponse == null)
-                   displayGeneratedContentGarbled(binding.postInput, res.generatedText, Config.generatePostDelay)
+                if (res.errResponse == null) {
+                    if (res.generatedText.isBlank())
+                        Snackbar.make(binding.root, "Be a little more creative", Toast.LENGTH_SHORT).show()
+                    else displayGeneratedContentGarbled(binding.postInput, res.generatedText, Config.generatePostDelay)
+                }
                 else Snackbar.make(binding.root, res.errResponse.errorMessage.toString(), Toast.LENGTH_SHORT).show()
             }
         }
@@ -98,7 +98,6 @@ class WriteFragment() : Fragment() {
 
         return binding.root
     }
-    
 
 
     override fun onDestroyView() {
