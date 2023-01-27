@@ -8,6 +8,7 @@
     android:padding="8dp"
     app:alignContent="stretch"
     app:alignItems="stretch"
+    app:justifyContent="space_evenly"
     app:flexWrap="wrap">
 
     <androidx.recyclerview.widget.RecyclerView

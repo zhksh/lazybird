@@ -1,23 +1,34 @@
 package com.example.blog_e.ui.editProfile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
+import com.example.blog_e.Config
 import com.example.blog_e.R
 import com.example.blog_e.UserViewModel
 import com.example.blog_e.adapters.ProfilePictureAdapter
+import com.example.blog_e.data.model.CompletePayload
 import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.data.model.UpdateUserAPIModel
 import com.example.blog_e.databinding.FragmentEditProfileBinding
 import com.example.blog_e.ui.profile.ProfileFragment
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 
 class EditProfileFragment(): Fragment() {
     private val images: MutableList<ProfilePicture> = ProfilePicture.values().toMutableList()
@@ -31,15 +42,15 @@ class EditProfileFragment(): Fragment() {
         val binding = FragmentEditProfileBinding.inflate(inflater, container, false)
         val userViewModel: UserViewModel by activityViewModels()
 
+        if (binding.editBio.text.toString() == "") {
+            binding.editBio.setText(userViewModel.getUser().value?.selfDescription?: "")
+        }
+
+
         userViewModel.getUser().observe(viewLifecycleOwner) { user ->
             if (user == null) {
                 return@observe
             }
-
-            if (binding.editBio.text.toString() == "") {
-                binding.editBio.setText(user.selfDescription?: "")
-            }
-
             binding.avatarBtn.setImageResource(user.profilePicture.res)
 
             if (binding.editDisplayName.text.toString() == "") {
@@ -57,7 +68,8 @@ class EditProfileFragment(): Fragment() {
             val recyclerView =
                 dialogView.findViewById<RecyclerView>(R.id.profile_images_list)
 
-            recyclerView.layoutManager = FlexboxLayoutManager(binding.root.context)
+            val layoutManager = FlexboxLayoutManager(binding.root.context)
+            recyclerView.layoutManager = layoutManager
             val builder = MaterialAlertDialogBuilder(binding.root.context)
                 .setTitle("Select a profile picture")
                 .setView(dialogView)
@@ -82,8 +94,8 @@ class EditProfileFragment(): Fragment() {
 
         binding.saveButton.setOnClickListener {
             var bio = binding.editBio.text.toString()
-            if (bio.length > 100) {
-                bio = bio.substring(0, 100)
+            if (bio.length > 150) {
+                bio = bio.substring(0, 150)
             }
 
             var displayName: String? = binding.editDisplayName.text.toString()
@@ -110,6 +122,16 @@ class EditProfileFragment(): Fragment() {
             }
         }
 
+        binding.generateButton.setOnClickListener {
+            binding.loadingOverlay.visibility = View.VISIBLE
+            userViewModel.createSelfDesc().observe(viewLifecycleOwner){ response ->
+                if (response.err == null)  binding.editBio.setText(response.bio)
+                else Snackbar.make(binding.root, response.err.errorMessage.toString(), Toast.LENGTH_SHORT).show()
+                binding.loadingOverlay.visibility = View.INVISIBLE
+            }
+        }
+
+
         return binding.root
     }
 
@@ -120,4 +142,6 @@ class EditProfileFragment(): Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
+
 }

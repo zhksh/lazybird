@@ -85,10 +85,8 @@ class VisitProfileFragment : Fragment() {
 
                 if (uiState.isFollowing) {
                     binding.followBtn.text = "Unfollow"
-                    binding.followCheck.isVisible = true
                 } else {
                     binding.followBtn.text = "Follow"
-                    binding.followCheck.isVisible = false
                 }
             }
         }
