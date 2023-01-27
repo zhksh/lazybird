@@ -90,6 +90,11 @@ class PostThreadActivity : AppCompatActivity() {
         viewModel.closePostConnection()
     }
 
+    override fun finish() {
+        setResult(RESULT_OK)
+        super.finish()
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         this.finish()
         return true

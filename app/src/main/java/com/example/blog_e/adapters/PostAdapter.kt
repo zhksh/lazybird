@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ import com.example.blog_e.utils.calculatePastTime
 class PostAdapter(
     differCallback: DiffUtil.ItemCallback<PostAPIModel>,
     private val context: Context,
+    private val launcher: ActivityResultLauncher<Intent>,
     private val navigateToUserProfile: (String) -> Unit
 ) : PagingDataAdapter<PostAPIModel, PostAdapter.ViewHolder>(differCallback) {
 
@@ -79,6 +81,6 @@ class PostAdapter(
     private fun openPost(postId: String) {
         val intent = Intent(context, PostThreadActivity::class.java)
         intent.putExtra("POST_ID", postId)
-        context.startActivity(intent)
+        launcher.launch(intent)
     }
 }

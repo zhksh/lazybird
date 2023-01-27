@@ -1,15 +1,16 @@
 package com.example.blog_e.ui.home
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.add
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.blog_e.R
@@ -24,6 +25,20 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
+
+    private lateinit var postAdapter: PostAdapter
+    private lateinit var recyclerView: RecyclerView
+
+    private val startForPostThreadResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            // No need for handling the data; always refresh the adapter when coming back
+            //it.data?.let { intent -> }
+            postAdapter.refresh()
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,10 +57,14 @@ class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
                 openFragment(detailFragment)
             }
         }
-        val postAdapter = PostAdapter(PostComparator(), binding.root.context, navigateToProfile)
+        postAdapter = PostAdapter(
+            PostComparator(),
+            requireActivity(),
+            startForPostThreadResult,
+            navigateToProfile
+        )
         val linearLayoutManager = LinearLayoutManager(context)
-
-        val recyclerView = binding.postsListRecyclerView
+        recyclerView = binding.postsListRecyclerView
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = postAdapter
         recyclerView.setHasFixedSize(true)
@@ -56,8 +75,8 @@ class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
         }
 
         binding.swipeRefresh.setOnRefreshListener {
-            // TODO: Den Adapter zu refreshen sorgt aktuell dafür, dass hier das Paging nicht richtig funktioniert. Nochmal genauer naschschauen!!!
-            // postAdapter.refresh()
+            postAdapter.refresh()
+            recyclerView.smoothScrollToPosition(0)
             binding.swipeRefresh.isRefreshing = false
         }
 
@@ -67,7 +86,7 @@ class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
 
 private val TABS = listOf("Bubble", "Global")
 
-class HomePagerFragment(): Fragment() {
+class HomePagerFragment() : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -98,7 +117,8 @@ class HomePagerFragment(): Fragment() {
     }
 }
 
-class HomePagerAdapter(fragment: Fragment, private val openFragment: (Fragment) -> Unit): FragmentStateAdapter(fragment) {
+class HomePagerAdapter(fragment: Fragment, private val openFragment: (Fragment) -> Unit) :
+    FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = TABS.count()
 
     override fun createFragment(position: Int): Fragment {
