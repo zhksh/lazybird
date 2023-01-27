@@ -34,11 +34,6 @@ class WriteFragment() : Fragment() {
     private var _binding: FragmentWriteBinding? = null
 
     private val binding get() = _binding!!
-
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-
     private val writeViewModel: WriteViewModel by viewModels()
 
     @SuppressLint("SetTextI18n")
@@ -54,50 +49,13 @@ class WriteFragment() : Fragment() {
 
         val postBtn = binding.postButton
         val generateEmptyBtn = binding.generatePostFromPromptButton
-        val spinner = binding.completeSpinner
-     
+
         binding.autoCompleteOptions.visibility = View.GONE
-
         binding.lifecycleOwner = this
-        Log.v(TAG, Utils.formatBackstack(findNavController()))
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    writeViewModel.uiState.collect {
-                        Log.v(TAG, "collecting ui state: ${it.toString()}")
-                        if (it.success){
-                            findNavController().navigate(R.id.action_write_fragment_to_nav_host_fragment_activity_main)
-                        }
-                        if (it.running){
-                            spinner.visibility = View.VISIBLE
-                        }
-                        else {
-                            spinner.visibility = View.GONE
-                            if (!it.success){
-                                if (it.errorMsg.isNotBlank())
-                                    Snackbar.make(binding.root, it.errorMsg, Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                   }
-                }
-
-                launch {
-                    writeViewModel.generateState.collect {
-                        Log.v(TAG, "collecting generation state: ${it.toString()}")
-                        if (it.success)  {
-                          displayGeneratedContent(binding.postInput, it.generatedText, Config.generatePostDelay)
-                        }
-                    }
-                }
-            }
-        }
-        
 
 
         fun getMood(): String {
             var mood : String
-
             try { mood = binding.root.findViewById<Button>(
                 binding.emotionButtonsGroup.checkedButtonId).text.toString().lowercase()}
             catch (e: NullPointerException){ mood = Config.defaultMood}
@@ -107,26 +65,32 @@ class WriteFragment() : Fragment() {
 
         postBtn.setOnClickListener {
             Log.e(TAG, getMood())
-            writeViewModel.createPost(
-                Post(
-                    content=binding.postInput.text.toString(),
-                    autogenerateResponses = binding.autoReplyFlag.isChecked
-                ),
-                AutogenrationOptions(mood = getMood(), 
-                    temperature = binding.writeGenerateTemperature.value, 
-                    historyLength = binding.autpreplyHistoryLength.value.toInt())
+            val post = Post(
+                content=binding.postInput.text.toString(),
+                autogenerateResponses = binding.autoReplyFlag.isChecked
             )
+            val params = AutogenrationOptions(mood = getMood(),
+                temperature = binding.writeGenerateTemperature.value,
+                historyLength = binding.autpreplyHistoryLength.value.toInt())
+            writeViewModel.createPost(post, params).observe(viewLifecycleOwner){res ->
+                if (res.errorMessage == null)
+                    findNavController().navigate(R.id.action_write_fragment_to_nav_host_fragment_activity_main)
+                else Snackbar.make(binding.root, res.errorMessage, Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         generateEmptyBtn.setOnClickListener {
-            writeViewModel.completePost(
-                AutoCompleteOptions(
-                    binding.postInput.text.toString(),
-                    binding.writeGenerateTemperature.value,
-                    getMood(), "true")
-            )
+            val params =  AutoCompleteOptions(
+                binding.postInput.text.toString(),
+                binding.writeGenerateTemperature.value,
+                getMood(), "false")
+            writeViewModel.completePost(params).observe(viewLifecycleOwner){ res ->
+                if (res.errResponse == null)
+                   displayGeneratedContent(binding.postInput, res.generatedText, Config.generatePostDelay)
+                else Snackbar.make(binding.root, res.errResponse.errorMessage.toString(), Toast.LENGTH_SHORT).show()
+            }
         }
-
 
         binding.autoReplyFlag.setOnCheckedChangeListener {_, isChecked ->
             if (isChecked) {
