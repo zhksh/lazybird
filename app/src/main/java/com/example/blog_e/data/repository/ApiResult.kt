@@ -10,10 +10,10 @@ import retrofit2.Response
 import java.io.IOException
 import kotlin.system.measureTimeMillis
 
-data class ErrorResponse(
-    val message: String,
-    val error: String
+data class SuccessResponse(
+    val errorMessage: String?,
 )
+
 sealed interface ApiResult<T : Any>
 
 class ApiSuccess<T : Any>(val data: T) : ApiResult<T>
@@ -54,3 +54,4 @@ class ApiHandler(private val tag: String) {
     }
 
 }
+

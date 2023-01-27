@@ -15,7 +15,7 @@ class Config {
         const val apiAddress = httpPrefix + domain
         const val socketAddress = socketPrefix + domain
 
-        const val clientTimout = 60 //s
+        const val clientTimout = 10 //s
         const val tagPref = "mvsp"
 
         // the rest of the world is using ISO-8601 and so are we
@@ -28,6 +28,12 @@ class Config {
 
         const val defaultMood = "ironic"
         const val defaultTemperature: Float = 0.8f
+        const val defaultHistoryLength = 5
+
+
+        const val defaultPageSize = 10
+        const val enablePlaceHolders = false
+        const val prefetchDistance = 1
 
         fun tag(str: String): String {return tagPref + "_" + str }
     }
