@@ -95,6 +95,7 @@ class ProfileFragment : Fragment() {
         }
 
         binding.swipeRefresh.setOnRefreshListener {
+            postAdapter.refresh()
             binding.swipeRefresh.isRefreshing = false
             userViewModel.renewUserData()
         }

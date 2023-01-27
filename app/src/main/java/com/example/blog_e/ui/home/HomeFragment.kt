@@ -56,8 +56,8 @@ class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
         }
 
         binding.swipeRefresh.setOnRefreshListener {
-            // TODO: Den Adapter zu refreshen sorgt aktuell dafür, dass hier das Paging nicht richtig funktioniert. Nochmal genauer naschschauen!!!
-            // postAdapter.refresh()
+            postAdapter.refresh()
+            recyclerView.smoothScrollToPosition(0)
             binding.swipeRefresh.isRefreshing = false
         }
 
