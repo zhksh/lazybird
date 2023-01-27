@@ -16,10 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BlogE"
         tools:targetApi="31">
-        <service
-            android:name=".LLMService"
-            android:enabled="true"
-            android:exported="true"></service>
 
         <activity
             android:name=".MainActivity"

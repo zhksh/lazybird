@@ -10,9 +10,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.blog_e.Config
 import com.example.blog_e.R
@@ -20,11 +17,9 @@ import com.example.blog_e.data.model.AutoCompleteOptions
 import com.example.blog_e.data.model.AutogenrationOptions
 import com.example.blog_e.data.model.Post
 import com.example.blog_e.databinding.FragmentWriteBinding
-import com.example.blog_e.utils.Utils
 import com.example.blog_e.utils.displayGeneratedContent
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint

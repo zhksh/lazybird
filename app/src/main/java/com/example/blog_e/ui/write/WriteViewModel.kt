@@ -7,16 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blog_e.Config
-import com.example.blog_e.SelfDescription
-import com.example.blog_e.data.model.AutogenrationOptions
 import com.example.blog_e.data.model.AutoCompleteOptions
+import com.example.blog_e.data.model.AutogenrationOptions
 import com.example.blog_e.data.model.Post
 import com.example.blog_e.data.repository.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,7 +37,7 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
                 }
                 is ApiError ->{
                     Log.e(TAG, "sending post failed: ${res} ")
-                    response.value = SuccessResponse("posting failed, try tommorrow or after the weekend")
+                    response.value = SuccessResponse("Posting failed, try tommorrow or after the weekend")
                 }
                 is ApiException -> {
                     Log.e(TAG, "sending post failed: ${res} ")
