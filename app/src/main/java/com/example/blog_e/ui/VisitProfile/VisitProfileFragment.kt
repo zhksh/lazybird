@@ -32,7 +32,7 @@ class VisitProfileFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private val visitUserModel: ProfileVisitViewModel by viewModels()
+    private val visitUserModel: VisitProfileViewModel by viewModels()
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter

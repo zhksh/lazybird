@@ -31,7 +31,7 @@ data class VisitUserUIModel(
 )
 
 @HiltViewModel
-class ProfileVisitViewModel @Inject constructor(
+class VisitProfileViewModel @Inject constructor(
     private val blogRepo: BlogRepo,
     private val userRepo: UserRepo,
     private val sessionManager: SessionManager
