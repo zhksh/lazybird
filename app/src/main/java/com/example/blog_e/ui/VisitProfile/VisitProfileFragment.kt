@@ -21,6 +21,7 @@ import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.databinding.FragmentVisitProfileBinding
 import com.example.blog_e.utils.PostComparator
 import com.example.blog_e.utils.Utils
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -35,6 +36,7 @@ class VisitProfileFragment : Fragment() {
     private val visitUserModel: VisitProfileViewModel by viewModels()
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var postAdapter: PostAdapter
 
     private val startForPostThreadResult = registerForActivityResult(
@@ -66,7 +68,8 @@ class VisitProfileFragment : Fragment() {
             // pass no function for on click events
         }
         recyclerView = binding.postsListRecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(root.context)
+        linearLayoutManager = LinearLayoutManager(root.context)
+        recyclerView.layoutManager = linearLayoutManager
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = postAdapter
 
@@ -120,8 +123,25 @@ class VisitProfileFragment : Fragment() {
 
         }
 
-        return root
+        val fab: FloatingActionButton = binding.fab
 
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0 || linearLayoutManager.findFirstVisibleItemPosition() == 0) {
+                    fab.hide()
+                } else if (dy < 0) {
+                    fab.show()
+                }
+            }
+        })
+
+        fab.setOnClickListener {
+            recyclerView.smoothScrollToPosition(0)
+            fab.hide()
+        }
+
+        return root
     }
 
     override fun onDestroyView() {
