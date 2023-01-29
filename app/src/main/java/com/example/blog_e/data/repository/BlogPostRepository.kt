@@ -1,12 +1,9 @@
 package com.example.blog_e.data.repository
 
-import androidx.lifecycle.LiveData
 import com.example.blog_e.data.model.*
 
 
 interface BlogPostRepository {
-
-    fun getPostsStream(): LiveData<List<Post>>
 
     suspend fun getPosts(postsQueryModel: GetPostsQueryModel): ApiResult<PostsResult>
 
