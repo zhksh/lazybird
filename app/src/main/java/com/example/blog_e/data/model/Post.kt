@@ -1,5 +1,6 @@
 package com.example.blog_e.data.model
 
+import androidx.paging.Config
 import com.example.blog_e.utils.Utils
 import java.time.LocalDateTime
 import java.util.*
@@ -18,5 +19,6 @@ data class Post(
 data class AutogenrationOptions(
     val mood: String,
     val temperature: Float,
-    val historyLength: Int
+    val historyLength: Int,
+    val ours: String = com.example.blog_e.Config.useGPTNeo
 )

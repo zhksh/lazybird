@@ -1,5 +1,6 @@
 package com.example.blog_e.data.repository
 
+import com.example.blog_e.SelfDescription
 import com.example.blog_e.data.model.*
 import retrofit2.Response
 import retrofit2.http.*
@@ -8,7 +9,7 @@ interface BlogEAPI {
 
     // User
     @POST("users")
-    suspend fun signUp(@Body params: NewUserAPIModel): Response<Authorization>
+    suspend fun signUp(@Body user: NewUserAPIModel): Response<Authorization>
 
     @GET("users")
     suspend fun findUsers(@Query("search") search: String): Response<FindUsersAPIModel>

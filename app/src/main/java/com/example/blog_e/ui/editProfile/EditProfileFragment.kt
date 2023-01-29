@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.paging.Config
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
 import com.example.blog_e.UserViewModel
@@ -84,9 +85,7 @@ class EditProfileFragment(): Fragment() {
 
         binding.saveButton.setOnClickListener {
             var bio = binding.editBio.text.toString()
-            if (bio.length > 150) {
-                bio = bio.substring(0, 150)
-            }
+            bio = bio.substring(0, minOf(bio.length, com.example.blog_e.Config.maxDescLength))
 
             var displayName: String? = binding.editDisplayName.text.toString()
             if (displayName == "") {

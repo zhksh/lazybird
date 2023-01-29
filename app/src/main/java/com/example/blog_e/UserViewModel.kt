@@ -85,7 +85,7 @@ class UserViewModel @Inject constructor(
 
         viewModelScope.launch {
             val res = userRepo.createSelfDescription(AutoCompleteOptions("",
-                Config.defaultTemperature, Config.defaultMood, "false"))
+                Config.defaultTemperature, Config.defaultMood, Config.useGPTNeo))
             when(res){
                 is ApiSuccess ->  {
                     response.value = SelfDescription(bio = res.data.response)
@@ -102,10 +102,12 @@ class UserViewModel @Inject constructor(
         return response
     }
 
+
     fun signUp(newUser: NewUserAPIModel): LiveData<SuccessResponse> {
         val response = MutableLiveData<SuccessResponse>()
 
         viewModelScope.launch {
+            newUser.options = AutoCompleteOptions(temperature = 1.2f, ours = Config.useGPTNeo, mood = Config.defaultMood)
             when (val result = userRepo.signUp(newUser)) {
                 is ApiSuccess -> {
                     sessionManager.saveSession(result.data.accessToken, newUser.username)

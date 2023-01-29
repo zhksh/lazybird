@@ -15,32 +15,13 @@
         android:layout_margin="8dp"
         android:orientation="vertical"
         tools:context=".ui.write.WriteFragment">
-<!--        <TextView-->
-<!--            android:id="@+id/header_title"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:text="Write a post"-->
-<!--            android:textSize="24sp"-->
-<!--            android:textStyle="bold" />-->
+
         <LinearLayout
             android:id="@+id/aiToggleFeature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-<!--            <Switch-->
-<!--                android:id="@+id/aiSwitchButton"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="some AI"-->
-<!--                app:layout_constraintBottom_toTopOf="@+id/textField"-->
-<!--                app:layout_constraintStart_toStartOf="parent">-->
-<!--            </Switch>-->
-<!--            <TextView-->
-<!--                    android:id="@+id/aiSwitchText"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="AI feature" />-->
+
             <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -86,34 +67,38 @@
 
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/emotionButtonsGroup"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:singleSelection="true">
 
                 <Button
                     android:id="@+id/button2"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Happy" />
                 <Button
                     android:id="@+id/button3"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Angry" />
 
                 <Button
                     android:id="@+id/button4"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Ironic" />
 
                 <Button
                     android:id="@+id/button5"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Sad" />
             </com.google.android.material.button.MaterialButtonToggleGroup>

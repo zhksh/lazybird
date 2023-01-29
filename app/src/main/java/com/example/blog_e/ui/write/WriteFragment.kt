@@ -76,7 +76,7 @@ class WriteFragment() : Fragment() {
             val params =  AutoCompleteOptions(
                 binding.postInput.text.toString(),
                 binding.writeGenerateTemperature.value,
-                getMood(), "false")
+                getMood())
             writeViewModel.completePost(params).observe(viewLifecycleOwner){ res ->
                 if (res.errResponse == null) {
                     if (res.generatedText.isBlank())

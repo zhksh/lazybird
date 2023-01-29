@@ -29,6 +29,8 @@ class Config {
         const val defaultMood = "ironic"
         const val defaultTemperature: Float = 0.8f
         const val defaultHistoryLength = 5
+        const val useGPTNeo = "true"
+        const val maxDescLength = 200
 
 
         const val defaultPageSize = 10

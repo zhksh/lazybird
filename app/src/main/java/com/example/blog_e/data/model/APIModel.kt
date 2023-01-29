@@ -1,5 +1,6 @@
 package com.example.blog_e.data.model
 
+import androidx.paging.Config
 import com.google.gson.annotations.SerializedName
 
 data class PostAPIModel(
@@ -68,7 +69,8 @@ data class NewUserAPIModel(
     val displayName: String,
     val password: String,
     val iconId: String,
-    val username: String
+    val username: String,
+    var options : AutoCompleteOptions? = null
 )
 
 data class UpdateUserAPIModel(
@@ -89,10 +91,10 @@ data class LoginPayload(
 )
 
 data class AutoCompleteOptions(
-    val prefix: String,
+    val prefix: String = "",
     val temperature: Float,
     val mood: String,
-    val ours: String
+    val ours: String = com.example.blog_e.Config.useGPTNeo
 )
 
 data class CommentPayload(

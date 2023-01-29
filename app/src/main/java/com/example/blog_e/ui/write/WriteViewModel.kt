@@ -66,7 +66,7 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
                     Log.e(TAG, "sending post failed: ${res} ")
                     response.value =
                         GeneratePostResponse(errResponse =
-                        SuccessResponse("posting failed, try tommorrow or after the weekend"))
+                            SuccessResponse("posting failed, try tommorrow or after the weekend"))
                 }
             }
         }
