@@ -1,4 +1,4 @@
-package com.example.blog_e.data.repository
+package com.example.blog_e.data.api
 
 import com.example.blog_e.data.model.*
 import retrofit2.Response
@@ -44,9 +44,8 @@ interface BlogEAPI {
         @Query("usernames") usernames: List<String>? = null,
         @Query("pageSize") pageSize: Int,
         @Query("pageToken") pageToken: String? = null,
-        @Query("isUserFeed") isUserFeed: Boolean? = null,
-
-        ): Response<PostsResult>
+        @Query("isUserFeed") isUserFeed: Boolean? = null
+    ): Response<PostsResult>
 
     @POST("posts/{postId}/comments")
     suspend fun createComment(

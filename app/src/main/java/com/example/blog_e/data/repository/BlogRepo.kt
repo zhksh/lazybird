@@ -2,6 +2,7 @@ package com.example.blog_e.data.repository
 
 import androidx.paging.PagingConfig
 import com.example.blog_e.Config
+import com.example.blog_e.data.api.BlogEAPI
 import com.example.blog_e.data.model.*
 
 class BlogRepo(private val backendS: BlogEAPI) : BlogPostRepository {

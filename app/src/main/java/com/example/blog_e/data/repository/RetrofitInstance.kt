@@ -3,6 +3,7 @@ package com.example.blog_e.data.repository
 import android.content.Context
 import android.util.Log
 import com.example.blog_e.Config
+import com.example.blog_e.data.api.BlogEAPI
 import com.example.blog_e.utils.SessionManager
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
