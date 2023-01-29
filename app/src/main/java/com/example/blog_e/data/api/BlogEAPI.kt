@@ -1,4 +1,4 @@
-package com.example.blog_e.data.repository
+package com.example.blog_e.data.api
 
 import com.example.blog_e.SelfDescription
 import com.example.blog_e.data.model.*
@@ -7,7 +7,8 @@ import retrofit2.http.*
 
 interface BlogEAPI {
 
-    // User
+
+    // User routes
     @POST("users")
     suspend fun signUp(@Body user: NewUserAPIModel): Response<Authorization>
 
@@ -28,9 +29,14 @@ interface BlogEAPI {
     @Headers("Content-Type: text/html")
     suspend fun unFollow(@Path("username") username: String): Response<String>
 
-    @POST("generate/self-description")
-    suspend fun createSelfDescription(@Body completePayload: AutoCompleteOptions): Response<LLMSelfDescription>
-    // Post
+    @POST("users/{username}")
+    suspend fun updateUser(
+        @Path("username") username: String,
+        @Body completePayload: UpdateUserAPIModel
+    ): Response<Unit>
+
+
+    // Post routes
     @POST("posts")
     suspend fun createPost(@Body post: PostRequest): Response<PostAPIModel>
 
@@ -39,18 +45,14 @@ interface BlogEAPI {
         @Query("usernames") usernames: List<String>? = null,
         @Query("pageSize") pageSize: Int,
         @Query("pageToken") pageToken: String? = null,
-        @Query("isUserFeed") isUserFeed: Boolean? = null,
-
-        ): Response<PostsResult>
-
-    @POST("users/{username}")
-    suspend fun updateUser(@Path("username") username: String, @Body completePayload: UpdateUserAPIModel): Response<Unit>
-
-    @POST("generate/complete")
-    suspend fun generateCompletion(@Body completePayload: AutoCompleteOptions): Response<LLMResult>
+        @Query("isUserFeed") isUserFeed: Boolean? = null
+    ): Response<PostsResult>
 
     @POST("posts/{postId}/comments")
-    suspend fun createComment(@Path("postId") postId: String, @Body comment: CommentPayload): Response<Unit>
+    suspend fun createComment(
+        @Path("postId") postId: String,
+        @Body comment: CommentPayload
+    ): Response<Unit>
 
     @POST("posts/{postId}/likes")
     suspend fun addLike(@Path("postId") postId: String): Response<Unit>
@@ -59,10 +61,11 @@ interface BlogEAPI {
     suspend fun removeLike(@Path("postId") postId: String): Response<Unit>
 
 
-    /*TODO: APIs for
-       (WS) Watch post  http://localhost:6969/posts/{id}/watch
-       Like/Unlike post http://localhost:6969/posts/{id}/likes
-       New comment      http://localhost:6969/posts/{id}/comments
-     */
+    // AI generation routes
+    @POST("generate/complete")
+    suspend fun generateCompletion(@Body completePayload: AutoCompleteOptions): Response<LLMResult>
+
+    @POST("generate/self-description")
+    suspend fun createSelfDescription(@Body completePayload: AutoCompleteOptions): Response<LLMSelfDescription>
 
 }

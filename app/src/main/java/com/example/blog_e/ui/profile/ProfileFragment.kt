@@ -24,6 +24,7 @@ import com.example.blog_e.adapters.PostAdapter
 import com.example.blog_e.databinding.FragmentProfileBinding
 import com.example.blog_e.ui.editProfile.EditProfileFragment
 import com.example.blog_e.utils.PostComparator
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -41,6 +42,7 @@ class ProfileFragment : Fragment() {
     private val userViewModel: UserViewModel by activityViewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
+    private lateinit var linearLayoutManager: LinearLayoutManager
 
     private val TAG = Config.tag(this.toString())
 
@@ -72,7 +74,8 @@ class ProfileFragment : Fragment() {
             // pass no function when click on your own profile
         }
         recyclerView = binding.postsListRecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(root.context)
+        linearLayoutManager = LinearLayoutManager(root.context)
+        recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = postAdapter
         recyclerView.setHasFixedSize(true)
 
@@ -119,6 +122,23 @@ class ProfileFragment : Fragment() {
                 .replace(R.id.nav_host_fragment_activity_main, fragment)
                 .addToBackStack(null)
                 .commit()
+        }
+
+        val fab: FloatingActionButton = binding.fab
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0 || linearLayoutManager.findFirstVisibleItemPosition() == 0) {
+                    fab.hide()
+                } else if (dy < 0) {
+                    fab.show()
+                }
+            }
+        })
+
+        fab.setOnClickListener {
+            recyclerView.smoothScrollToPosition(0)
         }
 
         return root

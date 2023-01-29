@@ -15,24 +15,35 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/logo_app"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
             android:layout_gravity="center"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="100dp"
             android:src="@drawable/logo"
             app:civ_border_width="2dp" />
 
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_width="match_parent"
+        <TextView
+            style="@style/Widget.MaterialComponents.TextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="@string/app_name"
+            android:textSize="34sp" />
+
+        <Button
+            android:layout_gravity="center"
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
             android:text="@string/login"
             android:textAllCaps="false" />
 
         <Button
+            android:layout_gravity="center"
             android:id="@+id/btn_sign_up"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:text="@string/sign_up"

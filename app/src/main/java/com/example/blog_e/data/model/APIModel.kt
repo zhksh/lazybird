@@ -48,9 +48,8 @@ data class GetUserAPIModel(
 )
 
 data class PostRequest(
-    val post : Post,
+    val post: Post,
     val params: AutogenrationOptions
-
 )
 
 data class PostsResult(
@@ -62,7 +61,7 @@ data class GetPostsQueryModel(
     val usernames: List<String>? = null,
     val pageSize: Int,
     val pageToken: String? = null,
-    val isUserFeed: Boolean?= null
+    val isUserFeed: Boolean? = null
 )
 
 data class NewUserAPIModel(
@@ -100,5 +99,20 @@ data class AutoCompleteOptions(
 data class CommentPayload(
     val content: String
 )
+
+data class LLMResult(
+    @SerializedName("response")
+    val response: String,
+    @SerializedName("prefix")
+    val prefix: String
+)
+
+data class LLMSelfDescription(
+    @SerializedName("response")
+    val response: String,
+    @SerializedName("entity")
+    val entity: String
+)
+
 
 

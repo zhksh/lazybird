@@ -67,8 +67,8 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout3"
-            tools:layout_editor_absoluteX="-16dp"
-        >
+            tools:layout_editor_absoluteX="-16dp">
+
             <TextView
                 android:id="@+id/nickname"
                 android:layout_width="0dp"
@@ -76,8 +76,8 @@
                 android:text="Max Mustermann"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="@+id/follow_btn" />
+                app:layout_constraintBottom_toBottomOf="@+id/follow_btn"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/at"
@@ -98,14 +98,13 @@
                 app:layout_constraintTop_toTopOf="@+id/nickname" />
 
             <com.google.android.material.button.MaterialButton
-                    android:id="@+id/follow_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:enabled="true"
-                    android:text="unfollow"
-                    android:layout_marginRight="5dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    />
+                android:id="@+id/follow_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:enabled="true"
+                android:text="unfollow"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
                 android:id="@+id/selfDescription"
@@ -116,7 +115,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/follow_btn"
 
-            />
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -129,10 +128,9 @@
         android:background="#000000"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
@@ -148,7 +146,8 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -158,7 +157,18 @@
                 tools:itemCount="2"
                 tools:listitem="@layout/posts_list_item" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
+            android:visibility="gone"
+            app:behavior_autoHide="true" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

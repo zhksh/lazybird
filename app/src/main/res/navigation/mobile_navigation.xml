@@ -71,7 +71,7 @@
 
     <fragment
         android:id="@+id/start_fragment"
-        android:name="com.example.blog_e.ui.login.StartFragment"
+        android:name="com.example.blog_e.ui.start.StartFragment"
         android:label="start_fragment"
         tools:layout="@layout/fragment_start" >
         <action

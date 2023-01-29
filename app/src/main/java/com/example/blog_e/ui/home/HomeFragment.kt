@@ -18,6 +18,7 @@ import com.example.blog_e.adapters.PostAdapter
 import com.example.blog_e.databinding.FragmentHomeBinding
 import com.example.blog_e.ui.VisitProfile.VisitProfileFragment
 import com.example.blog_e.utils.PostComparator
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -78,6 +79,23 @@ class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
             postAdapter.refresh()
             recyclerView.smoothScrollToPosition(0)
             binding.swipeRefresh.isRefreshing = false
+        }
+
+        val fab: FloatingActionButton = binding.fab
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0 || linearLayoutManager.findFirstVisibleItemPosition() == 0) {
+                    fab.hide()
+                } else if (dy < 0) {
+                    fab.show()
+                }
+            }
+        })
+
+        fab.setOnClickListener {
+            recyclerView.smoothScrollToPosition(0)
         }
 
         return binding.root

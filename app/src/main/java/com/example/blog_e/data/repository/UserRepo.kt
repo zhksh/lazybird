@@ -1,6 +1,7 @@
 package com.example.blog_e.data.repository
 
 import com.example.blog_e.Config
+import com.example.blog_e.data.api.BlogEAPI
 import com.example.blog_e.data.model.*
 
 class UserRepo(private val backendS: BlogEAPI) : UserRepository {
