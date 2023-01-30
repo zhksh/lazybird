@@ -37,16 +37,13 @@ class WriteFragment() : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.i(tag, "created")
         super.onCreateView(inflater, container, savedInstanceState)
 
         _binding = FragmentWriteBinding.inflate(inflater, container, false)
 
-        val postBtn = binding.postButton
-        val generateEmptyBtn = binding.generatePostFromPromptButton
+        binding.lifecycleOwner = this
 
         binding.autoCompleteOptions.visibility = View.GONE
-        binding.lifecycleOwner = this
 
 
         fun getMood(): String {
@@ -56,8 +53,7 @@ class WriteFragment() : Fragment() {
             return Config.defaultMood
         }
 
-        postBtn.setOnClickListener {
-            Log.e(TAG, getMood())
+        binding.postButton.setOnClickListener {
             val post = Post(
                 content=binding.postInput.text.toString(),
                 autogenerateResponses = binding.autoReplyFlag.isChecked
@@ -72,7 +68,7 @@ class WriteFragment() : Fragment() {
             }
         }
 
-        generateEmptyBtn.setOnClickListener {
+        binding.generatePostFromPromptButton.setOnClickListener {
             val params =  AutoCompleteOptions(
                 binding.postInput.text.toString(),
                 binding.writeGenerateTemperature.value,
@@ -83,7 +79,7 @@ class WriteFragment() : Fragment() {
                 if (res.errResponse == null) {
                     if (res.generatedText.isBlank()){
                         garbler.cancel()
-                        Snackbar.make(binding.root, "Be a little more creative", Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, "Maybe be a little more creative ..", Toast.LENGTH_SHORT).show()
                     }
                     else garbler.rebuildStringWithPrefix(res.generatedText)
                 }
@@ -92,11 +88,8 @@ class WriteFragment() : Fragment() {
         }
 
         binding.autoReplyFlag.setOnCheckedChangeListener {_, isChecked ->
-            if (isChecked) {
-               binding.autoCompleteOptions.visibility = View.VISIBLE
-            } else {
-                binding.autoCompleteOptions.visibility = View.GONE
-            }
+            if (isChecked) binding.autoCompleteOptions.visibility = View.VISIBLE
+            else binding.autoCompleteOptions.visibility = View.GONE
         }
         
 

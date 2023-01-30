@@ -142,8 +142,8 @@ fun displayGeneratedContentSpanedBkg(view: TextInputEditText, content: String, r
 class Garbler (view: TextInputEditText, range: LongRange){
 
     val handler: Handler
-    val runnable: Runnable
-    var cancelled: Boolean = false
+    var runnable: Runnable
+    var canceled: Boolean = false
     var originalContent: String
     var view: TextInputEditText
     val preserve = " "
@@ -170,7 +170,7 @@ class Garbler (view: TextInputEditText, range: LongRange){
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 view.setText(span)
-                if (!cancelled) handler.postDelayed(this, range.random())
+                if (!canceled) handler.postDelayed(this, range.random())
             }
         }
     }
@@ -184,7 +184,7 @@ class Garbler (view: TextInputEditText, range: LongRange){
         val completeLen = content.length
 
         var i = 0
-        var runnable = object : Runnable {
+        runnable = object : Runnable {
             override fun run() {
                 val str = "${content.subSequence(0, i)} ${getRandomString(content.length-i, preserve, indices)}"
                 val span = SpannableString(str)
@@ -209,7 +209,7 @@ class Garbler (view: TextInputEditText, range: LongRange){
     }
 
     fun cancel(){
-        cancelled = true
+        canceled = true
         view.setText(originalContent)
     }
 }
