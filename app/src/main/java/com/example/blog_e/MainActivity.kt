@@ -2,15 +2,10 @@ package com.example.blog_e
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.blog_e.data.model.User
 import com.example.blog_e.databinding.ActivityMainBinding
 import com.example.blog_e.utils.SessionManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -35,19 +30,7 @@ class MainActivity : AppCompatActivity() {
         sessionManager = SessionManager(application)
 
         val navView: BottomNavigationView = binding.navView
-
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home,
-                R.id.navigation_write,
-                R.id.navigation_profile,
-                R.id.navigation_search
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
