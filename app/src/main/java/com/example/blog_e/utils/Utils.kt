@@ -16,6 +16,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+
 class Utils {
     companion object {
         fun formatBackstack(navController: NavController): String{
@@ -137,36 +138,82 @@ fun displayGeneratedContentSpanedBkg(view: TextInputEditText, content: String, r
     view.setSelection(view.length())
 }
 
-fun displayGeneratedContentGarbled(view: TextInputEditText, content: String, range: LongRange){
-    if (content.length < 1) return
-    val prefix = view.text.toString()
+
+class Garbler (view: TextInputEditText, range: LongRange){
+
+    val handler: Handler
+    val runnable: Runnable
+    var cancelled: Boolean = false
+    var originalContent: String
+    var view: TextInputEditText
     val preserve = " "
-    val indices = Regex(preserve).findAll(content).map { it.range.first }.toSet()
-    val completeLen = prefix.length + content.length
+    val range: LongRange
 
-    var i = 0
-    var handler = Handler()
-    var runnable = object : Runnable {
-        override fun run() {
-            val str = prefix + " " + content.subSequence(0, i) +
-                    getRandomString(content.length-i, preserve, indices)
-            val span = SpannableString(str)
+    init {
+        this.view = view
+        this.range = range
 
-            span.setSpan(
-                ForegroundColorSpan(Color.BLACK),
-                0, completeLen,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+        originalContent = view.text.toString()
+        if (originalContent.length < 1) originalContent = getRandomString(10, "", emptySet())
 
-            view.setText(span)
-            if (prefix.length + i++ < completeLen){
-                handler.postDelayed(this, range.random())
+        val indices = Regex(preserve).findAll(originalContent).map { it.range.first }.toSet()
+        val completeLen = originalContent.length
+        handler = Handler()
+        runnable = object : Runnable {
+            override fun run() {
+                val str = getRandomString(originalContent.length, preserve, indices)
+                val span = SpannableString(str)
+
+                span.setSpan(
+                    ForegroundColorSpan(Color.BLACK),
+                    0, completeLen,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                view.setText(span)
+                if (!cancelled) handler.postDelayed(this, range.random())
             }
         }
     }
-    handler.postDelayed(runnable, 0)
-    view.setSelection(view.length())
+    fun garble(){
+        this.handler.postDelayed(runnable, 0)
+    }
+
+    fun rebuildString(content: String) {
+        cancel()
+        val indices = Regex(preserve).findAll(content).map { it.range.first }.toSet()
+        val completeLen = content.length
+
+        var i = 0
+        var runnable = object : Runnable {
+            override fun run() {
+                val str = "${content.subSequence(0, i)} ${getRandomString(content.length-i, preserve, indices)}"
+                val span = SpannableString(str)
+
+                span.setSpan(
+                    ForegroundColorSpan(Color.BLACK),
+                    0, completeLen,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                view.setText(span)
+                if (i++ < completeLen){
+                    handler.postDelayed(this, range.random())
+                }
+            }
+        }
+        handler.postDelayed(runnable, 0)
+    }
+
+    fun rebuildStringWithPrefix(newContent: String){
+       rebuildString("$originalContent $newContent")
+    }
+
+    fun cancel(){
+        cancelled = true
+        view.setText(originalContent)
+    }
 }
+
 
 
 private fun getRandomString(sizeOfRandomString: Int, c: String, indices: Set<Int>): String {

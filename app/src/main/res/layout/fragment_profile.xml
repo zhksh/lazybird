@@ -76,7 +76,6 @@
                 android:id="@+id/nickname"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Max Mustermann"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +94,6 @@
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="maxMrMustermann"
                 android:textSize="20sp"
                 app:layout_constraintStart_toEndOf="@id/at"
                 app:layout_constraintTop_toTopOf="@+id/nickname" />

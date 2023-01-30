@@ -55,7 +55,7 @@
                 android:gravity="top"
                 android:inputType="textMultiLine"
                 android:minHeight="200dp"
-                android:text="Bruce Lee and your sister took a saxophone and a knife, then"/>
+                android:text="Your hovercraft seriously needs"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
@@ -112,7 +112,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="temperature:">
+                        android:text="craziness:">
 
                 </TextView>
                 <com.google.android.material.slider.Slider
