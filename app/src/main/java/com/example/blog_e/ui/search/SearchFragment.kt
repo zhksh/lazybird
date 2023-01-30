@@ -61,7 +61,7 @@ class SearchFragment : Fragment() {
                 }
 
                 override fun onQueryTextChange(newQuery: String?): Boolean {
-                    if (newQuery != null && newQuery.length > 0) {
+                    if (newQuery != null && newQuery.isNotEmpty()) {
                         viewModel.findUsers(newQuery)
                     } else {
                         viewModel.resetQuery()

@@ -38,7 +38,6 @@ class SearchResultsAdapter(
 
         var displayName = user.displayName
         if (user.isOwnUser) {
-            // TODO: Instead of you, add indicator on right of search result
             displayName += " (you)"
         }
         viewHolder.displayName.text = displayName
@@ -47,6 +46,8 @@ class SearchResultsAdapter(
             viewHolder.itemView.setOnClickListener {
                 navigateToUserProfile(user.username)
             }
+        } else {
+            viewHolder.itemView.setOnClickListener {}
         }
     }
 
