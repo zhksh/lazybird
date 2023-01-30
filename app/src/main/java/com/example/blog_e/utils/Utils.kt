@@ -154,7 +154,7 @@ class Garbler (view: TextInputEditText, range: LongRange){
         this.range = range
 
         originalContent = view.text.toString()
-        if (originalContent.length < 1) originalContent = getRandomString(10, "", emptySet())
+        if (originalContent.isBlank()) originalContent = getRandomString(10, "", emptySet())
 
         val indices = Regex(preserve).findAll(originalContent).map { it.range.first }.toSet()
         val completeLen = originalContent.length
@@ -209,8 +209,10 @@ class Garbler (view: TextInputEditText, range: LongRange){
     }
 
     fun cancel(){
-        canceled = true
-        view.setText(originalContent)
+        if (!canceled){
+            canceled = true
+            view.setText(originalContent)
+        }
     }
 }
 

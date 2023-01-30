@@ -43,7 +43,7 @@ class EditProfileFragment(): Fragment() {
             }
             binding.avatarBtn.setImageResource(user.profilePicture.res)
 
-            if (binding.editDisplayName.text.toString() == "") {
+            if (binding.editDisplayName.text.toString().isBlank()) {
                 binding.editDisplayName.setText(user.displayName)
             }
         }
@@ -114,13 +114,11 @@ class EditProfileFragment(): Fragment() {
             val garbler = Garbler(binding.editBio, com.example.blog_e.Config.generatePostDelay)
             garbler.garble()
             userViewModel.createSelfDesc().observe(viewLifecycleOwner){ response ->
+                garbler.cancel()
                 if (response.err == null) {
                     garbler.rebuildString(response.bio)
                 }
-                else {
-                    garbler.cancel()
-                    Snackbar.make(binding.root, response.err.errorMessage.toString(), Toast.LENGTH_SHORT).show()
-                }
+                else Snackbar.make(binding.root, response.err.errorMessage.toString(), Toast.LENGTH_SHORT).show()
             }
         }
 

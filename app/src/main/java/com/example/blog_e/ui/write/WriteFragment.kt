@@ -73,18 +73,17 @@ class WriteFragment() : Fragment() {
                 binding.postInput.text.toString(),
                 binding.writeGenerateTemperature.value,
                 getMood())
-            var garbler = Garbler(binding.postInput, Config.generatePostDelay)
+            val garbler = Garbler(binding.postInput, Config.generatePostDelay)
             garbler.garble()
             writeViewModel.completePost(params).observe(viewLifecycleOwner){ res ->
+                garbler.cancel()
                 if (res.errResponse == null) {
                     if (res.generatedText.isBlank()){
-                        garbler.cancel()
                         Snackbar.make(binding.root, "Maybe be a little more creative ..", Toast.LENGTH_SHORT).show()
                     }
                     else garbler.rebuildStringWithPrefix(res.generatedText)
                 }
                 else{
-                    garbler.cancel()
                     Snackbar.make(binding.root, res.errResponse.errorMessage.toString(), Toast.LENGTH_SHORT).show()
                 }
             }
