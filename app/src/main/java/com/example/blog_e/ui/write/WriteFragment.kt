@@ -83,7 +83,10 @@ class WriteFragment() : Fragment() {
                     }
                     else garbler.rebuildStringWithPrefix(res.generatedText)
                 }
-                else Snackbar.make(binding.root, res.errResponse.errorMessage.toString(), Toast.LENGTH_SHORT).show()
+                else{
+                    garbler.cancel()
+                    Snackbar.make(binding.root, res.errResponse.errorMessage.toString(), Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

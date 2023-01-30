@@ -117,7 +117,10 @@ class EditProfileFragment(): Fragment() {
                 if (response.err == null) {
                     garbler.rebuildString(response.bio)
                 }
-                else Snackbar.make(binding.root, response.err.errorMessage.toString(), Toast.LENGTH_SHORT).show()
+                else {
+                    garbler.cancel()
+                    Snackbar.make(binding.root, response.err.errorMessage.toString(), Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

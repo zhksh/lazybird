@@ -24,7 +24,7 @@ class Config {
         const val timeZone = "UTC"
         // const val timeZone = "Europe/Berlin"
 
-        val  generatePostDelay = LongRange(60,60) //ms
+        val  generatePostDelay = LongRange(30,30) //ms
 
         const val defaultMood = "ironic"
         const val defaultTemperature: Float = 0.8f

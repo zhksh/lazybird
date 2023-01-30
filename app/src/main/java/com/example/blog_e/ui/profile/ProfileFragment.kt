@@ -96,7 +96,6 @@ class ProfileFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     profileViewModel.profileUiState.collect {
-                        Log.v(TAG, "collecting ui state: ${it.toString()}")
                         if (it.errMsg.isNotBlank())
                             Snackbar.make(binding.root, it.errMsg, Toast.LENGTH_SHORT).show()
                     }
