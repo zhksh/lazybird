@@ -102,7 +102,7 @@ class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
     }
 }
 
-private val TABS = listOf("Bubble", "Global")
+private val TABS = listOf("Global", "Bubble" )
 
 class HomePagerFragment() : Fragment() {
     override fun onCreateView(
@@ -142,7 +142,7 @@ class HomePagerAdapter(fragment: Fragment, private val openFragment: (Fragment) 
     override fun createFragment(position: Int): Fragment {
         val fragment = HomeFragment(openFragment)
         fragment.arguments = Bundle().apply {
-            putBoolean(IS_USER_FEED_KEY, position == 0)
+            putBoolean(IS_USER_FEED_KEY, position == 1)
         }
         return fragment
     }

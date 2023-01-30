@@ -17,7 +17,7 @@ import com.example.blog_e.data.model.AutoCompleteOptions
 import com.example.blog_e.data.model.AutogenrationOptions
 import com.example.blog_e.data.model.Post
 import com.example.blog_e.databinding.FragmentWriteBinding
-import com.example.blog_e.utils.displayGeneratedContentGarbled
+import com.example.blog_e.utils.Garbler
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -77,11 +77,15 @@ class WriteFragment() : Fragment() {
                 binding.postInput.text.toString(),
                 binding.writeGenerateTemperature.value,
                 getMood())
+            var garbler = Garbler(binding.postInput, Config.generatePostDelay)
+            garbler.garble()
             writeViewModel.completePost(params).observe(viewLifecycleOwner){ res ->
                 if (res.errResponse == null) {
-                    if (res.generatedText.isBlank())
+                    if (res.generatedText.isBlank()){
+                        garbler.cancel()
                         Snackbar.make(binding.root, "Be a little more creative", Toast.LENGTH_SHORT).show()
-                    else displayGeneratedContentGarbled(binding.postInput, res.generatedText, Config.generatePostDelay)
+                    }
+                    else garbler.rebuildStringWithPrefix(res.generatedText)
                 }
                 else Snackbar.make(binding.root, res.errResponse.errorMessage.toString(), Toast.LENGTH_SHORT).show()
             }
