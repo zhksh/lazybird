@@ -24,7 +24,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
+class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     private lateinit var postAdapter: PostAdapter
@@ -104,7 +104,7 @@ class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
 
 private val TABS = listOf("Global", "Bubble")
 
-class HomePagerFragment() : Fragment() {
+class HomePagerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -114,7 +114,7 @@ class HomePagerFragment() : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val adapter = HomePagerAdapter(this) { openFragment(it) }
+        val adapter = HomePagerAdapter(this)
         val viewPager: ViewPager2 = view.findViewById(R.id.pager)
         viewPager.adapter = adapter
 
@@ -125,22 +125,14 @@ class HomePagerFragment() : Fragment() {
             }
         }.attach()
     }
-
-    private fun openFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_fragment_activity_main, fragment)
-            .addToBackStack(null)
-            .setReorderingAllowed(true)
-            .commit()
-    }
 }
 
-class HomePagerAdapter(fragment: Fragment, private val openFragment: (Fragment) -> Unit) :
+class HomePagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = TABS.count()
 
     override fun createFragment(position: Int): Fragment {
-        val fragment = HomeFragment(openFragment)
+        val fragment = HomeFragment()
         fragment.arguments = Bundle().apply {
             putBoolean(IS_USER_FEED_KEY, position == 1)
         }
