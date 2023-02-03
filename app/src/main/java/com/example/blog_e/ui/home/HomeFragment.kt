@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -16,7 +17,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.blog_e.R
 import com.example.blog_e.adapters.PostAdapter
 import com.example.blog_e.databinding.FragmentHomeBinding
-import com.example.blog_e.ui.VisitProfile.VisitProfileFragment
 import com.example.blog_e.utils.PostComparator
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
@@ -24,7 +24,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
+class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     private lateinit var postAdapter: PostAdapter
@@ -52,10 +52,10 @@ class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
             if (username == viewModel.username) {
                 findNavController().navigate(R.id.navigation_profile)
             } else {
-                val detailFragment = VisitProfileFragment.newInstance(username)
-
-                // TODO: Passing this lambda is not optimal.
-                openFragment(detailFragment)
+                findNavController().navigate(
+                    R.id.action_navigation_home_to_navigation_visit_profile,
+                    bundleOf("username" to username)
+                )
             }
         }
         postAdapter = PostAdapter(
@@ -102,9 +102,9 @@ class HomeFragment(private val openFragment: (Fragment) -> Unit) : Fragment() {
     }
 }
 
-private val TABS = listOf("Global", "Bubble" )
+private val TABS = listOf("Global", "Bubble")
 
-class HomePagerFragment() : Fragment() {
+class HomePagerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -114,7 +114,7 @@ class HomePagerFragment() : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val adapter = HomePagerAdapter(this) { openFragment(it) }
+        val adapter = HomePagerAdapter(this)
         val viewPager: ViewPager2 = view.findViewById(R.id.pager)
         viewPager.adapter = adapter
 
@@ -125,22 +125,14 @@ class HomePagerFragment() : Fragment() {
             }
         }.attach()
     }
-
-    private fun openFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_fragment_activity_main, fragment)
-            .addToBackStack(null)
-            .setReorderingAllowed(true)
-            .commit()
-    }
 }
 
-class HomePagerAdapter(fragment: Fragment, private val openFragment: (Fragment) -> Unit) :
+class HomePagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = TABS.count()
 
     override fun createFragment(position: Int): Fragment {
-        val fragment = HomeFragment(openFragment)
+        val fragment = HomeFragment()
         fragment.arguments = Bundle().apply {
             putBoolean(IS_USER_FEED_KEY, position == 1)
         }

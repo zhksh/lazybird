@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.blog_e.databinding.ActivityMainBinding
@@ -11,16 +12,16 @@ import com.example.blog_e.utils.SessionManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
-var HIDE_NAV_BAR_FRAGMENTS = listOf(R.id.start_fragment, R.id.login_fragment, R.id.sign_up_fragment)
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sessionManager: SessionManager
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         supportActionBar?.hide()
 
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         sessionManager = SessionManager(application)
 
         val navView: BottomNavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        navController = findNavController(R.id.nav_host_fragment_activity_main)
         navView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -43,5 +44,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.navigate(R.id.start_fragment)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp()
+    }
+
+    companion object {
+        private val HIDE_NAV_BAR_FRAGMENTS = listOf(
+            R.id.start_fragment,
+            R.id.login_fragment,
+            R.id.sign_up_fragment,
+            R.id.navigation_visit_profile
+        )
     }
 }
