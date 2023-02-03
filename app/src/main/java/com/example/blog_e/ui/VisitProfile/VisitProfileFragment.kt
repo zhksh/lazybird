@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -38,6 +40,7 @@ class VisitProfileFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var postAdapter: PostAdapter
+    private lateinit var actionBar: ActionBar
 
     private val startForPostThreadResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -54,10 +57,15 @@ class VisitProfileFragment : Fragment() {
     ): View {
         Log.v(TAG, Utils.formatBackstack(findNavController()))
 
+        actionBar = (activity as AppCompatActivity).supportActionBar!!
+        actionBar.setDisplayHomeAsUpEnabled(true)
+        actionBar.show()
+
         _binding = FragmentVisitProfileBinding.inflate(layoutInflater)
         val root: View = binding.root
 
         val currentUser = requireArguments().getString("username")!!
+        actionBar.title = "Profile of $currentUser"
         Log.i(TAG, "Übergebener Username: ${currentUser}")
 
         postAdapter = PostAdapter(
@@ -147,6 +155,7 @@ class VisitProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        actionBar.hide()
     }
 
     companion object {

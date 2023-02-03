@@ -1,21 +1,18 @@
 package com.example.blog_e.ui.search
 
-import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView.OnQueryTextListener
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.blog_e.R
 import com.example.blog_e.adapters.SearchResultsAdapter
 import com.example.blog_e.databinding.FragmentSearchBinding
-import com.example.blog_e.ui.VisitProfile.VisitProfileFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,11 +29,10 @@ class SearchFragment : Fragment() {
         val navigate: (String) -> Unit = { username ->
             // TODO: Display action bar with back button on navigate
             binding.searchView.clearFocus()
-            val detailFragment = VisitProfileFragment.newInstance(username)
-            parentFragmentManager.beginTransaction()
-                .add(R.id.nav_host_fragment_activity_main, detailFragment)
-                .addToBackStack(null)
-                .commit()
+            findNavController().navigate(
+                R.id.action_navigation_search_to_navigation_visit_profile,
+                bundleOf("username" to username)
+            )
         }
 
         val adapter = SearchResultsAdapter(emptyList(), navigate)
