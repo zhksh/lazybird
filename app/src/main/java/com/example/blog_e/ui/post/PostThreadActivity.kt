@@ -109,9 +109,9 @@ class PostThreadActivity : AppCompatActivity() {
         binding.displayName.text = post.user.displayName ?: post.user.username
 
         val likeImageResource = if (post.isLiked) {
-            R.drawable.heart_filled
+            R.drawable.ic_baseline_favorite_24
         } else {
-            R.drawable.heart_outline
+            R.drawable.ic_baseline_favorite_border_24
         }
         binding.likeButton.setImageResource(likeImageResource)
 
