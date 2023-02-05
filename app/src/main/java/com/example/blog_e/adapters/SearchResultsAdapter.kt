@@ -7,9 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
-import com.example.blog_e.data.model.CommentAPIModel
-import com.example.blog_e.data.model.UserAPIModel
-import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.ui.search.SearchResult
 
 class SearchResultsAdapter(

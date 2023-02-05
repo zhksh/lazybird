@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-data class GeneratePostResponse (
+data class GeneratePostResponse(
     val generatedText: String = "",
     val errResponse: SuccessResponse? = null
 )
@@ -31,17 +31,19 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
         val response = MutableLiveData<SuccessResponse>()
         viewModelScope.launch {
             val res = postRepo.createPost(data, params)
-            when(res){
-                is ApiSuccess ->  {
+            when (res) {
+                is ApiSuccess -> {
                     response.value = SuccessResponse(null)
                 }
-                is ApiError ->{
+                is ApiError -> {
                     Log.e(TAG, "sending post failed: ${res} ")
-                    response.value = SuccessResponse("Posting failed, try tommorrow or after the weekend")
+                    response.value =
+                        SuccessResponse("Posting failed, try tommorrow or after the weekend")
                 }
                 is ApiException -> {
                     Log.e(TAG, "sending post failed: ${res} ")
-                    response.value = SuccessResponse("posting failed, try tommorrow or after the weekend")
+                    response.value =
+                        SuccessResponse("posting failed, try tommorrow or after the weekend")
                 }
             }
         }
@@ -52,29 +54,28 @@ class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewM
         val response = MutableLiveData<GeneratePostResponse>()
         viewModelScope.launch {
             val res = postRepo.completePost(data)
-            when(res){
-                is ApiSuccess ->  {
+            when (res) {
+                is ApiSuccess -> {
                     response.value = GeneratePostResponse(generatedText = res.data.response)
                 }
-                is ApiError ->{
+                is ApiError -> {
                     Log.e(TAG, "sending post failed: ${res} ")
                     response.value =
-                        GeneratePostResponse(errResponse =
-                            SuccessResponse("posting failed, try tommorrow or after the weekend"))
+                        GeneratePostResponse(
+                            errResponse =
+                            SuccessResponse("posting failed, try tommorrow or after the weekend")
+                        )
                 }
                 is ApiException -> {
                     Log.e(TAG, "sending post failed: ${res} ")
                     response.value =
-                        GeneratePostResponse(errResponse =
-                            SuccessResponse("posting failed, try tommorrow or after the weekend"))
+                        GeneratePostResponse(
+                            errResponse =
+                            SuccessResponse("posting failed, try tommorrow or after the weekend")
+                        )
                 }
             }
         }
         return response
     }
-
-
-
-
-
 }

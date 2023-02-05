@@ -1,10 +1,11 @@
-package com.example.blog_e
+package com.example.blog_e.ui.common
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blog_e.Config
 import com.example.blog_e.data.model.*
 import com.example.blog_e.data.repository.*
 import com.example.blog_e.utils.SessionManager
@@ -52,12 +53,16 @@ class UserViewModel @Inject constructor(
                 }
                 is ApiError -> {
                     when (result.code) {
-                        401 -> response.value = SuccessResponse(errorMessage = "Password is incorrect")
-                        404 -> response.value = SuccessResponse(errorMessage = "Username is incorrect")
-                        else -> response.value = SuccessResponse(errorMessage = "Something went wrong, please try again")
+                        401 -> response.value =
+                            SuccessResponse(errorMessage = "Password is incorrect")
+                        404 -> response.value =
+                            SuccessResponse(errorMessage = "Username is incorrect")
+                        else -> response.value =
+                            SuccessResponse(errorMessage = "Something went wrong, please try again")
                     }
                 }
-                is ApiException -> response.value = SuccessResponse(errorMessage = "Connection failed")
+                is ApiException -> response.value =
+                    SuccessResponse(errorMessage = "Connection failed")
             }
         }
 
@@ -70,7 +75,8 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch {
             when (userRepo.updateUser("me", info)) {
                 is ApiSuccess -> response.value = SuccessResponse(null)
-                is ApiError -> response.value = SuccessResponse("Something went wrong, please try again")
+                is ApiError -> response.value =
+                    SuccessResponse("Something went wrong, please try again")
                 is ApiException -> response.value = SuccessResponse("Connection failed")
             }
 
@@ -84,13 +90,17 @@ class UserViewModel @Inject constructor(
         val response = MutableLiveData<SelfDescription>()
 
         viewModelScope.launch {
-            val res = userRepo.createSelfDescription(AutoCompleteOptions("",
-                Config.defaultTemperature, Config.defaultMood, Config.useGPTNeo))
-            when(res){
-                is ApiSuccess ->  {
+            val res = userRepo.createSelfDescription(
+                AutoCompleteOptions(
+                    "",
+                    Config.defaultTemperature, Config.defaultMood, Config.useGPTNeo
+                )
+            )
+            when (res) {
+                is ApiSuccess -> {
                     response.value = SelfDescription(bio = res.data.response)
                 }
-                is ApiError ->{
+                is ApiError -> {
                     Log.e(TAG, "generating Desc for ${user.value?.username} failed ")
                     response.value = SelfDescription(err = SuccessResponse("Connection failed"))
                 }
@@ -107,7 +117,11 @@ class UserViewModel @Inject constructor(
         val response = MutableLiveData<SuccessResponse>()
 
         viewModelScope.launch {
-            newUser.options = AutoCompleteOptions(temperature = 1.2f, ours = Config.useGPTNeo, mood = Config.defaultMood)
+            newUser.options = AutoCompleteOptions(
+                temperature = 1.2f,
+                ours = Config.useGPTNeo,
+                mood = Config.defaultMood
+            )
             when (val result = userRepo.signUp(newUser)) {
                 is ApiSuccess -> {
                     sessionManager.saveSession(result.data.accessToken, newUser.username)
@@ -116,11 +130,14 @@ class UserViewModel @Inject constructor(
                 }
                 is ApiError -> {
                     when (result.code) {
-                        409 -> response.value = SuccessResponse(errorMessage = "This username is already taken")
-                        else -> response.value = SuccessResponse(errorMessage = "Something went wrong, please try again")
+                        409 -> response.value =
+                            SuccessResponse(errorMessage = "This username is already taken")
+                        else -> response.value =
+                            SuccessResponse(errorMessage = "Something went wrong, please try again")
                     }
                 }
-                is ApiException -> response.value = SuccessResponse(errorMessage = "Connection failed")
+                is ApiException -> response.value =
+                    SuccessResponse(errorMessage = "Connection failed")
             }
         }
 
@@ -132,11 +149,12 @@ class UserViewModel @Inject constructor(
         user.value = null
     }
 
-    fun renewUserData(){
+    fun renewUserData() {
         viewModelScope.launch {
             fetchUser()
         }
     }
+
     private suspend fun fetchUser() {
         when (val result = userRepo.getUser("me")) {
             is ApiSuccess -> {

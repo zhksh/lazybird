@@ -16,11 +16,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.blog_e.Config
 import com.example.blog_e.R
-import com.example.blog_e.UserViewModel
 import com.example.blog_e.adapters.PostAdapter
 import com.example.blog_e.databinding.FragmentProfileBinding
+import com.example.blog_e.ui.common.UserViewModel
 import com.example.blog_e.ui.editProfile.EditProfileFragment
 import com.example.blog_e.utils.PostComparator
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -43,7 +42,6 @@ class ProfileFragment : Fragment() {
     private lateinit var postAdapter: PostAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
 
-    private val TAG = Config.tag(this.toString())
 
     private val startForPostThreadResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()

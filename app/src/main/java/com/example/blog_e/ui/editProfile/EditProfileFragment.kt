@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
-import com.example.blog_e.UserViewModel
+import com.example.blog_e.ui.common.UserViewModel
 import com.example.blog_e.adapters.ProfilePictureAdapter
 import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.data.model.UpdateUserAPIModel
@@ -20,7 +20,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
-class EditProfileFragment(): Fragment() {
+class EditProfileFragment : Fragment() {
     private val images: MutableList<ProfilePicture> = ProfilePicture.values().toMutableList()
     private var newIconId: String? = null
 
@@ -28,12 +28,12 @@ class EditProfileFragment(): Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentEditProfileBinding.inflate(inflater, container, false)
         val userViewModel: UserViewModel by activityViewModels()
 
         if (binding.editBio.text.toString() == "") {
-            binding.editBio.setText(userViewModel.getUser().value?.selfDescription?: "")
+            binding.editBio.setText(userViewModel.getUser().value?.selfDescription ?: "")
         }
 
 
@@ -52,7 +52,7 @@ class EditProfileFragment(): Fragment() {
             close()
         }
 
-        // TODO: Same as in Signup, should not be repeated
+
         binding.avatarBtn.setOnClickListener {
             val dialogView = layoutInflater.inflate(R.layout.dialog_profile_picutres, null)
             val recyclerView =
@@ -113,12 +113,15 @@ class EditProfileFragment(): Fragment() {
         binding.generateButton.setOnClickListener {
             val garbler = Garbler(binding.editBio, com.example.blog_e.Config.generatePostDelay)
             garbler.garble()
-            userViewModel.createSelfDesc().observe(viewLifecycleOwner){ response ->
+            userViewModel.createSelfDesc().observe(viewLifecycleOwner) { response ->
                 garbler.cancel()
                 if (response.err == null) {
                     garbler.rebuildString(response.bio)
-                }
-                else Snackbar.make(binding.root, response.err.errorMessage.toString(), Toast.LENGTH_SHORT).show()
+                } else Snackbar.make(
+                    binding.root,
+                    response.err.errorMessage.toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 

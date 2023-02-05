@@ -73,6 +73,7 @@
             tools:layout_editor_absoluteX="-16dp">
 
             <TextView
+                android:text="Max Mustermann"
                 android:id="@+id/nickname"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -91,6 +92,7 @@
                 app:layout_constraintTop_toTopOf="@+id/nickname" />
 
             <TextView
+                android:text="maxtMuster"
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -140,6 +142,7 @@
 
 
             <androidx.recyclerview.widget.RecyclerView
+                android:scrollbars="vertical"
                 android:id="@+id/postsListRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

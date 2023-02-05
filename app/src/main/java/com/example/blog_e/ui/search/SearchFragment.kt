@@ -27,7 +27,6 @@ class SearchFragment : Fragment() {
         val binding = FragmentSearchBinding.inflate(inflater)
 
         val navigate: (String) -> Unit = { username ->
-            // TODO: Display action bar with back button on navigate
             binding.searchView.clearFocus()
             findNavController().navigate(
                 R.id.action_navigation_search_to_navigation_visit_profile,

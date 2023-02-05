@@ -32,8 +32,7 @@
                 android:layout_height="match_parent"
                 android:gravity="top"
                 android:inputType="textMultiLine"
-                android:minHeight="200dp"
-                android:text="Your hovercraft seriously needs"/>
+                android:minHeight="200dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout

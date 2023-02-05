@@ -19,17 +19,17 @@ import java.util.*
 
 class Utils {
     companion object {
-        fun formatBackstack(navController: NavController): String{
+        fun formatBackstack(navController: NavController): String {
             return "current Backstack:\n " + navController.backQueue.joinToString("\n") {
                 " ${it.destination.navigatorName}: ${it.destination.displayName}(${it.destination.label})"
             }
         }
 
-        fun currentDate(): LocalDateTime{
+        fun currentDate(): LocalDateTime {
             return LocalDateTime.now(ZoneId.of(Config.timeZone))
         }
 
-        fun currentDateFormatted(): String{
+        fun currentDateFormatted(): String {
             val current = currentDate()
             val formatter = DateTimeFormatter.ofPattern(Config.dateFormat)
 
@@ -37,9 +37,13 @@ class Utils {
 
         }
 
-        fun getDrawableID(resourceName: String, activity: FragmentActivity?, resources:Resources): Int {
+        fun getDrawableID(
+            resourceName: String,
+            activity: FragmentActivity?,
+            resources: Resources
+        ): Int {
             val uri = "@drawable/${resourceName}"
-            return  resources.getIdentifier(uri, null, activity?.packageName)
+            return resources.getIdentifier(uri, null, activity?.packageName)
         }
     }
 
@@ -108,7 +112,7 @@ fun validatePassword(password: String): String {
  * Populates a textedit views with a affix preserving its prefix, with hickups
  */
 
-fun displayGeneratedContentSpanedBkg(view: TextInputEditText, content: String, range: LongRange){
+fun displayGeneratedContentSpanedBkg(view: TextInputEditText, content: String, range: LongRange) {
     val prefix = view.text.toString()
     val completed = prefix + " " + content
     val span = SpannableString(completed)
@@ -129,7 +133,7 @@ fun displayGeneratedContentSpanedBkg(view: TextInputEditText, content: String, r
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             view.setText(span)
-            if (i++ < completed.length){
+            if (i++ < completed.length) {
                 handler.postDelayed(this, range.random())
             }
         }
@@ -139,7 +143,7 @@ fun displayGeneratedContentSpanedBkg(view: TextInputEditText, content: String, r
 }
 
 
-class Garbler (view: TextInputEditText, range: LongRange){
+class Garbler(view: TextInputEditText, range: LongRange) {
 
     val handler: Handler
     var runnable: Runnable
@@ -174,7 +178,8 @@ class Garbler (view: TextInputEditText, range: LongRange){
             }
         }
     }
-    fun garble(){
+
+    fun garble() {
         this.handler.postDelayed(runnable, 0)
     }
 
@@ -186,7 +191,13 @@ class Garbler (view: TextInputEditText, range: LongRange){
         var i = 0
         runnable = object : Runnable {
             override fun run() {
-                val str = "${content.subSequence(0, i)} ${getRandomString(content.length-i, preserve, indices)}"
+                val str = "${content.subSequence(0, i)} ${
+                    getRandomString(
+                        content.length - i,
+                        preserve,
+                        indices
+                    )
+                }"
                 val span = SpannableString(str)
 
                 span.setSpan(
@@ -196,7 +207,7 @@ class Garbler (view: TextInputEditText, range: LongRange){
                 )
 
                 view.setText(span)
-                if (i++ < completeLen){
+                if (i++ < completeLen) {
                     handler.postDelayed(this, range.random())
                 }
             }
@@ -204,18 +215,17 @@ class Garbler (view: TextInputEditText, range: LongRange){
         handler.postDelayed(runnable, 0)
     }
 
-    fun rebuildStringWithPrefix(newContent: String){
-       rebuildString("$originalContent $newContent")
+    fun rebuildStringWithPrefix(newContent: String) {
+        rebuildString("$originalContent $newContent")
     }
 
-    fun cancel(){
-        if (!canceled){
+    fun cancel() {
+        if (!canceled) {
             canceled = true
             view.setText(originalContent)
         }
     }
 }
-
 
 
 private fun getRandomString(sizeOfRandomString: Int, c: String, indices: Set<Int>): String {

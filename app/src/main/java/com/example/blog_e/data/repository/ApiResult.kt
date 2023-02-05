@@ -1,10 +1,6 @@
 package com.example.blog_e.data.repository
 
 import android.util.Log
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import okio.Buffer
-import org.json.JSONObject
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -34,11 +30,13 @@ class ApiHandler(private val tag: String) {
             if (response.isSuccessful && body != null) {
                 Log.v(tag, "response body: $body")
                 ApiSuccess(body)
-            }
-            else {
+            } else {
                 val errBody = response.errorBody()!!.charStream().readText()
-                Log.e(tag,"API request unsuccessful. Error ${response.code()}: ${response.message()}: ${errBody.toString()}")
-                ApiError(code = response.code(), message = errBody.toString())
+                Log.e(
+                    tag,
+                    "API request unsuccessful. Error ${response.code()}: ${response.message()}: $errBody"
+                )
+                ApiError(code = response.code(), message = errBody)
             }
 
         } catch (e: HttpException) {
@@ -48,7 +46,7 @@ class ApiHandler(private val tag: String) {
             Log.e(tag, "IOException occurred: " + e.message)
             ApiException(e)
         } catch (e: Throwable) {
-            Log.e(tag, "Exception occurred: " + e.message )
+            Log.e(tag, "Exception occurred: " + e.message)
             ApiException(e)
         }
     }

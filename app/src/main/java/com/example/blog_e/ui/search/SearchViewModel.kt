@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blog_e.Config
 import com.example.blog_e.data.model.ProfilePicture
-import com.example.blog_e.data.model.UserAPIModel
 import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.data.repository.ApiError
 import com.example.blog_e.data.repository.ApiException
@@ -54,7 +53,6 @@ class SearchViewModel @Inject constructor(
                     }
                     users.value = result
                 }
-                // TODO: Handle errors
                 is ApiError -> Log.e(tag, "searchUser error")
                 is ApiException -> Log.e(tag, "searchUser exception")
             }

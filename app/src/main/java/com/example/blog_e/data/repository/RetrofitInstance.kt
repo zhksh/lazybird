@@ -43,26 +43,26 @@ class ApiClient {
     private fun okhttpClient(context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(context))
-            .addInterceptor(CustomInterceptor(context))
+            .addInterceptor(CustomInterceptor())
             .readTimeout(Config.clientTimout.toLong(), TimeUnit.SECONDS)
             .connectTimeout(Config.clientTimout.toLong(), TimeUnit.SECONDS)
             .build()
     }
 
 
-    class CustomInterceptor(context: Context) : Interceptor {
+    class CustomInterceptor() : Interceptor {
 
         override fun intercept(chain: Interceptor.Chain): Response {
             val tag = Config.tag("custom interceptor")
             val req: Request = chain.request()
             val requestBuilder: Request.Builder = req.newBuilder()
-            requestBuilder.header("Content-Type", "application/json");
+            requestBuilder.header("Content-Type", "application/json")
             Log.d(tag, "url: ${req.url()}")
             //log body
             val buffer = Buffer()
             req.body()?.writeTo(buffer)
 
-            Log.d(tag, "request body: ${buffer.toString()}")
+            Log.d(tag, "request body: $buffer")
             Log.d(tag, "headers: ${req.headers()}")
 
             return chain.proceed(requestBuilder.build())
