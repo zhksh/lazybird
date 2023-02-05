@@ -174,12 +174,17 @@ class Garbler(view: TextInputEditText, range: LongRange) {
                 )
                 view.setText(span)
                 if (!canceled) handler.postDelayed(this, range.random())
+                else revert()
             }
         }
     }
 
     fun garble() {
         this.handler.postDelayed(runnable, 0)
+    }
+
+    fun revert(){
+        view.setText(originalContent)
     }
 
     fun rebuildString(content: String) {
@@ -221,7 +226,6 @@ class Garbler(view: TextInputEditText, range: LongRange) {
     fun cancel() {
         if (!canceled) {
             canceled = true
-            view.setText(originalContent)
         }
     }
 }
