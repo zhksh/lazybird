@@ -23,6 +23,13 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * This class extends the **Fragment** class and is annotated with **@AndroidEntryPoint**. It
+ * provides the implementation for displaying posts in a recyclerview.
+ *
+ * The fragment is displayed in the *HomePagerFragment* that selects the filter of whether this
+ * fragment displays posts of a global feed or the user's bubble.
+ */
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
@@ -105,6 +112,9 @@ class HomeFragment : Fragment() {
 
 private val TABS = listOf("Global", "Bubble")
 
+/**
+ * This class extends the **Fragment** class and selects the current *HomeFragment*.
+ */
 class HomePagerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,

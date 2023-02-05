@@ -28,6 +28,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
+/**
+ * This class extends the **Fragment** class and is annotated with **@AndroidEntryPoint**.
+ * It is a fragment class for the profile screen in the Android app.
+ *
+ * The main purpose of this class is to display the profile information of the user and to provide
+ * functionalities for the user to edit their profile, logout and see their posts.
+ */
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 

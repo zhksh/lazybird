@@ -20,6 +20,10 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
+/**
+ * This class extends the **Fragment** class and provides the implementation for a user to edit
+ * their profile information, including profile picture, display name and self-description.
+ */
 class EditProfileFragment : Fragment() {
     private val images: MutableList<ProfilePicture> = ProfilePicture.values().toMutableList()
     private var newIconId: String? = null
@@ -136,6 +140,4 @@ class EditProfileFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
-
-
 }

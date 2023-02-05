@@ -15,6 +15,13 @@ import com.example.blog_e.adapters.SearchResultsAdapter
 import com.example.blog_e.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * This class extends the **Fragment** class and is annotated with **@AndroidEntryPoint**.
+ * It is a fragment class for the profile screen in the Android app.
+ *
+ * The main purpose of this class is to display a search layout for a users result and to provide
+ * functionalities follow, unfollow a user and visit a user's profile.
+ */
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
     override fun onCreateView(

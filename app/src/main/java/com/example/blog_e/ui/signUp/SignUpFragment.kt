@@ -30,6 +30,20 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * This class extends the **Fragment** class and is annotated with **@AndroidEntryPoint**.
+ * It is a fragment class that is used for displaying the sign up form for the user.
+ *
+ * The main purpose of this class is the sign up operation.
+ *
+ * Sign up form fields include:
+ *   - a selection for a profile picture
+ *   - a username
+ *   - a display name (default is username)
+ *   - a password
+ *
+ * You can also navigate to the LoginFragment.
+ */
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null

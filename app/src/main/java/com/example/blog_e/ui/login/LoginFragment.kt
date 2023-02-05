@@ -18,6 +18,18 @@ import com.example.blog_e.databinding.FragmentLoginBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * This class extends the **Fragment** class and is annotated with **@AndroidEntryPoint**.
+ * It is a fragment class that is used for displaying the login form for the user.
+ *
+ * The main purpose of this class is the login operation.
+ *
+ * Login form fields include:
+ *   - the username
+ *   - the password
+ *
+ * You can also navigate to the LoginFragment.
+ */
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
     override fun onCreateView(

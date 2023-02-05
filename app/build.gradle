@@ -56,9 +56,11 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
-    // circle image view for logo
+
+    // used for circle image view
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    // use retrofit as backend API wrapper
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.7.2'
 
@@ -66,10 +68,13 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
+    // use GSON builder for retrofit
     implementation 'com.google.code.gson:gson:2.10.1'
+
+    // use websocket connection
     implementation "org.java-websocket:Java-WebSocket:1.3.0"
 
-    // user swiper refreshlayout when you want to load async when scrolling to the top
+    // user swiper refreshLayout when you want to load async when scrolling to the top
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     // use android paging library

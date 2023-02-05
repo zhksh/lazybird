@@ -28,6 +28,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * This class extends the **Fragment** class and is annotated with **@AndroidEntryPoint**.
+ * It is a fragment class for the profile screen in the Android app.
+ *
+ * The main purpose of this class is to display the profile information of a user that is being
+ * visited and to provide functionalities to follow, unfollow and see the posts of this visited user.
+ */
 @AndroidEntryPoint
 class VisitProfileFragment : Fragment() {
     private var _binding: FragmentVisitProfileBinding? = null

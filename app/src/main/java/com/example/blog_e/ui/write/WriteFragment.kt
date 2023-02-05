@@ -21,6 +21,16 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 
+/**
+ * This class extends the **Fragment** class and is annotated with **@AndroidEntryPoint**. It
+ * provides the implementation for creating a post.
+ *
+ * The user can enter the text for the post, select a mood and set options for auto-generating
+ * responses. The post can also be auto-completed by generating text suggestions.
+ *
+ * The fragment uses the WriteViewModel to communicate with the backend to create a post and get
+ * auto-complete suggestions.
+ */
 @AndroidEntryPoint
 class WriteFragment : Fragment() {
 

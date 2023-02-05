@@ -13,6 +13,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 
+/**
+ * This class extends the **AppCompatActivity** class and is annotated with **@AndroidEntryPoint**.
+ * It is the main screen of this app and serves as the entry point for navigating to other screens
+ * of the app.
+ */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

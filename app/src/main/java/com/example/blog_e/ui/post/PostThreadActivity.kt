@@ -20,6 +20,14 @@ import com.example.blog_e.databinding.ActivityPostThreadBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * This class extends the **AppCompatActivity** class and is annotated with **@AndroidEntryPoint**.
+ *
+ * The main purposes of this class are to display the a post thread, including its content, author
+ * information, comments and to add new comments to the post thread.
+ *
+ * Via a web socket, the data is displayed live.
+ */
 @AndroidEntryPoint
 class PostThreadActivity : AppCompatActivity() {
 

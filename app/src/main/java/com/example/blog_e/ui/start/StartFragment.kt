@@ -11,6 +11,11 @@ import com.example.blog_e.R
 import com.example.blog_e.ui.common.UserViewModel
 import com.example.blog_e.databinding.FragmentStartBinding
 
+/**
+ * This class extends the **Fragment** class and provides the implementation for the start screen
+ * of an Android application. This screen allows users to either log in or sign up to the
+ * application and is displayed if no user is logged in.
+ */
 class StartFragment : Fragment() {
     private var _binding: FragmentStartBinding? = null
     private val binding get() = _binding!!
