@@ -89,7 +89,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="craziness:">
+                >
 
                 </TextView>
                 <com.google.android.material.slider.Slider
@@ -117,7 +117,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="history length:"></TextView>
+                        android:text="consider past comments:"></TextView>
                 <com.google.android.material.slider.Slider
                         android:id="@+id/autpreplyHistoryLength"
                         android:layout_width="wrap_content"
