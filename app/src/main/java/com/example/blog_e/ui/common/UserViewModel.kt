@@ -1,10 +1,11 @@
-package com.example.blog_e
+package com.example.blog_e.ui.common
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blog_e.Config
 import com.example.blog_e.data.model.*
 import com.example.blog_e.data.repository.*
 import com.example.blog_e.utils.SessionManager

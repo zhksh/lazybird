@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
-import com.example.blog_e.UserViewModel
+import com.example.blog_e.ui.common.UserViewModel
 import com.example.blog_e.adapters.ProfilePictureAdapter
 import com.example.blog_e.data.model.ProfilePicture
 import com.example.blog_e.data.model.UpdateUserAPIModel
