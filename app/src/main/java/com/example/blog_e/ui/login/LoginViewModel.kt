@@ -27,5 +27,3 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         return username != "" && password != ""
     }
 }
-
-

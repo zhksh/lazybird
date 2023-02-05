@@ -27,7 +27,6 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
 /**
  * This class extends the **Fragment** class and is annotated with **@AndroidEntryPoint**.
  * It is a fragment class for the profile screen in the Android app.

@@ -16,7 +16,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-
 class Utils {
     companion object {
         fun formatBackstack(navController: NavController): String {
@@ -237,5 +236,3 @@ private fun getRandomString(sizeOfRandomString: Int, c: String, indices: Set<Int
         else sb.append(ALLOWED_CHARACTERS[random.nextInt(ALLOWED_CHARACTERS.length)])
     return sb.toString()
 }
-
-

@@ -50,6 +50,4 @@ class ApiHandler(private val tag: String) {
             ApiException(e)
         }
     }
-
 }
-

@@ -28,7 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
  *   - the username
  *   - the password
  *
- * You can also navigate to the LoginFragment.
+ * You can also navigate to the sign up screen.
  */
 @AndroidEntryPoint
 class LoginFragment : Fragment() {

@@ -13,7 +13,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 data class SelfDescription(
     val bio: String = "",
     val err: SuccessResponse? = null

@@ -41,5 +41,4 @@ class Config {
             return tagPref + "_" + str
         }
     }
-
 }

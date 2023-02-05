@@ -33,7 +33,6 @@ class StartFragment : Fragment() {
         binding.btnSignUp.setOnClickListener { signUp() }
 
         userViewModel.getUser().observe(viewLifecycleOwner) { user ->
-            // TODO: Add loading spinner until call finished?
             if (user != null) {
                 findNavController().navigate(R.id.action_user_set)
             }
@@ -49,5 +48,4 @@ class StartFragment : Fragment() {
     private fun login() {
         findNavController().navigate(R.id.login_fragment)
     }
-
 }

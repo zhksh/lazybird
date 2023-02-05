@@ -4,7 +4,6 @@ import com.example.blog_e.utils.Utils
 import java.time.LocalDateTime
 import java.util.*
 
-
 data class Post(
     val id: UUID = UUID.randomUUID(),
     val content: String,

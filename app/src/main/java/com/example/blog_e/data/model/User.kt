@@ -3,7 +3,6 @@ package com.example.blog_e.data.model
 import android.util.Log
 import com.example.blog_e.R
 
-
 data class User(
     val username: String,
     val displayName: String,

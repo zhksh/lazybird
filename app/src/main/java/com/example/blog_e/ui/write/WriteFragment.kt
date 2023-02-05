@@ -20,7 +20,6 @@ import com.example.blog_e.utils.Garbler
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
-
 /**
  * This class extends the **Fragment** class and is annotated with **@AndroidEntryPoint**. It
  * provides the implementation for creating a post.

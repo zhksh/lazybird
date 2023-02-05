@@ -6,7 +6,6 @@ import retrofit2.http.*
 
 interface BlogEAPI {
 
-
     // User routes
     @POST("users")
     suspend fun signUp(@Body user: NewUserAPIModel): Response<Authorization>

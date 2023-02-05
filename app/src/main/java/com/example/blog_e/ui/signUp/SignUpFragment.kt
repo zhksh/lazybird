@@ -1,6 +1,5 @@
 package com.example.blog_e.ui.signUp
 
-
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -42,7 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
  *   - a display name (default is username)
  *   - a password
  *
- * You can also navigate to the LoginFragment.
+ * You can also navigate to the login screen.
  */
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {

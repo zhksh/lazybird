@@ -1,6 +1,5 @@
 package com.example.blog_e.ui.write
 
-
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,12 +14,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 data class GeneratePostResponse(
     val generatedText: String = "",
     val errResponse: SuccessResponse? = null
 )
-
 
 @HiltViewModel
 class WriteViewModel @Inject constructor(private val postRepo: BlogRepo) : ViewModel() {

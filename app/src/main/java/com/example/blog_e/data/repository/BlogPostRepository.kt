@@ -2,7 +2,6 @@ package com.example.blog_e.data.repository
 
 import com.example.blog_e.data.model.*
 
-
 interface BlogPostRepository {
 
     suspend fun getPosts(postsQueryModel: GetPostsQueryModel): ApiResult<PostsResult>

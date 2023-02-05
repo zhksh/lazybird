@@ -32,4 +32,3 @@ class HomeViewModel @Inject constructor(
         }.liveData.cachedIn(viewModelScope) as MutableLiveData<PagingData<PostAPIModel>>
     }
 }
-

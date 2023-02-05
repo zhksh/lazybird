@@ -112,6 +112,3 @@ data class LLMSelfDescription(
     @SerializedName("entity")
     val entity: String
 )
-
-
-
