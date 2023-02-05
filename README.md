@@ -24,4 +24,4 @@ blog_e
 ```
 
 ### Note
-Due to reconsideration of the applications name, you the name is referred to in some files as `BlogE` whereas the new and display
+Due to reconsideration of the applications name, you the name is referred to in some files as `BlogE` whereas the new is `LaryBird`. `LazyBird` is the displayed name in the application screens and on the android device.
