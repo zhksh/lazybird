@@ -98,8 +98,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:background="@drawable/textview_border"
+                    android:layout_height="wrap_content"
                     android:ems="10"
                     android:onTextChanged="@{viewModel::updatedUsername}"
                     android:inputType="textPersonName"
@@ -126,7 +125,6 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:background="@drawable/textview_border"
                     android:onTextChanged="@{viewModel::updatedDisplayName}"
                     android:text="@{viewModel.displayName}"
                     android:inputType="textPersonName"
@@ -156,7 +154,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:autofillHints=""
-                    android:background="@drawable/textview_border"
                     android:onTextChanged="@{viewModel::updatedPassword}"
                     android:imeOptions="actionDone"
                     android:ems="10"

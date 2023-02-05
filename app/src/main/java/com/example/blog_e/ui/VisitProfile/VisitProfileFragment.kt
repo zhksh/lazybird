@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.Config
+import com.example.blog_e.R
 import com.example.blog_e.adapters.PostAdapter
 import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.databinding.FragmentVisitProfileBinding
@@ -113,9 +114,9 @@ class VisitProfileFragment : Fragment() {
         }
 
 
+        binding.swipeRefresh.setColorSchemeResources(R.color.secondaryColor)
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
-            Log.i(TAG, "Es wurde refresht")
         }
 
         binding.followBtn.setOnClickListener {

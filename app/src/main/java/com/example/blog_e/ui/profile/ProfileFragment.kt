@@ -2,7 +2,6 @@ package com.example.blog_e.ui.profile
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -109,6 +108,7 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_logout)
         }
 
+        binding.swipeRefresh.setColorSchemeResources(R.color.secondaryColor)
         binding.swipeRefresh.setOnRefreshListener {
             postAdapter.refresh()
             binding.swipeRefresh.isRefreshing = false

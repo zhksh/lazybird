@@ -75,6 +75,7 @@ class HomeFragment : Fragment() {
             postAdapter.submitData(lifecycle, it)
         }
 
+        binding.swipeRefresh.setColorSchemeResources(R.color.secondaryColor)
         binding.swipeRefresh.setOnRefreshListener {
             postAdapter.refresh()
             recyclerView.smoothScrollToPosition(0)

@@ -58,6 +58,17 @@
                 android:src="@drawable/baby_yoda_1"
                 app:shapeAppearanceOverlay="@style/Circular" />
 
+            <Button
+                android:id="@+id/followBtn"
+                android:layout_marginTop="132dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:enabled="true"
+                android:text="unfollow" />
+
+
         </RelativeLayout>
 
 
@@ -76,8 +87,8 @@
                 android:text="Max Mustermann"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/follow_btn"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/at"
@@ -97,14 +108,6 @@
                 app:layout_constraintStart_toEndOf="@id/at"
                 app:layout_constraintTop_toTopOf="@+id/nickname" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/follow_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:enabled="true"
-                android:text="unfollow"
-                app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
                 android:id="@+id/selfDescription"
@@ -113,7 +116,7 @@
                 android:text="A random description"
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/follow_btn"
+                app:layout_constraintTop_toBottomOf="@+id/nickname"
 
                 />
 

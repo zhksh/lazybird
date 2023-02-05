@@ -64,7 +64,6 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
-                        android:background="@drawable/textview_border"
                         android:ems="10"
                         android:inputType="textPersonName"
                         android:onTextChanged="@{viewModel::updatedUsername}"
@@ -87,7 +86,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:autofillHints=""
-                        android:background="@drawable/textview_border"
                         android:ems="10"
                         android:inputType="textPassword"
                         android:imeOptions="actionDone"
