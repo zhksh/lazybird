@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.blog_e.R
-import com.example.blog_e.adapters.PostAdapter
+import com.example.blog_e.ui.common.PostAdapter
 import com.example.blog_e.databinding.FragmentHomeBinding
 import com.example.blog_e.utils.PostComparator
 import com.google.android.material.floatingactionbutton.FloatingActionButton
