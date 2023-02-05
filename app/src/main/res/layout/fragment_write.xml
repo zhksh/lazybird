@@ -35,6 +35,16 @@
                 android:minHeight="200dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="sans-serif"
+            android:text="AI settings:"
+            android:textSize="17sp"
+            android:textStyle="bold"></TextView>
+
         <LinearLayout
             android:id="@+id/aiOptions"
             android:layout_width="match_parent"
@@ -142,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:enabled="true"
-                android:text="Complete"
+                android:text="Generate"
                 android:visibility="visible">
 
             </Button>

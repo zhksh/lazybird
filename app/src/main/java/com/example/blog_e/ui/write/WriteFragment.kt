@@ -2,13 +2,11 @@ package com.example.blog_e.ui.write
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.annotation.FloatRange
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -22,7 +20,7 @@ import com.example.blog_e.utils.Garbler
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
-enum class TemperatureLabel(val start: Float, val end: Float ) {
+enum class TemperatureLabel(val start: Float, val end: Float) {
 
     MILD(0.0f, 0.2f),
     MODERATE(0.2f, 0.4f),
@@ -32,16 +30,26 @@ enum class TemperatureLabel(val start: Float, val end: Float ) {
 
     companion object {
         fun getLabelByValue(value: Float): String {
-            return TemperatureLabel.values().filter { it -> scale(value) in it. start ..  it.end }.first().name
+            return TemperatureLabel.values().filter { it -> scale(value) in it.start..it.end }
+                .first().name
         }
-        fun scale(value: Float): Float{
-            return value/2
+
+        fun scale(value: Float): Float {
+            return value / 2
         }
     }
 }
 
-
-
+/**
+ * This class extends the **Fragment** class and is annotated with **@AndroidEntryPoint**. It
+ * provides the implementation for creating a post.
+ *
+ * The user can enter the text for the post, select a mood and set options for auto-generating
+ * responses. The post can also be auto-completed by generating text suggestions.
+ *
+ * The fragment uses the WriteViewModel to communicate with the backend to create a post and get
+ * auto-complete suggestions.
+ */
 @AndroidEntryPoint
 class WriteFragment() : Fragment() {
 
@@ -66,26 +74,29 @@ class WriteFragment() : Fragment() {
         binding.autoCompleteOptions.visibility = View.GONE
 
 
-        binding.writeGenerateTemperature.setLabelFormatter{ value : Float ->
+        binding.writeGenerateTemperature.setLabelFormatter { value: Float ->
             return@setLabelFormatter "${TemperatureLabel.getLabelByValue(value)}"
         }
 
         fun getMood(): String {
-            binding.root.findViewById<Button>(binding.emotionButtonsGroup.checkedButtonId)?.let { mmodbtn ->
-                return mmodbtn.text.toString().lowercase()
-            }
+            binding.root.findViewById<Button>(binding.emotionButtonsGroup.checkedButtonId)
+                ?.let { mmodbtn ->
+                    return mmodbtn.text.toString().lowercase()
+                }
             return Config.defaultMood
         }
 
         binding.postButton.setOnClickListener {
             val post = Post(
-                content=binding.postInput.text.toString(),
+                content = binding.postInput.text.toString(),
                 autogenerateResponses = binding.autoReplyFlag.isChecked
             )
-            val params = AutogenrationOptions(mood = getMood(),
+            val params = AutogenrationOptions(
+                mood = getMood(),
                 temperature = binding.writeGenerateTemperature.value,
-                historyLength = binding.autpreplyHistoryLength.value.toInt())
-            writeViewModel.createPost(post, params).observe(viewLifecycleOwner){res ->
+                historyLength = binding.autpreplyHistoryLength.value.toInt()
+            )
+            writeViewModel.createPost(post, params).observe(viewLifecycleOwner) { res ->
                 if (res.errorMessage == null)
                     findNavController().navigate(R.id.action_write_fragment_to_nav_host_fragment_activity_main)
                 else Snackbar.make(binding.root, res.errorMessage, Toast.LENGTH_SHORT).show()
@@ -93,31 +104,38 @@ class WriteFragment() : Fragment() {
         }
 
         binding.generatePostFromPromptButton.setOnClickListener {
-            val params =  AutoCompleteOptions(
+            val params = AutoCompleteOptions(
                 binding.postInput.text.toString(),
                 binding.writeGenerateTemperature.value,
-                getMood())
+                getMood()
+            )
             val garbler = Garbler(binding.postInput, Config.generatePostDelay)
             garbler.garble()
-            writeViewModel.completePost(params).observe(viewLifecycleOwner){ res ->
+            writeViewModel.completePost(params).observe(viewLifecycleOwner) { res ->
                 garbler.cancel()
                 if (res.errResponse == null) {
-                    if (res.generatedText.isBlank()){
-                        Snackbar.make(binding.root, "Maybe be a little more creative ..", Toast.LENGTH_SHORT).show()
-                    }
-                    else garbler.rebuildStringWithPrefix(res.generatedText)
-                }
-                else{
-                    Snackbar.make(binding.root, res.errResponse.errorMessage.toString(), Toast.LENGTH_SHORT).show()
+                    if (res.generatedText.isBlank()) {
+                        Snackbar.make(
+                            binding.root,
+                            "Maybe be a little more creative ..",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else garbler.rebuildStringWithPrefix(res.generatedText)
+                } else {
+                    Snackbar.make(
+                        binding.root,
+                        res.errResponse.errorMessage.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
 
-        binding.autoReplyFlag.setOnCheckedChangeListener {_, isChecked ->
+        binding.autoReplyFlag.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) binding.autoCompleteOptions.visibility = View.VISIBLE
             else binding.autoCompleteOptions.visibility = View.GONE
         }
-        
+
 
         return binding.root
     }
