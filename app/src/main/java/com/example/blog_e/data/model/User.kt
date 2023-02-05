@@ -39,8 +39,7 @@ fun mapApiUser(apiUser: GetUserAPIModel): User {
 fun iconIdToProfilePicture(iconId: String): ProfilePicture {
     return try {
         ProfilePicture.valueOf(iconId)
-    }
-    catch (e: IllegalArgumentException){
+    } catch (e: IllegalArgumentException) {
         ProfilePicture.PICTURE_05
     }
 }

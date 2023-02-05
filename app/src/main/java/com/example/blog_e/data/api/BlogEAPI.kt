@@ -1,6 +1,5 @@
 package com.example.blog_e.data.api
 
-import com.example.blog_e.SelfDescription
 import com.example.blog_e.data.model.*
 import retrofit2.Response
 import retrofit2.http.*

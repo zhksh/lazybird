@@ -2,7 +2,6 @@ package com.example.blog_e.ui.write
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,9 +22,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class WriteFragment() : Fragment() {
+class WriteFragment : Fragment() {
 
-    private val TAG = Config.tag(this.toString())
     private var _binding: FragmentWriteBinding? = null
 
     private val binding get() = _binding!!
@@ -47,21 +45,24 @@ class WriteFragment() : Fragment() {
 
 
         fun getMood(): String {
-            binding.root.findViewById<Button>(binding.emotionButtonsGroup.checkedButtonId)?.let { mmodbtn ->
-                return mmodbtn.text.toString().lowercase()
-            }
+            binding.root.findViewById<Button>(binding.emotionButtonsGroup.checkedButtonId)
+                ?.let { mmodbtn ->
+                    return mmodbtn.text.toString().lowercase()
+                }
             return Config.defaultMood
         }
 
         binding.postButton.setOnClickListener {
             val post = Post(
-                content=binding.postInput.text.toString(),
+                content = binding.postInput.text.toString(),
                 autogenerateResponses = binding.autoReplyFlag.isChecked
             )
-            val params = AutogenrationOptions(mood = getMood(),
+            val params = AutogenrationOptions(
+                mood = getMood(),
                 temperature = binding.writeGenerateTemperature.value,
-                historyLength = binding.autpreplyHistoryLength.value.toInt())
-            writeViewModel.createPost(post, params).observe(viewLifecycleOwner){res ->
+                historyLength = binding.autpreplyHistoryLength.value.toInt()
+            )
+            writeViewModel.createPost(post, params).observe(viewLifecycleOwner) { res ->
                 if (res.errorMessage == null)
                     findNavController().navigate(R.id.action_write_fragment_to_nav_host_fragment_activity_main)
                 else Snackbar.make(binding.root, res.errorMessage, Toast.LENGTH_SHORT).show()
@@ -69,31 +70,38 @@ class WriteFragment() : Fragment() {
         }
 
         binding.generatePostFromPromptButton.setOnClickListener {
-            val params =  AutoCompleteOptions(
+            val params = AutoCompleteOptions(
                 binding.postInput.text.toString(),
                 binding.writeGenerateTemperature.value,
-                getMood())
+                getMood()
+            )
             val garbler = Garbler(binding.postInput, Config.generatePostDelay)
             garbler.garble()
-            writeViewModel.completePost(params).observe(viewLifecycleOwner){ res ->
+            writeViewModel.completePost(params).observe(viewLifecycleOwner) { res ->
                 garbler.cancel()
                 if (res.errResponse == null) {
-                    if (res.generatedText.isBlank()){
-                        Snackbar.make(binding.root, "Maybe be a little more creative ..", Toast.LENGTH_SHORT).show()
-                    }
-                    else garbler.rebuildStringWithPrefix(res.generatedText)
-                }
-                else{
-                    Snackbar.make(binding.root, res.errResponse.errorMessage.toString(), Toast.LENGTH_SHORT).show()
+                    if (res.generatedText.isBlank()) {
+                        Snackbar.make(
+                            binding.root,
+                            "Maybe be a little more creative ..",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else garbler.rebuildStringWithPrefix(res.generatedText)
+                } else {
+                    Snackbar.make(
+                        binding.root,
+                        res.errResponse.errorMessage.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
 
-        binding.autoReplyFlag.setOnCheckedChangeListener {_, isChecked ->
+        binding.autoReplyFlag.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) binding.autoCompleteOptions.visibility = View.VISIBLE
             else binding.autoCompleteOptions.visibility = View.GONE
         }
-        
+
 
         return binding.root
     }

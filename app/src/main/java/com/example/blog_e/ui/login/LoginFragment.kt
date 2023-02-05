@@ -2,7 +2,6 @@ package com.example.blog_e.ui.login
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.blog_e.R
 import com.example.blog_e.UserViewModel
-import com.example.blog_e.data.model.User
 import com.example.blog_e.databinding.FragmentLoginBinding
-import com.example.blog_e.utils.validatePassword
-import com.example.blog_e.utils.validateUsername
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,19 +32,20 @@ class LoginFragment : Fragment() {
         val binding = FragmentLoginBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
 
-        binding.btnAccount.setOnClickListener{
+        binding.btnAccount.setOnClickListener {
             findNavController().navigate(R.id.sign_up_fragment)
         }
 
-        binding.btnLogin.setOnClickListener{
+        binding.btnLogin.setOnClickListener {
             login(viewModel, userViewModel, binding)
         }
 
         binding.etPassword.editText?.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 login(viewModel, userViewModel, binding)
-                val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(v.windowToken,0)
+                val imm =
+                    v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
                 true
             } else {
                 false
@@ -58,7 +55,11 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-    private fun login(viewModel: LoginViewModel, userViewModel: UserViewModel, binding: FragmentLoginBinding) {
+    private fun login(
+        viewModel: LoginViewModel,
+        userViewModel: UserViewModel,
+        binding: FragmentLoginBinding
+    ) {
         viewModel.isLoading.set(true)
 
         val username = binding.etUserName.editText?.text.toString()

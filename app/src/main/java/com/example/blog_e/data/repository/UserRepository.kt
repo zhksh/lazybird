@@ -7,7 +7,7 @@ interface UserRepository {
     suspend fun signUp(user: NewUserAPIModel): ApiResult<Authorization>
 
     suspend fun login(loginBody: LoginPayload): ApiResult<Authorization>
-    
+
     suspend fun getUser(username: String): ApiResult<GetUserAPIModel>
 
     suspend fun findUsers(search: String): ApiResult<FindUsersAPIModel>

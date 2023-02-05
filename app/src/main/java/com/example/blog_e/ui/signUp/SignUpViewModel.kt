@@ -51,6 +51,6 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
 
     private fun signUpIsReady(): Boolean {
         val displayName = displayName.get() ?: return false
-        return validateUsername(this.username) == "" && validatePassword(this.password) == ""&& displayName.isNotEmpty()
+        return validateUsername(this.username) == "" && validatePassword(this.password) == "" && displayName.isNotEmpty()
     }
 }
