@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.blog_e.R
-import com.example.blog_e.adapters.SearchResultsAdapter
+import com.example.blog_e.ui.common.SearchResultsAdapter
 import com.example.blog_e.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 

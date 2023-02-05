@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.Config
 import com.example.blog_e.R
-import com.example.blog_e.adapters.PostAdapter
+import com.example.blog_e.ui.common.PostAdapter
 import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.databinding.FragmentVisitProfileBinding
 import com.example.blog_e.utils.PostComparator

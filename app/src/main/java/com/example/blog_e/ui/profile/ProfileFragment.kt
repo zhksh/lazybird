@@ -17,7 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.R
-import com.example.blog_e.adapters.PostAdapter
+import com.example.blog_e.ui.common.PostAdapter
 import com.example.blog_e.databinding.FragmentProfileBinding
 import com.example.blog_e.ui.common.UserViewModel
 import com.example.blog_e.ui.editProfile.EditProfileFragment

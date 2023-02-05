@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blog_e.Config
 import com.example.blog_e.R
-import com.example.blog_e.adapters.CommentsViewAdapter
+import com.example.blog_e.ui.common.CommentsViewAdapter
 import com.example.blog_e.data.model.CommentAPIModel
 import com.example.blog_e.data.model.iconIdToProfilePicture
 import com.example.blog_e.databinding.ActivityPostThreadBinding
