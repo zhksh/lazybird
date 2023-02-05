@@ -52,7 +52,7 @@ class EditProfileFragment(): Fragment() {
             close()
         }
 
-        // TODO: Same as in Signup, should not be repeated
+
         binding.avatarBtn.setOnClickListener {
             val dialogView = layoutInflater.inflate(R.layout.dialog_profile_picutres, null)
             val recyclerView =

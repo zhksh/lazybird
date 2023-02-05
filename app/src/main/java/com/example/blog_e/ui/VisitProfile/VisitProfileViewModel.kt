@@ -1,5 +1,6 @@
 package com.example.blog_e.ui.VisitProfile
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -61,10 +62,10 @@ class VisitProfileViewModel @Inject constructor(
                 updateUiWithUser(result.data)
             }
             is ApiError -> {
-                TODO()
+                Log.e(TAG, "api error")
             }
             is ApiException -> {
-                TODO()
+                Log.e(TAG, "api exception")
             }
         }
     }

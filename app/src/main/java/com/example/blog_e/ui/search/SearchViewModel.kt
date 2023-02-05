@@ -54,7 +54,6 @@ class SearchViewModel @Inject constructor(
                     }
                     users.value = result
                 }
-                // TODO: Handle errors
                 is ApiError -> Log.e(tag, "searchUser error")
                 is ApiException -> Log.e(tag, "searchUser exception")
             }
